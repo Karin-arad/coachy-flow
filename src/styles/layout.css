@@ -18,7 +18,7 @@
     background: linear-gradient(90deg, #DE4A8F 0%, #F1A10C 100%);
     color: white;
     font-weight: 700;
-    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+    text-shadow: 1px 1px 2px rgba(70, 70, 70, 0.6);
     transition: all 0.3s ease;
   }
 

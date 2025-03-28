@@ -1,4 +1,3 @@
-
 @layer utilities {
   .font-rubik {
     font-family: 'Rubik', sans-serif;
@@ -39,19 +38,22 @@
     hover:before:scale-x-100 hover:before:origin-left;
   }
 
+  .text-shadow {
+    text-shadow: 1px 1px 2px rgba(70, 70, 70, 0.6);
+  }
+  
   .text-gradient-blue {
     @apply bg-gradient-to-r from-coachy-blue to-coachy-turquoise bg-clip-text text-transparent font-bold;
+    text-shadow: none;
   }
 
   .text-gradient-pink {
     @apply bg-gradient-to-r from-coachy-pink to-coachy-yellow bg-clip-text text-transparent font-bold;
+    text-shadow: none;
   }
 
   .text-gradient-full {
     @apply bg-full-spectrum bg-clip-text text-transparent animate-color-shift bg-[length:300%_100%] font-bold;
-  }
-
-  .text-shadow {
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    text-shadow: none;
   }
 }

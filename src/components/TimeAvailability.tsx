@@ -36,12 +36,13 @@ const TimeAvailability = () => {
         </h2>
         
         <div className="grid grid-cols-2 gap-3 justify-items-center">
-          {timeOptions.map((option) => (
+          {timeOptions.map((option, index) => (
             <button
               key={option.value}
               onClick={() => setTimeAvailable(option.value)}
               className={cn(
                 'w-full px-3 py-2 rounded-xl transition-all duration-300 text-base shadow-sm flex flex-col items-center gap-1 time-option-card',
+                `time-option-${index + 1}`,
                 timeAvailable === option.value ? 'selected' : ''
               )}
             >

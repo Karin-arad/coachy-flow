@@ -14,7 +14,8 @@ const EmotionalRating = () => {
     goToNextScreen, 
     currentScreen, 
     currentSlider, 
-    setCurrentSlider 
+    goToNextSlider,
+    goToPreviousSlider
   } = useFlowContext();
   
   // Reset scroll position when component becomes visible
@@ -67,19 +68,6 @@ const EmotionalRating = () => {
   
   // Determine if we're on the last parameter
   const isLastSlider = currentSlider === parameters.length - 1;
-
-  // Handle navigation between sliders
-  const goToPrevSlider = () => {
-    if (currentSlider > 0) {
-      setCurrentSlider(currentSlider - 1);
-    }
-  };
-
-  const goToNextSlider = () => {
-    if (currentSlider < parameters.length - 1) {
-      setCurrentSlider(currentSlider + 1);
-    }
-  };
 
   return (
     <AnimatedCard 
@@ -146,7 +134,7 @@ const EmotionalRating = () => {
           <Button
             variant="outline"
             size="sm"
-            onClick={goToPrevSlider}
+            onClick={goToPreviousSlider}
             disabled={currentSlider === 0}
             className="flex items-center gap-1"
           >
@@ -186,7 +174,14 @@ const EmotionalRating = () => {
                 "h-2 w-2 rounded-full transition-all duration-300",
                 index === currentSlider ? "bg-coachy-blue w-4" : "bg-gray-300"
               )}
-              onClick={() => setCurrentSlider(index)}
+              onClick={() => {
+                // Trigger celebration when changing slider via pagination dots
+                if (index !== currentSlider) {
+                  const { triggerCelebration, setCurrentSlider } = useFlowContext();
+                  triggerCelebration('confetti');
+                  setCurrentSlider(index);
+                }
+              }}
             />
           ))}
         </div>

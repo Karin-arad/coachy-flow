@@ -118,7 +118,8 @@ const CelebrationEffects: React.FC<CelebrationEffectsProps> = ({ effectType, act
         />
       )}
       
-      <style jsx>{`
+      <style>
+        {`
         .emoji-rain {
           position: fixed;
           top: -30px;
@@ -131,7 +132,8 @@ const CelebrationEffects: React.FC<CelebrationEffectsProps> = ({ effectType, act
             transform: translateY(calc(100vh + 30px));
           }
         }
-      `}</style>
+        `}
+      </style>
     </>
   );
 };

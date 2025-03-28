@@ -27,6 +27,8 @@ type FlowContextType = {
   setIsCelebrating: (isActive: boolean) => void;
   goToNextScreen: () => void;
   goToPreviousScreen: () => void;
+  goToNextSlider: () => void;
+  goToPreviousSlider: () => void;
   triggerCelebration: (type: CelebrationType) => void;
 };
 
@@ -48,14 +50,18 @@ export const FlowProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [celebrationType, setCelebrationType] = useState<CelebrationType>('');
   const [isCelebrating, setIsCelebrating] = useState(false);
 
-  const goToNextScreen = () => {
-    // Trigger a celebration when advancing to the next screen
+  // Helper function to get a random celebration type
+  const getRandomCelebration = (): CelebrationType => {
     const celebrations: CelebrationType[] = ['confetti', 'fireworks', 'stars', 'emoji', 'colorful-fireworks'];
+    return celebrations[Math.floor(Math.random() * celebrations.length)];
+  };
+
+  const goToNextScreen = () => {
     const nextScreen = Math.min(currentScreen + 1, 4);
     
     // Only trigger celebration if we're advancing to a new screen
     if (nextScreen > currentScreen) {
-      triggerCelebration(celebrations[nextScreen % celebrations.length]);
+      triggerCelebration(getRandomCelebration());
     }
     
     setCurrentScreen(nextScreen);
@@ -65,6 +71,20 @@ export const FlowProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const goToPreviousScreen = () => {
     setCurrentScreen((prev) => Math.max(prev - 1, 1));
     setCurrentSlider(0); // Reset slider index when moving to a new screen
+  };
+  
+  const goToNextSlider = () => {
+    if (currentScreen === 2) { // Only on the emotional rating screen
+      // Trigger celebration between slider transitions
+      triggerCelebration('confetti');
+      setCurrentSlider(prev => Math.min(prev + 1, 3));
+    }
+  };
+  
+  const goToPreviousSlider = () => {
+    if (currentScreen === 2) { // Only on the emotional rating screen
+      setCurrentSlider(prev => Math.max(prev - 1, 0));
+    }
   };
   
   const triggerCelebration = (type: CelebrationType) => {
@@ -96,6 +116,8 @@ export const FlowProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         setIsCelebrating,
         goToNextScreen,
         goToPreviousScreen,
+        goToNextSlider,
+        goToPreviousSlider,
         triggerCelebration,
       }}
     >

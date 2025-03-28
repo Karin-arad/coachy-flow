@@ -1,5 +1,4 @@
-
-import { getOpenAIHeaders } from './apiHelpers';
+import { getOpenAIHeaders, getYouTubeApiKey } from './apiHelpers';
 
 export interface ChatMessage {
   role: 'system' | 'user' | 'assistant';

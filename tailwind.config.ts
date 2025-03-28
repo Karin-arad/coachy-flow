@@ -54,14 +54,14 @@ export default {
 					foreground: 'hsl(var(--card-foreground))'
 				},
 				coachy: {
-					blue: '#5B9BD5', // updated primary blue
-					lightBlue: '#D3E4FD', // soft light blue
-					gray: '#F1F0FB', // soft gray
-					yellow: '#FFD166', // new energetic yellow
-					turquoise: '#4ECDC4', // new calming turquoise
-					pink: '#FF8DC7', // new accent pink
-					text: '#444444', // dark gray for text
-					red: '#ea384c', // heart red
+					blue: '#4285E4', // adjusted blue for better contrast
+					lightBlue: '#D3E5FD', // slightly adjusted light blue
+					gray: '#F1F0FB', // kept the same soft gray
+					yellow: '#F9BC00', // adjusted yellow for more saturation and contrast
+					turquoise: '#39B3A4', // adjusted for better contrast
+					pink: '#E94B97', // adjusted for better contrast 
+					text: '#2D3748', // darker text for better readability
+					red: '#E53E3E', // adjusted heart red
 				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
@@ -199,9 +199,9 @@ export default {
 				'check-appear': 'check-appear 1.5s ease-in-out forwards'
 			},
 			backgroundImage: {
-				'sunrise-gradient': 'linear-gradient(135deg, #FF8DC7 0%, #FFD166 100%)',
-				'ocean-calm': 'linear-gradient(135deg, #5B9BD5 0%, #4ECDC4 100%)',
-				'full-spectrum': 'linear-gradient(to right, #FF8DC7, #5B9BD5, #4ECDC4, #FFD166)',
+				'sunrise-gradient': 'linear-gradient(135deg, #E94B97 0%, #F9BC00 100%)',
+				'ocean-calm': 'linear-gradient(135deg, #4285E4 0%, #39B3A4 100%)',
+				'full-spectrum': 'linear-gradient(to right, #E94B97, #4285E4, #39B3A4, #F9BC00)',
 			}
 		}
 	},

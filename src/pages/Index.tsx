@@ -8,6 +8,7 @@ import PracticeSummary from '@/components/PracticeSummary';
 import ProgressBar from '@/components/ProgressBar';
 import CelebrationEffects from '@/components/CelebrationEffects';
 import { motion } from 'framer-motion';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 const CoachyFlow = () => {
   const { currentScreen, celebrationType, isCelebrating } = useFlowContext();
@@ -29,27 +30,27 @@ const CoachyFlow = () => {
   };
   
   return (
-    <div className="h-screen overflow-hidden bg-gradient-to-br from-white via-[#f8f9fa] to-white py-8 app-background">
+    <div className="h-screen flex flex-col bg-gradient-to-br from-white via-[#f8f9fa] to-white app-background">
       {/* Global celebration effects */}
       <CelebrationEffects 
         effectType={celebrationType} 
         active={isCelebrating} 
-        duration={1500} // Reduced from 2500
+        duration={1500}
       />
       
-      <div className="container h-full px-4 py-6 flex flex-col items-center">
-        <div className="w-full max-w-md">
+      <div className="flex-1 flex flex-col items-center justify-start px-4 py-6">
+        <div className="w-full max-w-md mb-4">
           <ProgressBar currentStep={currentScreen} totalSteps={4} />
         </div>
         
-        <div className="relative w-full mt-4 flex justify-center flex-1 overflow-hidden">
+        <div className="w-full flex-1 flex justify-center items-center">
           <motion.div
             key={currentScreen}
-            initial={{ opacity: 0, filter: "blur(5px)" }} // Reduced blur
+            initial={{ opacity: 0, filter: "blur(5px)" }}
             animate={{ opacity: 1, filter: "blur(0px)" }}
-            exit={{ opacity: 0, filter: "blur(5px)" }} // Reduced blur
-            transition={{ duration: 0.4 }} // Reduced from 0.6
-            className="w-full h-full flex items-center justify-center"
+            exit={{ opacity: 0, filter: "blur(5px)" }}
+            transition={{ duration: 0.4 }}
+            className="w-full flex items-center justify-center"
           >
             {renderCurrentScreen()}
           </motion.div>

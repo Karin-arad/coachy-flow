@@ -30,28 +30,28 @@ const EmotionalRating = () => {
       id: 'bounciness', 
       label: 'קופצנות', 
       question: 'כמה קופצנית את מרגישה?', 
-      icon: <Feather className="text-coachy-pink animate-float" size={20} />,
+      icon: <Feather className="text-coachy-pink animate-float" size={16} />,
       type: 'bounciness' as const
     },
     { 
       id: 'energy', 
       label: 'אנרגיה', 
       question: 'מה רמת האנרגיה שלך?', 
-      icon: <Zap className="text-coachy-yellow animate-pulse-gentle" size={20} />,
+      icon: <Zap className="text-coachy-yellow animate-pulse-gentle" size={16} />,
       type: 'energy' as const
     },
     { 
       id: 'alertness', 
       label: 'ערנות', 
       question: 'כמה ערנית את מרגישה?', 
-      icon: <Eye className="text-coachy-blue animate-pulse-gentle" size={20} />,
+      icon: <Eye className="text-coachy-blue animate-pulse-gentle" size={16} />,
       type: 'alertness' as const
     },
     { 
       id: 'lightness', 
       label: 'קלילות', 
       question: 'מה תחושת הקלילות שלך?', 
-      icon: <Feather className="text-coachy-turquoise animate-float" size={20} />,
+      icon: <Feather className="text-coachy-turquoise animate-float" size={16} />,
       type: 'lightness' as const
     },
   ];
@@ -67,24 +67,24 @@ const EmotionalRating = () => {
       isVisible={currentScreen === 2} 
       className="screen-2-container"
     >
-      <div className="space-y-4 text-sm">
-        <h2 className="text-xl font-medium text-coachy-blue mb-4 flex items-center gap-2">
+      <div className="space-y-3 text-sm">
+        <h2 className="text-lg font-medium text-coachy-blue mb-2 flex items-center gap-2">
           <span>דרגי את עצמך מ־1 עד 7 בכל אחד מהפרמטרים הבאים:</span>
-          <Sparkles className="text-amber-500" size={18} />
+          <Sparkles className="text-amber-500" size={16} />
         </h2>
         
-        <div className="space-y-6">
+        <div className="space-y-4">
           {currentParam && (
             <div key={currentParam.id} className={cn(
-              "space-y-3 bg-gradient-to-r p-5 rounded-xl transition-all duration-300 shadow-sm", // reduced padding
+              "space-y-2 bg-gradient-to-r p-3 rounded-xl transition-all duration-300 shadow-sm",
               emotionRatings[currentParam.id as keyof typeof emotionRatings] > 4 ? 
                 "from-white/80 to-white/50 shadow-md" :
                 "from-white/60 to-transparent"
             )}>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
                 {currentParam.icon}
                 <div className={cn(
-                  "text-lg font-semibold bg-gradient-to-r bg-clip-text text-transparent",
+                  "text-base font-semibold bg-gradient-to-r bg-clip-text text-transparent",
                   currentParam.id === 'bounciness' && "from-coachy-pink to-pink-600",
                   currentParam.id === 'energy' && "from-coachy-yellow to-amber-500",
                   currentParam.id === 'alertness' && "from-coachy-blue to-indigo-600",
@@ -94,9 +94,9 @@ const EmotionalRating = () => {
                 </div>
               </div>
               <div className="flex justify-between items-center">
-                <div className="text-sm text-coachy-text font-medium">{currentParam.label}</div>
+                <div className="text-xs text-coachy-text font-medium">{currentParam.label}</div>
                 <div className={cn(
-                  "text-2xl font-bold bg-gradient-to-r bg-clip-text text-transparent",
+                  "text-xl font-bold bg-gradient-to-r bg-clip-text text-transparent",
                   currentParam.id === 'bounciness' && "from-coachy-pink to-pink-600",
                   currentParam.id === 'energy' && "from-coachy-yellow to-amber-500",
                   currentParam.id === 'alertness' && "from-coachy-blue to-indigo-600",
@@ -112,7 +112,7 @@ const EmotionalRating = () => {
                 max={7}
                 step={1}
                 onValueChange={(value) => handleRatingChange(currentParam.id as keyof typeof emotionRatings, value)}
-                className="py-2" // Reduced padding
+                className="py-1"
               />
               <div className="flex justify-between text-xs text-gray-500 font-medium">
                 <span>נמוך</span>
@@ -123,15 +123,15 @@ const EmotionalRating = () => {
         </div>
         
         {/* Navigation buttons */}
-        <div className="flex justify-between mt-4">
+        <div className="flex justify-between mt-2">
           <Button
             variant="outline"
             size="sm"
             onClick={goToPreviousSlider}
             disabled={currentSlider === 0}
-            className="flex items-center gap-1"
+            className="flex items-center gap-1 text-xs h-8"
           >
-            <ChevronRight size={16} />
+            <ChevronRight size={14} />
             <span>הקודם</span>
           </Button>
           
@@ -139,7 +139,7 @@ const EmotionalRating = () => {
             <Button 
               onClick={goToNextScreen}
               variant="energetic"
-              className="text-white px-5 py-1.5 transition-all duration-300 transform hover:scale-105 active:scale-95 rounded-xl shadow-sm hover:shadow-md hover:brightness-105 relative overflow-hidden group text-sm"
+              className="text-white px-4 py-1 transition-all duration-300 transform hover:scale-105 active:scale-95 rounded-xl shadow-sm hover:shadow-md hover:brightness-105 relative overflow-hidden group text-xs h-8"
             >
               <span className="relative z-10">יאללה, נמשיך</span>
               <span className="absolute inset-0 bg-white/20 transform scale-x-0 group-hover:scale-x-100 group-active:scale-x-100 transition-transform origin-right duration-300"></span>
@@ -149,28 +149,23 @@ const EmotionalRating = () => {
               variant="joyful"
               size="sm"
               onClick={goToNextSlider}
-              className="flex items-center gap-1"
+              className="flex items-center gap-1 text-xs h-8"
             >
               <span>הבא</span>
-              <ChevronLeft size={16} />
+              <ChevronLeft size={14} />
             </Button>
           )}
         </div>
         
         {/* Pagination dots for visual feedback */}
-        <div className="flex justify-center gap-2 mt-2">
+        <div className="flex justify-center gap-2 mt-1">
           {parameters.map((_, index) => (
             <div 
               key={index}
               className={cn(
-                "h-2 w-2 rounded-full transition-all duration-300",
-                index === currentSlider ? "bg-coachy-blue w-5" : "bg-gray-300"
+                "h-1.5 w-1.5 rounded-full transition-all duration-300",
+                index === currentSlider ? "bg-coachy-blue w-4" : "bg-gray-300"
               )}
-              onClick={() => {
-                // No celebration on pagination dots
-                const { setCurrentSlider } = useFlowContext();
-                setCurrentSlider(index);
-              }}
             />
           ))}
         </div>

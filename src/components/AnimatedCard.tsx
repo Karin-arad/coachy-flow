@@ -28,12 +28,13 @@ const AnimatedCard = ({ children, isVisible, className }: AnimatedCardProps) => 
         duration: 0.5 
       }}
       className={cn(
-        'glass-card rounded-2xl p-6 shadow-lg w-full max-w-md mx-auto max-h-[calc(100vh-150px)] overflow-auto',
+        'glass-card rounded-2xl p-5 shadow-lg w-full max-w-md mx-auto overflow-hidden',
         isMorning ? 'morning-theme' : 'evening-theme',
         className
       )}
       style={{ 
-        boxShadow: '0 10px 40px rgba(31, 38, 135, 0.2)'
+        boxShadow: '0 10px 40px rgba(31, 38, 135, 0.2)',
+        height: 'auto'
       }}
     >
       <motion.div

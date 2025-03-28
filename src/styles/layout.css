@@ -5,6 +5,8 @@
     --scale-factor: 0.95;
     transform-origin: top center;
     transform: scale(var(--scale-factor));
+    max-height: 500px;
+    overflow: visible;
   }
   
   .screen-3-container {
@@ -12,6 +14,8 @@
     --scale-factor: 0.95;
     transform-origin: top center;
     transform: scale(var(--scale-factor));
+    max-height: 500px;
+    overflow: visible;
   }
   
   .continue-button {

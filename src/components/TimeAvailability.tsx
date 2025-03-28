@@ -1,15 +1,13 @@
-
 import React, { useEffect } from 'react';
 import { useFlowContext } from '@/context/FlowContext';
 import { Button } from '@/components/ui/button';
 import AnimatedCard from './AnimatedCard';
 import { cn } from '@/lib/utils';
-import { Clock } from 'lucide-react';
+import { Clock, Heart } from 'lucide-react';
 
 const TimeAvailability = () => {
   const { timeAvailable, setTimeAvailable, goToNextScreen, currentScreen } = useFlowContext();
   
-  // Reset scroll position when component becomes visible
   useEffect(() => {
     if (currentScreen === 3) {
       window.scrollTo(0, 0);
@@ -33,6 +31,7 @@ const TimeAvailability = () => {
         <h2 className="text-xl font-medium bg-gradient-to-r from-coachy-blue to-indigo-600 bg-clip-text text-transparent mb-5 flex items-center gap-2">
           <span>כמה זמן יש לך כרגע?</span>
           <Clock className="text-coachy-blue animate-[spin_10s_linear_infinite]" size={18} />
+          <Heart className="fill-pink-400 stroke-pink-400 animate-pulse-gentle" size={18} />
         </h2>
         
         <div className="grid grid-cols-2 gap-3 justify-items-center">

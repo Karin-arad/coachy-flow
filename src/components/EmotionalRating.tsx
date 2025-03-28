@@ -68,6 +68,19 @@ const EmotionalRating = () => {
   // Determine if we're on the last parameter
   const isLastSlider = currentSlider === parameters.length - 1;
 
+  // Handle navigation between sliders
+  const goToPrevSlider = () => {
+    if (currentSlider > 0) {
+      setCurrentSlider(currentSlider - 1);
+    }
+  };
+
+  const goToNextSlider = () => {
+    if (currentSlider < parameters.length - 1) {
+      setCurrentSlider(currentSlider + 1);
+    }
+  };
+
   return (
     <AnimatedCard 
       isVisible={currentScreen === 2} 
@@ -133,7 +146,7 @@ const EmotionalRating = () => {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => setCurrentSlider(prev => Math.max(0, prev - 1))}
+            onClick={goToPrevSlider}
             disabled={currentSlider === 0}
             className="flex items-center gap-1"
           >
@@ -155,7 +168,7 @@ const EmotionalRating = () => {
             <Button
               variant="joyful"
               size="sm"
-              onClick={() => setCurrentSlider(prev => Math.min(parameters.length - 1, prev + 1))}
+              onClick={goToNextSlider}
               className="flex items-center gap-1"
             >
               <span>הבא</span>

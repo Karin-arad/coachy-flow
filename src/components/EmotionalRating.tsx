@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useFlowContext } from '@/context/FlowContext';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
@@ -9,6 +9,13 @@ import { cn } from '@/lib/utils';
 
 const EmotionalRating = () => {
   const { emotionRatings, setEmotionRatings, goToNextScreen, currentScreen } = useFlowContext();
+  
+  // Reset scroll position when component becomes visible
+  useEffect(() => {
+    if (currentScreen === 2) {
+      window.scrollTo(0, 0);
+    }
+  }, [currentScreen]);
   
   const handleRatingChange = (parameter: keyof typeof emotionRatings, value: number[]) => {
     setEmotionRatings({
@@ -22,44 +29,47 @@ const EmotionalRating = () => {
       id: 'bounciness', 
       label: 'קופצנות', 
       question: 'כמה קופצנית את מרגישה?', 
-      icon: <Feather className="text-coachy-pink animate-float" size={24} />,
+      icon: <Feather className="text-coachy-pink animate-float" size={20} />,
       type: 'bounciness' as const
     },
     { 
       id: 'energy', 
       label: 'אנרגיה', 
       question: 'מה רמת האנרגיה שלך?', 
-      icon: <Zap className="text-coachy-yellow animate-pulse-gentle" size={24} />,
+      icon: <Zap className="text-coachy-yellow animate-pulse-gentle" size={20} />,
       type: 'energy' as const
     },
     { 
       id: 'alertness', 
       label: 'ערנות', 
       question: 'כמה ערנית את מרגישה?', 
-      icon: <Eye className="text-coachy-blue animate-pulse-gentle" size={24} />,
+      icon: <Eye className="text-coachy-blue animate-pulse-gentle" size={20} />,
       type: 'alertness' as const
     },
     { 
       id: 'lightness', 
       label: 'קלילות', 
       question: 'מה תחושת הקלילות שלך?', 
-      icon: <Feather className="text-coachy-turquoise animate-float" size={24} />,
+      icon: <Feather className="text-coachy-turquoise animate-float" size={20} />,
       type: 'lightness' as const
     },
   ];
 
   return (
-    <AnimatedCard isVisible={currentScreen === 2}>
-      <div className="space-y-6">
-        <h2 className="text-2xl font-medium text-coachy-blue mb-6 flex items-center gap-2">
+    <AnimatedCard 
+      isVisible={currentScreen === 2} 
+      className="screen-2-container h-[calc(100vh-200px)]"
+    >
+      <div className="space-y-6 text-sm">
+        <h2 className="text-xl font-medium text-coachy-blue mb-5 flex items-center gap-2">
           <span>דרגי את עצמך מ־1 עד 7 בכל אחד מהפרמטרים הבאים:</span>
-          <Sparkles className="text-amber-500" size={20} />
+          <Sparkles className="text-amber-500" size={18} />
         </h2>
         
-        <div className="space-y-14">
+        <div className="space-y-12">
           {parameters.map((param) => (
             <div key={param.id} className={cn(
-              "space-y-4 bg-gradient-to-r p-6 rounded-xl transition-all duration-300",
+              "space-y-3 bg-gradient-to-r p-5 rounded-xl transition-all duration-300",
               emotionRatings[param.id as keyof typeof emotionRatings] > 4 ? 
                 "from-white/70 to-white/40 shadow-md" : 
                 "from-white/50 to-transparent"
@@ -67,7 +77,7 @@ const EmotionalRating = () => {
               <div className="flex items-center gap-3">
                 {param.icon}
                 <div className={cn(
-                  "text-lg font-medium bg-gradient-to-r bg-clip-text text-transparent",
+                  "text-base font-medium bg-gradient-to-r bg-clip-text text-transparent",
                   param.id === 'bounciness' && "from-coachy-pink to-pink-600",
                   param.id === 'energy' && "from-coachy-yellow to-amber-500",
                   param.id === 'alertness' && "from-coachy-blue to-indigo-600",
@@ -77,9 +87,9 @@ const EmotionalRating = () => {
                 </div>
               </div>
               <div className="flex justify-between items-center">
-                <div className="text-md text-coachy-text font-medium">{param.label}</div>
+                <div className="text-sm text-coachy-text font-medium">{param.label}</div>
                 <div className={cn(
-                  "text-2xl font-medium bg-gradient-to-r bg-clip-text text-transparent",
+                  "text-xl font-medium bg-gradient-to-r bg-clip-text text-transparent",
                   param.id === 'bounciness' && "from-coachy-pink to-pink-600",
                   param.id === 'energy' && "from-coachy-yellow to-amber-500",
                   param.id === 'alertness' && "from-coachy-blue to-indigo-600",
@@ -95,9 +105,9 @@ const EmotionalRating = () => {
                 max={7}
                 step={1}
                 onValueChange={(value) => handleRatingChange(param.id as keyof typeof emotionRatings, value)}
-                className="py-4"
+                className="py-3"
               />
-              <div className="flex justify-between text-sm text-gray-500">
+              <div className="flex justify-between text-xs text-gray-500">
                 <span>נמוך</span>
                 <span>גבוה</span>
               </div>
@@ -105,12 +115,12 @@ const EmotionalRating = () => {
           ))}
         </div>
         
-        <div className="flex justify-end mt-8">
+        <div className="flex justify-end mt-6">
           <Button 
             onClick={goToNextScreen}
             variant="energetic"
             showCompletionEffect={true}
-            className="text-white px-6 py-2 transition-all duration-300 transform hover:scale-105 active:scale-95 rounded-xl shadow-sm hover:shadow-md hover:brightness-105 relative overflow-hidden group"
+            className="text-white px-5 py-1.5 transition-all duration-300 transform hover:scale-105 active:scale-95 rounded-xl shadow-sm hover:shadow-md hover:brightness-105 relative overflow-hidden group text-sm"
           >
             <span className="relative z-10">יאללה, נמשיך</span>
             <span className="absolute inset-0 bg-white/20 transform scale-x-0 group-hover:scale-x-100 group-active:scale-x-100 transition-transform origin-right duration-300"></span>

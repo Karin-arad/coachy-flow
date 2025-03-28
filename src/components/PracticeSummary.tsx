@@ -1,12 +1,43 @@
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useFlowContext } from '@/context/FlowContext';
 import { Button } from '@/components/ui/button';
 import AnimatedCard from './AnimatedCard';
-import { Heart, Play, Sparkles } from 'lucide-react';
+import { Heart, Play, Sparkles, Stars } from 'lucide-react';
+
+// Helper component for confetti particle
+const ConfettiParticle = ({ color, delay, left }: { color: string; delay: number; left: string }) => (
+  <div 
+    className="absolute top-0 z-50 w-3 h-3 rounded-full animate-confetti-explosion"
+    style={{ 
+      backgroundColor: color, 
+      left: left,
+      animationDelay: `${delay}ms`,
+      opacity: 0 // Start hidden
+    }}
+  />
+);
 
 const PracticeSummary = () => {
   const { currentScreen, freeTextEmotion, emotionRatings, timeAvailable } = useFlowContext();
+  const [showConfetti, setShowConfetti] = useState(false);
+  
+  // Confetti colors from our new palette
+  const confettiColors = ['#FF8DC7', '#5B9BD5', '#4ECDC4', '#FFD166'];
+  
+  useEffect(() => {
+    if (currentScreen === 4) {
+      // Only show confetti when this screen becomes visible
+      setShowConfetti(true);
+      
+      // Hide confetti after animation completes
+      const timer = setTimeout(() => {
+        setShowConfetti(false);
+      }, 2000);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [currentScreen]);
   
   const handleStartPractice = () => {
     // This would connect to the practice system in the future
@@ -19,13 +50,27 @@ const PracticeSummary = () => {
 
   return (
     <AnimatedCard isVisible={currentScreen === 4}>
+      {showConfetti && (
+        <>
+          {/* Generate 20 confetti particles with random positions and delays */}
+          {Array.from({ length: 20 }).map((_, i) => (
+            <ConfettiParticle 
+              key={i}
+              color={confettiColors[i % confettiColors.length]}
+              delay={i * 100} 
+              left={`${10 + (i * 4)}%`}
+            />
+          ))}
+        </>
+      )}
+      
       <div className="space-y-6">
         <div className="flex items-center justify-center gap-3 mb-4">
-          <Sparkles className="text-amber-500" size={20} />
+          <Sparkles className="text-amber-500 animate-float" size={26} />
           <h2 className="text-2xl font-medium bg-gradient-to-r from-coachy-blue to-indigo-600 bg-clip-text text-transparent">
             תודה קארין!
           </h2>
-          <Heart className="fill-coachy-red stroke-coachy-red animate-pulse-gentle" size={24} />
+          <Heart className="fill-coachy-red stroke-coachy-red animate-heartbeat" size={32} />
         </div>
         <p className="text-xl text-coachy-text bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent text-center">
           הנה תרגול קטן שיעשה לך טוב היום 💫
@@ -34,8 +79,8 @@ const PracticeSummary = () => {
         <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-coachy-gray via-gray-100 to-coachy-gray p-1 aspect-video my-6 shadow-md group">
           <div className="absolute inset-0 backdrop-blur-[1px] bg-white/10 flex items-center justify-center">
             <div className="text-gray-500 flex flex-col items-center gap-3">
-              <div className="w-16 h-16 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
-                <Play className="text-coachy-blue h-8 w-8 ml-1" />
+              <div className="w-16 h-16 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center shadow-lg group-hover:scale-125 transition-transform duration-500 hover:bg-gradient-to-r hover:from-coachy-blue hover:to-indigo-600">
+                <Play className="text-coachy-blue group-hover:text-white h-8 w-8 ml-1 transition-colors duration-500" />
               </div>
               <p>כאן יופיע סרטון YouTube עם תרגול מותאם אישית</p>
             </div>
@@ -45,11 +90,11 @@ const PracticeSummary = () => {
         <div className="flex justify-center mt-6">
           <Button 
             onClick={handleStartPractice}
-            className="bg-gradient-to-r from-coachy-blue to-indigo-600 hover:brightness-105 text-white px-8 py-6 text-lg rounded-xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] shadow-sm hover:shadow-md group"
+            className="bg-gradient-to-r from-coachy-blue to-indigo-600 hover:brightness-105 text-white px-8 py-6 text-lg rounded-xl transition-all duration-500 transform hover:scale-110 active:scale-95 shadow-sm hover:shadow-lg group"
           >
             <span className="relative z-10 flex items-center gap-2">
               <span>התחילי תרגול</span>
-              <Play className="h-5 w-5 ml-1 group-hover:animate-pulse" />
+              <Play className="h-5 w-5 ml-1 group-hover:animate-bounce-button" />
             </span>
             <span className="absolute inset-0 bg-white/20 transform scale-x-0 group-hover:scale-x-100 group-active:scale-x-100 transition-transform origin-right duration-300 rounded-xl"></span>
           </Button>

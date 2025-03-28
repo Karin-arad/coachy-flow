@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -122,6 +123,35 @@ export default {
 					'0%': { backgroundPosition: '0% 50%' },
 					'50%': { backgroundPosition: '100% 50%' },
 					'100%': { backgroundPosition: '0% 50%' }
+				},
+				'heartbeat': {
+					'0%, 100%': { transform: 'scale(1)' },
+					'25%': { transform: 'scale(1.3)' },
+					'40%': { transform: 'scale(1)' },
+					'60%': { transform: 'scale(1.2)' },
+					'75%': { transform: 'scale(1)' }
+				},
+				'float': {
+					'0%, 100%': { transform: 'translateY(0)' },
+					'50%': { transform: 'translateY(-10px)' }
+				},
+				'bounce-button': {
+					'0%, 100%': { transform: 'translateY(0)' },
+					'50%': { transform: 'translateY(-5px)' }
+				},
+				'rotate-sun': {
+					'0%': { transform: 'rotate(0deg) scale(1)' },
+					'50%': { transform: 'rotate(180deg) scale(1.2)' },
+					'100%': { transform: 'rotate(360deg) scale(1)' }
+				},
+				'sparkle': {
+					'0%': { opacity: '0', transform: 'scale(0)' },
+					'50%': { opacity: '1', transform: 'scale(1.5)' },
+					'100%': { opacity: '0', transform: 'scale(0)' }
+				},
+				'confetti-explosion': {
+					'0%': { transform: 'translateY(0) rotate(0deg)', opacity: '1' },
+					'100%': { transform: 'translateY(-100px) rotate(720deg)', opacity: '0' }
 				}
 			},
 			animation: {
@@ -132,7 +162,13 @@ export default {
 				'slide-in': 'slide-in 0.4s ease-out',
 				'slide-out': 'slide-out 0.4s ease-out',
 				'pulse-gentle': 'pulse-gentle 2s infinite ease-in-out',
-				'color-shift': 'color-shift 8s ease infinite'
+				'color-shift': 'color-shift 8s ease infinite',
+				'heartbeat': 'heartbeat 1.5s ease-in-out infinite',
+				'float': 'float 3s ease-in-out infinite',
+				'bounce-button': 'bounce-button 1s ease-in-out infinite',
+				'rotate-sun': 'rotate-sun 30s linear infinite',
+				'sparkle': 'sparkle 2s ease-in-out infinite',
+				'confetti-explosion': 'confetti-explosion 2s ease-out forwards'
 			},
 			backgroundImage: {
 				'sunrise-gradient': 'linear-gradient(135deg, #FF8DC7 0%, #FFD166 100%)',

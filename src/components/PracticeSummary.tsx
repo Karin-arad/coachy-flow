@@ -23,7 +23,7 @@ const PracticeSummary = () => {
   const [showConfetti, setShowConfetti] = useState(false);
   const [buttonClicked, setButtonClicked] = useState(false);
   
-  // Confetti colors from our new palette
+  // Confetti colors from our palette
   const confettiColors = ['#FF8DC7', '#5B9BD5', '#4ECDC4', '#FFD166'];
   
   useEffect(() => {
@@ -63,13 +63,13 @@ const PracticeSummary = () => {
     <AnimatedCard isVisible={currentScreen === 4} className="min-h-[400px] flex flex-col">
       {showConfetti && (
         <>
-          {/* Generate 20 confetti particles with random positions and delays */}
-          {Array.from({ length: 30 }).map((_, i) => (
+          {/* Generate 30 confetti particles with random positions and delays */}
+          {Array.from({ length: 40 }).map((_, i) => (
             <ConfettiParticle 
               key={i}
               color={confettiColors[i % confettiColors.length]}
-              delay={i * 50} 
-              left={`${5 + (i * 3)}%`}
+              delay={i * 30} 
+              left={`${Math.random() * 90}%`}
             />
           ))}
         </>
@@ -101,6 +101,7 @@ const PracticeSummary = () => {
         <div className="flex justify-center mt-auto pt-6 mb-2">
           <Button 
             onClick={handleStartPractice}
+            variant="joyful"
             className="bg-gradient-to-r from-coachy-pink to-coachy-yellow hover:brightness-105 text-white px-8 py-6 text-lg rounded-xl transition-all duration-500 transform hover:scale-110 active:scale-95 shadow-sm hover:shadow-lg group relative overflow-hidden"
           >
             <span className="relative z-10 flex items-center gap-2">

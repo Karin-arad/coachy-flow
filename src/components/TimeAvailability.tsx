@@ -25,7 +25,7 @@ const TimeAvailability = () => {
           <Clock className="text-coachy-blue animate-[spin_10s_linear_infinite]" size={20} />
         </h2>
         
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 justify-items-center">
+        <div className="grid grid-cols-2 gap-4 justify-items-center">
           {timeOptions.map((option) => (
             <button
               key={option.value}
@@ -50,8 +50,9 @@ const TimeAvailability = () => {
           <Button 
             onClick={goToNextScreen}
             disabled={!timeAvailable}
-            variant="green"
-            className="text-white px-6 py-2 transition-all duration-300 transform hover:scale-105 active:scale-95 rounded-xl shadow-sm hover:shadow-md hover:brightness-105 relative overflow-hidden group"
+            variant="joyful"
+            showCompletionEffect={true}
+            className="text-white px-6 py-2 transition-all duration-300 transform hover:scale-105 active:scale-95 rounded-xl shadow-sm hover:shadow-md relative overflow-hidden group"
           >
             <span className="relative z-10">יאללה, נמשיך</span>
             <span className="absolute inset-0 bg-white/20 transform scale-x-0 group-hover:scale-x-100 group-active:scale-x-100 transition-transform origin-right duration-300"></span>

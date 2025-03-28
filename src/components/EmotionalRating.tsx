@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
 import AnimatedCard from './AnimatedCard';
 import { Sparkles, Zap, Eye, Feather } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 const EmotionalRating = () => {
   const { emotionRatings, setEmotionRatings, goToNextScreen, currentScreen } = useFlowContext();
@@ -107,8 +108,9 @@ const EmotionalRating = () => {
         <div className="flex justify-end mt-8">
           <Button 
             onClick={goToNextScreen}
-            variant="green"
-            className="text-white px-6 py-2 transition-all duration-300 transform hover:scale-105 active:scale-95 rounded-xl shadow-sm hover:shadow-md hover:brightness-105 relative overflow-hidden group animate-bounce-button"
+            variant="energetic"
+            showCompletionEffect={true}
+            className="text-white px-6 py-2 transition-all duration-300 transform hover:scale-105 active:scale-95 rounded-xl shadow-sm hover:shadow-md hover:brightness-105 relative overflow-hidden group"
           >
             <span className="relative z-10">יאללה, נמשיך</span>
             <span className="absolute inset-0 bg-white/20 transform scale-x-0 group-hover:scale-x-100 group-active:scale-x-100 transition-transform origin-right duration-300"></span>
@@ -118,7 +120,5 @@ const EmotionalRating = () => {
     </AnimatedCard>
   );
 };
-
-import { cn } from '@/lib/utils';
 
 export default EmotionalRating;

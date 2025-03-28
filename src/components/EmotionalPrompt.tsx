@@ -18,8 +18,11 @@ const EmotionalPrompt = () => {
   return (
     <AnimatedCard isVisible={currentScreen === 1}>
       <div className="space-y-6">
-        <h2 className="text-2xl font-medium text-coachy-blue mb-6 flex items-center gap-2">
-          בוקר טוב קארין <Heart className="fill-[#ea384c] stroke-[#ea384c]" size={24} /> <br />
+        <div className="flex items-center gap-2 mb-2">
+          <span className="text-2xl font-medium text-coachy-blue">בוקר טוב קארין</span>
+          <Heart className="fill-[#ea384c] stroke-[#ea384c]" size={24} />
+        </div>
+        <h2 className="text-2xl font-medium text-coachy-blue mb-6">
           איך את מרגישה הבוקר?
         </h2>
         

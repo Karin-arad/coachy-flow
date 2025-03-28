@@ -114,14 +114,14 @@ const PracticeSummary = () => {
             transition={{ delay: 0.2, duration: 0.5 }}
           >
             <Sparkles className="text-amber-500 animate-float" size={26} />
-            <h2 className="text-2xl font-medium bg-gradient-to-r from-coachy-blue to-indigo-600 bg-clip-text text-transparent">
+            <h2 className="text-2xl font-medium text-gray-500">
               תודה קארין!
             </h2>
             <Heart className="fill-coachy-red stroke-coachy-red animate-heartbeat" size={32} />
           </motion.div>
 
           <motion.p 
-            className="text-xl text-coachy-text bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent text-center"
+            className="text-xl text-gray-500 text-center"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4, duration: 0.5 }}

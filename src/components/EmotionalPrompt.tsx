@@ -52,7 +52,7 @@ const EmotionalPrompt = () => {
             className="flex items-center bg-gradient-to-r from-white/50 to-white/30 px-4 py-2 rounded-xl shadow-sm"
             whileHover={{ scale: 1.03 }}
           >
-            <span className="text-2xl font-black text-coachy-blue">{greeting}</span>
+            <span className="text-2xl font-black text-gray-500">{greeting}</span>
             <Heart className="fill-coachy-red stroke-coachy-red animate-pulse-gentle mr-2" size={24} />
             <TimeIcon className="text-amber-500 ml-2 animate-[spin_30s_linear_infinite]" size={20} />
           </motion.div>

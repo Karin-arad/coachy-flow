@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useFlowContext } from '@/context/FlowContext';
 import { Button } from '@/components/ui/button';
 import AnimatedCard from './AnimatedCard';
@@ -8,6 +8,13 @@ import { Clock } from 'lucide-react';
 
 const TimeAvailability = () => {
   const { timeAvailable, setTimeAvailable, goToNextScreen, currentScreen } = useFlowContext();
+  
+  // Reset scroll position when component becomes visible
+  useEffect(() => {
+    if (currentScreen === 3) {
+      window.scrollTo(0, 0);
+    }
+  }, [currentScreen]);
   
   const timeOptions = [
     { value: '5 דקות', icon: '⏱️' },
@@ -18,7 +25,10 @@ const TimeAvailability = () => {
   ];
 
   return (
-    <AnimatedCard isVisible={currentScreen === 3} className="min-h-[400px] flex flex-col">
+    <AnimatedCard 
+      isVisible={currentScreen === 3} 
+      className="min-h-[400px] flex flex-col h-[calc(100vh-200px)]"
+    >
       <div className="space-y-6 h-full flex flex-col">
         <h2 className="text-2xl font-medium bg-gradient-to-r from-coachy-blue to-indigo-600 bg-clip-text text-transparent mb-6 flex items-center gap-2">
           <span>כמה זמן יש לך כרגע?</span>

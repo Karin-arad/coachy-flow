@@ -17,7 +17,9 @@
     "neutral": {
       "gray": "#F1F0FB",
       "white": "#FFFFFF",
-      "text": "#FFFFFF"
+      "text": "#FFFFFF",
+      "background": "#E6F0F8",
+      "altBackground": "#D6E6F5"
     }
   },
   "fontWeight": "bold",

@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { useFlowContext } from '@/context/FlowContext';
 import { Button } from '@/components/ui/button';
@@ -7,7 +6,6 @@ import CelebrationEffects from './CelebrationEffects';
 import { Heart, Play, Sparkles } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// Helper component for confetti particle
 const ConfettiParticle = ({ color, delay, left }: { color: string; delay: number; left: string }) => (
   <motion.div 
     className="absolute top-0 z-50 w-3 h-3 rounded-full"
@@ -37,16 +35,13 @@ const PracticeSummary = () => {
   const [celebrationType, setCelebrationType] = useState<'confetti' | 'fireworks' | 'stars' | 'emoji' | 'colorful-fireworks' | ''>('');
   const [celebrationActive, setCelebrationActive] = useState(false);
   
-  // Confetti colors from our palette
   const confettiColors = ['#FF8DC7', '#5B9BD5', '#4ECDC4', '#FFD166'];
   
   useEffect(() => {
     if (currentScreen === 4) {
-      // Play stars effect when this screen becomes visible
       setCelebrationType('stars');
       setCelebrationActive(true);
       
-      // Disable celebration after 2 seconds
       const timer = setTimeout(() => {
         setCelebrationActive(false);
       }, 2000);
@@ -56,24 +51,20 @@ const PracticeSummary = () => {
   }, [currentScreen]);
   
   const handleStartPractice = () => {
-    // Trigger confetti explosion on button click
     setButtonClicked(true);
     setShowConfetti(true);
     
-    // Start random celebration
     const celebrations = ['confetti', 'fireworks', 'emoji', 'colorful-fireworks'] as const;
     const randomCelebration = celebrations[Math.floor(Math.random() * celebrations.length)];
     setCelebrationType(randomCelebration);
     setCelebrationActive(true);
     
-    // Hide confetti after animation completes
     setTimeout(() => {
       setShowConfetti(false);
       setButtonClicked(false);
       setCelebrationActive(false);
     }, 3000);
     
-    // This would connect to the practice system in the future
     console.log('Starting practice with data:', {
       freeTextEmotion,
       emotionRatings,
@@ -93,7 +84,6 @@ const PracticeSummary = () => {
         <AnimatePresence>
           {showConfetti && (
             <>
-              {/* Generate confetti particles with random positions and delays */}
               {Array.from({ length: 40 }).map((_, i) => (
                 <ConfettiParticle 
                   key={i}
@@ -115,7 +105,7 @@ const PracticeSummary = () => {
           >
             <Sparkles className="text-amber-500 animate-float" size={26} />
             <h2 className="text-2xl font-medium text-gray-500">
-              תודה קארין!
+              מדהימה! הנה תרגול שיסגור לך פינה
             </h2>
             <Heart className="fill-coachy-red stroke-coachy-red animate-heartbeat" size={32} />
           </motion.div>

@@ -50,7 +50,7 @@ const EmotionalPrompt = () => {
         </div>
         
         <h2 className="text-2xl font-medium text-coachy-blue mb-6 bg-gradient-to-r from-coachy-blue to-indigo-600 bg-clip-text text-transparent">
-          איך את מרגישה עכשיו?
+          איך את/ה היום?
         </h2>
         
         <Textarea

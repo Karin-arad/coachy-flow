@@ -1,0 +1,29 @@
+
+@layer utilities {
+  .screen-2-container {
+    font-size: 0.875rem;
+    --scale-factor: 0.95;
+    transform-origin: top center;
+    transform: scale(var(--scale-factor));
+  }
+  
+  .screen-3-container {
+    font-size: 0.875rem;
+    --scale-factor: 0.95;
+    transform-origin: top center;
+    transform: scale(var(--scale-factor));
+  }
+  
+  .continue-button {
+    background: linear-gradient(90deg, #ff9fb1 0%, #ffbb86 100%);
+    color: white;
+    font-weight: 500;
+    transition: all 0.3s ease;
+  }
+
+  .continue-button:hover {
+    background: linear-gradient(90deg, #ff8ca2 0%, #ffa76c 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(255, 159, 177, 0.4);
+  }
+}

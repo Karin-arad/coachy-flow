@@ -1,0 +1,50 @@
+
+@layer utilities {
+  .animate-pulse-gentle {
+    @apply animate-[pulse-gentle_2s_infinite_ease-in-out];
+  }
+  
+  .animate-color-shift {
+    @apply animate-[color-shift_8s_ease_infinite];
+  }
+  
+  .animate-heartbeat {
+    @apply animate-[heartbeat_1.5s_ease-in-out_infinite];
+  }
+  
+  .animate-float {
+    @apply animate-[float_3s_ease-in-out_infinite];
+  }
+  
+  .animate-bounce-button {
+    @apply animate-[bounce-button_1s_ease-in-out_infinite];
+  }
+  
+  .animate-rotate-sun {
+    @apply animate-[rotate-sun_30s_linear_infinite];
+  }
+  
+  .animate-sparkle {
+    @apply animate-[sparkle_2s_ease-in-out_infinite];
+  }
+  
+  .animate-sparkle-delayed {
+    @apply animate-[sparkle-delayed_2s_ease-in-out_infinite];
+  }
+  
+  .animate-confetti-explosion {
+    @apply animate-[confetti-explosion_2s_ease-out_forwards];
+  }
+  
+  .animate-button-press {
+    @apply animate-[button-press_0.3s_ease-out];
+  }
+  
+  .animate-ripple {
+    @apply animate-[ripple_0.6s_ease-out];
+  }
+  
+  .animate-check-appear {
+    @apply animate-[check-appear_1.5s_ease-in-out_forwards];
+  }
+}

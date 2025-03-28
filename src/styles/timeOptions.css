@@ -1,0 +1,69 @@
+
+@layer utilities {
+  .time-option-card {
+    transition: all 0.3s ease;
+  }
+
+  .time-option-card:hover, .time-option-card.selected {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .time-option-1 {
+    background-color: #e6f7ff; /* Light blue */
+    border: 2px solid #91d5ff;
+  }
+
+  .time-option-1:hover, .time-option-1.selected {
+    background-color: #bae7ff;
+    border-color: #69c0ff;
+  }
+
+  .time-option-2 {
+    background-color: #f6ffed; /* Light green */
+    border: 2px solid #b7eb8f;
+  }
+
+  .time-option-2:hover, .time-option-2.selected {
+    background-color: #d9f7be;
+    border-color: #95de64;
+  }
+
+  .time-option-3 {
+    background-color: #fff7e6; /* Light orange */
+    border: 2px solid #ffd591;
+  }
+
+  .time-option-3:hover, .time-option-3.selected {
+    background-color: #ffe7ba;
+    border-color: #ffc069;
+  }
+
+  .time-option-4 {
+    background-color: #f9f0ff; /* Light purple */
+    border: 2px solid #d3adf7;
+  }
+
+  .time-option-4:hover, .time-option-4.selected {
+    background-color: #efdbff;
+    border-color: #b37feb;
+  }
+
+  .time-option-5 {
+    background-color: #fff0f6; /* Light pink */
+    border: 2px solid #ffadd2;
+  }
+
+  .time-option-5:hover, .time-option-5.selected {
+    background-color: #ffd6e7;
+    border-color: #ff85c0;
+  }
+
+  .time-icon {
+    color: #ae81ff; /* Purple */
+  }
+
+  .heart-icon {
+    color: #ff85c0; /* Pink */
+  }
+}

@@ -4,6 +4,7 @@ import { useFlowContext } from '@/context/FlowContext';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import AnimatedCard from './AnimatedCard';
+import { Heart } from 'lucide-react';
 
 const EmotionalPrompt = () => {
   const { freeTextEmotion, setFreeTextEmotion, goToNextScreen, currentScreen } = useFlowContext();
@@ -17,8 +18,8 @@ const EmotionalPrompt = () => {
   return (
     <AnimatedCard isVisible={currentScreen === 1}>
       <div className="space-y-6">
-        <h2 className="text-2xl font-medium text-coachy-blue mb-6">
-          בוקר טוב קארין 💙 <br />
+        <h2 className="text-2xl font-medium text-coachy-blue mb-6 flex items-center gap-2">
+          בוקר טוב קארין <Heart className="fill-[#ea384c] stroke-[#ea384c]" size={24} /> <br />
           איך את מרגישה הבוקר?
         </h2>
         
@@ -36,7 +37,8 @@ const EmotionalPrompt = () => {
           <Button 
             onClick={handleNextClick}
             disabled={!freeTextEmotion.trim()}
-            className="bg-coachy-blue hover:bg-coachy-blue/90 active:bg-coachy-blue/70 text-white px-6 py-2 transition-all duration-150 transform active:scale-95 rounded-xl shadow-sm hover:shadow"
+            variant="green"
+            className="text-white px-6 py-2 transition-all duration-150 transform active:scale-95 rounded-xl shadow-sm hover:shadow"
           >
             הבא
           </Button>

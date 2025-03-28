@@ -1,4 +1,5 @@
 
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -60,6 +61,7 @@ export default {
 					yellow: '#FEF7CD', // soft yellow
 					text: '#444444', // dark gray for text
 					pink: '#FFF0F5', // soft warm pink
+					red: '#ea384c', // heart red
 				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',

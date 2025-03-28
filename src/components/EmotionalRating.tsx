@@ -16,10 +16,10 @@ const EmotionalRating = () => {
   };
 
   const parameters = [
-    { id: 'bounciness', label: 'קופצנות' },
-    { id: 'energy', label: 'אנרגיה' },
-    { id: 'alertness', label: 'ערנות' },
-    { id: 'lightness', label: 'קלילות' },
+    { id: 'bounciness', label: 'קופצנות', question: 'כמה קופצנית את מרגישה?' },
+    { id: 'energy', label: 'אנרגיה', question: 'מה רמת האנרגיה שלך?' },
+    { id: 'alertness', label: 'ערנות', question: 'כמה ערנית את מרגישה?' },
+    { id: 'lightness', label: 'קלילות', question: 'מה תחושת הקלילות שלך?' },
   ];
 
   return (
@@ -29,11 +29,12 @@ const EmotionalRating = () => {
           דרגי את עצמך מ־1 עד 7 בכל אחד מהפרמטרים הבאים: ☀️
         </h2>
         
-        <div className="space-y-8">
+        <div className="space-y-12">
           {parameters.map((param) => (
-            <div key={param.id} className="space-y-2">
+            <div key={param.id} className="space-y-3">
+              <div className="text-lg font-medium text-coachy-blue">{param.question}</div>
               <div className="flex justify-between items-center">
-                <div className="text-lg text-coachy-text">{param.label}</div>
+                <div className="text-md text-coachy-text">{param.label}</div>
                 <div className="text-2xl font-medium text-coachy-blue">
                   {emotionRatings[param.id as keyof typeof emotionRatings]}
                 </div>
@@ -54,13 +55,13 @@ const EmotionalRating = () => {
           ))}
         </div>
         
-        <div className="flex justify-end mt-4">
+        <div className="flex justify-end mt-8">
           <Button 
             onClick={goToNextScreen}
             variant="green"
-            className="text-white px-6 py-2 transition-all duration-150 transform active:scale-95 rounded-xl shadow-sm hover:shadow"
+            className="text-white px-6 py-2 transition-all duration-300 transform active:scale-95 rounded-xl shadow-sm hover:shadow-md hover:brightness-105"
           >
-            הבא
+            יאללה, נמשיך
           </Button>
         </div>
       </div>

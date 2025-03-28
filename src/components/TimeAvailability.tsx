@@ -45,9 +45,9 @@ const TimeAvailability = () => {
             onClick={goToNextScreen}
             disabled={!timeAvailable}
             variant="green"
-            className="text-white px-6 py-2 transition-all duration-150 transform active:scale-95 rounded-xl shadow-sm hover:shadow"
+            className="text-white px-6 py-2 transition-all duration-300 transform active:scale-95 rounded-xl shadow-sm hover:shadow-md hover:brightness-105"
           >
-            הבא
+            יאללה, נמשיך
           </Button>
         </div>
       </div>

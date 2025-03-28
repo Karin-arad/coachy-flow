@@ -35,7 +35,7 @@ const PracticeSummary = () => {
         <div className="flex justify-center mt-4">
           <Button 
             onClick={handleStartPractice}
-            className="bg-coachy-blue hover:bg-coachy-blue/90 text-white px-8 py-6 text-lg rounded-xl transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] shadow-sm hover:shadow-md"
+            className="bg-coachy-blue hover:bg-coachy-blue/90 hover:brightness-105 text-white px-8 py-6 text-lg rounded-xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] shadow-sm hover:shadow-md"
           >
             התחילי תרגול
           </Button>

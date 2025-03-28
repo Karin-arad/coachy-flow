@@ -1,5 +1,4 @@
 
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -114,6 +113,10 @@ export default {
 				'slide-out': {
 					'0%': { transform: 'translateY(0)', opacity: '1' },
 					'100%': { transform: 'translateY(-10px)', opacity: '0' }
+				},
+				'pulse-gentle': {
+					'0%, 100%': { transform: 'scale(1)' },
+					'50%': { transform: 'scale(1.1)' }
 				}
 			},
 			animation: {
@@ -122,7 +125,8 @@ export default {
 				'fade-in': 'fade-in 0.3s ease-out',
 				'fade-out': 'fade-out 0.3s ease-out',
 				'slide-in': 'slide-in 0.4s ease-out',
-				'slide-out': 'slide-out 0.4s ease-out'
+				'slide-out': 'slide-out 0.4s ease-out',
+				'pulse-gentle': 'pulse-gentle 2s infinite ease-in-out'
 			}
 		}
 	},

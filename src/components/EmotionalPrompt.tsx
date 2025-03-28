@@ -20,7 +20,7 @@ const EmotionalPrompt = () => {
       <div className="space-y-6">
         <div className="flex items-center gap-2 mb-2">
           <span className="text-2xl font-medium text-coachy-blue">בוקר טוב קארין</span>
-          <Heart className="fill-[#ea384c] stroke-[#ea384c]" size={24} />
+          <Heart className="fill-coachy-red stroke-coachy-red animate-pulse-gentle" size={24} />
         </div>
         <h2 className="text-2xl font-medium text-coachy-blue mb-6">
           איך את מרגישה הבוקר?
@@ -41,9 +41,9 @@ const EmotionalPrompt = () => {
             onClick={handleNextClick}
             disabled={!freeTextEmotion.trim()}
             variant="green"
-            className="text-white px-6 py-2 transition-all duration-150 transform active:scale-95 rounded-xl shadow-sm hover:shadow"
+            className="text-white px-6 py-2 transition-all duration-300 transform active:scale-95 rounded-xl shadow-sm hover:shadow-md hover:brightness-105"
           >
-            הבא
+            יאללה, נמשיך
           </Button>
         </div>
       </div>

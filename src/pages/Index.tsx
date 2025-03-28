@@ -11,7 +11,7 @@ const CoachyFlow = () => {
   const { currentScreen } = useFlowContext();
   
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#FCE4EC] to-[#F5C6D7] py-8">
+    <div className="min-h-screen bg-gradient-to-br from-[#FCE4EC] via-[#F7D4E4] to-[#F5C6D7] py-8">
       <div className="container px-4 py-12 flex flex-col items-center">
         <div className="w-full max-w-md">
           <ProgressBar currentStep={currentScreen} totalSteps={4} />

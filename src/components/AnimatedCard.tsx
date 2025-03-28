@@ -12,11 +12,14 @@ const AnimatedCard = ({ children, isVisible, className }: AnimatedCardProps) => 
   return (
     <div
       className={cn(
-        'bg-white rounded-2xl p-6 shadow-md w-full max-w-md mx-auto transition-all duration-500',
+        'bg-white/90 backdrop-blur-sm rounded-2xl p-6 shadow-lg w-full max-w-md mx-auto transition-all duration-500',
         isVisible ? 'animate-slide-in opacity-100 transform-none relative z-10' : 'opacity-0 translate-y-10 absolute pointer-events-none',
         className
       )}
-      style={{ boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)' }}
+      style={{ 
+        boxShadow: '0 8px 32px rgba(31, 38, 135, 0.15)',
+        border: '1px solid rgba(255, 255, 255, 0.18)'
+      }}
     >
       {children}
     </div>

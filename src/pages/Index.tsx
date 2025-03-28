@@ -6,10 +6,26 @@ import EmotionalRating from '@/components/EmotionalRating';
 import TimeAvailability from '@/components/TimeAvailability';
 import PracticeSummary from '@/components/PracticeSummary';
 import ProgressBar from '@/components/ProgressBar';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 const CoachyFlow = () => {
   const { currentScreen } = useFlowContext();
+  
+  // Function to render the current screen component
+  const renderCurrentScreen = () => {
+    switch(currentScreen) {
+      case 1:
+        return <EmotionalPrompt />;
+      case 2:
+        return <EmotionalRating />;
+      case 3:
+        return <TimeAvailability />;
+      case 4:
+        return <PracticeSummary />;
+      default:
+        return <EmotionalPrompt />;
+    }
+  };
   
   return (
     <div className="min-h-screen bg-gradient-to-br from-white via-[#f8f9fa] to-white py-8 app-background">
@@ -19,21 +35,16 @@ const CoachyFlow = () => {
         </div>
         
         <div className="relative w-full mt-6 flex justify-center min-h-[500px]">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={currentScreen}
-              initial={{ opacity: 0, filter: "blur(10px)" }}
-              animate={{ opacity: 1, filter: "blur(0px)" }}
-              exit={{ opacity: 0, filter: "blur(10px)" }}
-              transition={{ duration: 0.6 }}
-              className="w-full"
-            >
-              {currentScreen === 1 && <EmotionalPrompt />}
-              {currentScreen === 2 && <EmotionalRating />}
-              {currentScreen === 3 && <TimeAvailability />}
-              {currentScreen === 4 && <PracticeSummary />}
-            </motion.div>
-          </AnimatePresence>
+          <motion.div
+            key={currentScreen}
+            initial={{ opacity: 0, filter: "blur(10px)" }}
+            animate={{ opacity: 1, filter: "blur(0px)" }}
+            exit={{ opacity: 0, filter: "blur(10px)" }}
+            transition={{ duration: 0.6 }}
+            className="w-full"
+          >
+            {renderCurrentScreen()}
+          </motion.div>
         </div>
       </div>
     </div>

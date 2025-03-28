@@ -17,7 +17,6 @@ const TimeAvailability = () => {
   }, [currentScreen]);
   
   const timeOptions = [
-    { value: '5 דקות', icon: '⏱️', description: 'אימון קצר וממוקד' },
     { value: '10 דקות', icon: '⏱️', description: 'זמן בינוני' },
     { value: '20 דקות', icon: '⏱️', description: 'אימון מעמיק' },
     { value: 'חצי שעה', icon: '🕰️', description: 'אימון מקיף' },

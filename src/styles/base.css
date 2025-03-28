@@ -90,13 +90,13 @@
 @layer base {
   * {
     @apply border-border;
-    color: #000000;
+    color: #555555;
     font-weight: 900;
     text-shadow: 0.5px 0.5px 1px rgba(0, 0, 0, 0.2);
   }
 
   input, textarea, .input-field, .user-text, .user-input, [contenteditable='true'] {
-    color: #222222;
+    color: #555555;
     font-weight: 600 !important;
     text-shadow: none;
     letter-spacing: 0.02em;
@@ -128,7 +128,7 @@
   }
 
   h1, h2, h3, h4, .heading, .title, .subtitle, .question-text {
-    -webkit-text-stroke: 0.6px #000000;
-    text-stroke: 0.6px #000000;
+    -webkit-text-stroke: 0.6px #555555;
+    text-stroke: 0.6px #555555;
   }
 }

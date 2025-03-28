@@ -1,3 +1,4 @@
+
 @layer utilities {
   .font-rubik {
     font-family: 'Rubik', sans-serif;
@@ -39,21 +40,28 @@
   }
 
   .text-shadow {
-    text-shadow: 1px 1px 2px rgba(70, 70, 70, 0.6);
+    text-shadow: 1px 1px 3px rgba(50, 50, 50, 0.8);
+  }
+  
+  .text-outline {
+    -webkit-text-stroke: 1px #333333;
   }
   
   .text-gradient-blue {
     @apply bg-gradient-to-r from-coachy-blue to-coachy-turquoise bg-clip-text text-transparent font-bold;
     text-shadow: none;
+    -webkit-text-stroke: 0;
   }
 
   .text-gradient-pink {
     @apply bg-gradient-to-r from-coachy-pink to-coachy-yellow bg-clip-text text-transparent font-bold;
     text-shadow: none;
+    -webkit-text-stroke: 0;
   }
 
   .text-gradient-full {
     @apply bg-full-spectrum bg-clip-text text-transparent animate-color-shift bg-[length:300%_100%] font-bold;
     text-shadow: none;
+    -webkit-text-stroke: 0;
   }
 }

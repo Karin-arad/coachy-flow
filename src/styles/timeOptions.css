@@ -13,7 +13,8 @@
     background-color: #d0e2ff; /* Light blue */
     border: 2px solid #3A78D4;
     color: #FFFFFF;
-    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+    text-shadow: 1px 1px 3px rgba(50, 50, 50, 0.8);
+    -webkit-text-stroke: 1px #333333;
     font-weight: bold;
   }
 
@@ -25,7 +26,8 @@
     background-color: #d8f2ef; /* Light turquoise */
     border: 2px solid #27A193;
     color: #FFFFFF;
-    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+    text-shadow: 1px 1px 3px rgba(50, 50, 50, 0.8);
+    -webkit-text-stroke: 1px #333333;
     font-weight: bold;
   }
 
@@ -37,7 +39,8 @@
     background-color: #ffeccc; /* Light orange */
     border: 2px solid #F1A10C;
     color: #FFFFFF;
-    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+    text-shadow: 1px 1px 3px rgba(50, 50, 50, 0.8);
+    -webkit-text-stroke: 1px #333333;
     font-weight: bold;
   }
 
@@ -49,7 +52,8 @@
     background-color: #f0ddf8; /* Light purple */
     border: 2px solid #9D4EDD;
     color: #FFFFFF;
-    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+    text-shadow: 1px 1px 3px rgba(50, 50, 50, 0.8);
+    -webkit-text-stroke: 1px #333333;
     font-weight: bold;
   }
 
@@ -61,7 +65,8 @@
     background-color: #fad5e5; /* Light pink */
     border: 2px solid #DE4A8F;
     color: #FFFFFF;
-    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+    text-shadow: 1px 1px 3px rgba(50, 50, 50, 0.8);
+    -webkit-text-stroke: 1px #333333;
     font-weight: bold;
   }
 

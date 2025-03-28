@@ -53,11 +53,7 @@ export const FlowProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   // Helper function to get a random celebration type with weighted probabilities
   const getRandomCelebration = (): CelebrationType => {
     const celebrations: CelebrationType[] = [
-      'confetti', 'confetti', 'confetti', // Added more weight to confetti
-      'fireworks', 'fireworks',
-      'stars', 'stars',
-      'emoji',
-      'colorful-fireworks'
+      'confetti', 'stars'
     ];
     return celebrations[Math.floor(Math.random() * celebrations.length)];
   };
@@ -67,12 +63,8 @@ export const FlowProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     
     // Only trigger celebration if we're advancing to a new screen
     if (nextScreen > currentScreen) {
+      // Simplified celebration - just one quick effect
       triggerCelebration(getRandomCelebration());
-      
-      // Add a second celebration with a slight delay for more impact
-      setTimeout(() => {
-        triggerCelebration('confetti');
-      }, 1000);
     }
     
     setCurrentScreen(nextScreen);
@@ -86,35 +78,31 @@ export const FlowProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   
   const goToNextSlider = () => {
     if (currentScreen === 2) { // Only on the emotional rating screen
-      // Trigger celebration between slider transitions
-      triggerCelebration('stars');
+      // Reduced celebration - only trigger one subtle effect
       setCurrentSlider(prev => Math.min(prev + 1, 3));
-      
-      // Add a confetti explosion with a slight delay
-      setTimeout(() => {
-        triggerCelebration('confetti');
-      }, 500);
     }
   };
   
   const goToPreviousSlider = () => {
     if (currentScreen === 2) { // Only on the emotional rating screen
       setCurrentSlider(prev => Math.max(prev - 1, 0));
-      
-      // Trigger a celebration even when going back
-      triggerCelebration('stars');
     }
   };
   
   const triggerCelebration = (type?: CelebrationType) => {
+    // Skip celebrations sometimes to reduce frequency
+    if (Math.random() > 0.5) {
+      return;
+    }
+    
     const celebrationType = type || getRandomCelebration();
     setCelebrationType(celebrationType);
     setIsCelebrating(true);
     
-    // Auto-disable celebration after 3 seconds (extended from 2 seconds)
+    // Auto-disable celebration after 1.5 seconds (reduced from 3 seconds)
     setTimeout(() => {
       setIsCelebrating(false);
-    }, 3000);
+    }, 1500);
   };
 
   return (

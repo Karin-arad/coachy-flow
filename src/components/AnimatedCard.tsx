@@ -28,7 +28,7 @@ const AnimatedCard = ({ children, isVisible, className }: AnimatedCardProps) => 
         duration: 0.5 
       }}
       className={cn(
-        'glass-card rounded-2xl p-6 shadow-lg w-full max-w-md mx-auto',
+        'glass-card rounded-2xl p-6 shadow-lg w-full max-w-md mx-auto max-h-[calc(100vh-150px)] overflow-auto',
         isMorning ? 'morning-theme' : 'evening-theme',
         className
       )}

@@ -1,7 +1,7 @@
 
 @layer utilities {
   .animate-pulse-gentle {
-    @apply animate-[pulse-gentle_2s_infinite_ease-in-out];
+    @apply animate-[pulse-gentle_3s_infinite_ease-in-out];
   }
   
   .animate-color-shift {
@@ -9,15 +9,15 @@
   }
   
   .animate-heartbeat {
-    @apply animate-[heartbeat_1.5s_ease-in-out_infinite];
+    @apply animate-[heartbeat_2s_ease-in-out_infinite];
   }
   
   .animate-float {
-    @apply animate-[float_3s_ease-in-out_infinite];
+    @apply animate-[float_4s_ease-in-out_infinite];
   }
   
   .animate-bounce-button {
-    @apply animate-[bounce-button_1s_ease-in-out_infinite];
+    @apply animate-[bounce-button_1.5s_ease-in-out_infinite];
   }
   
   .animate-rotate-sun {
@@ -25,15 +25,15 @@
   }
   
   .animate-sparkle {
-    @apply animate-[sparkle_2s_ease-in-out_infinite];
+    @apply animate-[sparkle_3s_ease-in-out_infinite];
   }
   
   .animate-sparkle-delayed {
-    @apply animate-[sparkle-delayed_2s_ease-in-out_infinite];
+    @apply animate-[sparkle-delayed_3s_ease-in-out_infinite];
   }
   
   .animate-sparkle-bright {
-    @apply animate-[sparkle-bright_2.5s_ease-in-out_infinite];
+    @apply animate-[sparkle-bright_3.5s_ease-in-out_infinite];
   }
   
   .animate-sparkle-pop {
@@ -41,7 +41,7 @@
   }
   
   .animate-confetti-explosion {
-    @apply animate-[confetti-explosion_2s_ease-out_forwards];
+    @apply animate-[confetti-explosion_1.5s_ease-out_forwards];
   }
   
   .animate-button-press {
@@ -49,11 +49,11 @@
   }
   
   .animate-ripple {
-    @apply animate-[ripple_0.6s_ease-out];
+    @apply animate-[ripple_0.5s_ease-out];
   }
   
   .animate-check-appear {
-    @apply animate-[check-appear_1.5s_ease-in-out_forwards];
+    @apply animate-[check-appear_1s_ease-in-out_forwards];
   }
   
   .animate-fall {
@@ -61,27 +61,27 @@
   }
   
   .animate-firework {
-    @apply animate-[firework_0.6s_ease-out_forwards];
+    @apply animate-[firework_0.5s_ease-out_forwards];
   }
   
   .animate-spin-slow {
-    @apply animate-[spin_8s_linear_infinite];
+    @apply animate-[spin_10s_linear_infinite];
   }
   
   .animate-fade-up {
-    @apply animate-[fade-up_0.5s_ease-out_forwards];
+    @apply animate-[fade-up_0.4s_ease-out_forwards];
   }
   
   .animate-emoji-rain {
-    @apply animate-[emoji-rain_3s_linear_forwards];
+    @apply animate-[emoji-rain_2s_linear_forwards];
   }
   
   .animate-glitter {
-    @apply animate-[glitter_3s_ease-in-out_infinite];
+    @apply animate-[glitter_4s_ease-in-out_infinite];
   }
   
   .animate-shimmer {
-    @apply animate-[shimmer_4s_linear_infinite];
+    @apply animate-[shimmer_5s_linear_infinite];
   }
 }
 
@@ -97,11 +97,11 @@
     opacity: 1;
   }
   50% {
-    transform: scale(1);
-    opacity: 0.8;
+    transform: scale(0.8);
+    opacity: 0.7;
   }
   100% {
-    transform: scale(1.5);
+    transform: scale(1.2);
     opacity: 0;
   }
 }
@@ -109,7 +109,7 @@
 @keyframes fade-up {
   0% {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(10px);
   }
   100% {
     opacity: 1;
@@ -120,18 +120,18 @@
 @keyframes sparkle-bright {
   0% { 
     opacity: 0; 
-    filter: brightness(0.7);
-    transform: scale(0.5) rotate(-15deg); 
+    filter: brightness(0.8);
+    transform: scale(0.8) rotate(-10deg); 
   }
   50% { 
-    opacity: 1; 
-    filter: brightness(1.5) drop-shadow(0 0 5px rgba(255,255,255,0.7));
-    transform: scale(1.2) rotate(15deg); 
+    opacity: 0.8; 
+    filter: brightness(1.2) drop-shadow(0 0 3px rgba(255,255,255,0.5));
+    transform: scale(1.1) rotate(10deg); 
   }
   100% { 
     opacity: 0; 
-    filter: brightness(0.7);
-    transform: scale(0.5) rotate(-15deg); 
+    filter: brightness(0.8);
+    transform: scale(0.8) rotate(-10deg); 
   }
 }
 
@@ -141,11 +141,11 @@
     transform: scale(0); 
   }
   50% { 
-    opacity: 1; 
-    transform: scale(1.3); 
+    opacity: 0.8; 
+    transform: scale(1.2); 
   }
   70% { 
-    opacity: 0.8; 
+    opacity: 0.7; 
     transform: scale(1); 
   }
   100% { 
@@ -156,20 +156,20 @@
 
 @keyframes glitter {
   0%, 100% {
-    opacity: 0.3;
-    filter: brightness(0.8) drop-shadow(0 0 2px white);
+    opacity: 0.2;
+    filter: brightness(0.8) drop-shadow(0 0 1px white);
   }
   25% {
-    opacity: 1;
-    filter: brightness(1.5) drop-shadow(0 0 6px white);
+    opacity: 0.8;
+    filter: brightness(1.2) drop-shadow(0 0 3px white);
   }
   50% {
-    opacity: 0.5;
-    filter: brightness(1) drop-shadow(0 0 4px white);
+    opacity: 0.4;
+    filter: brightness(1) drop-shadow(0 0 2px white);
   }
   75% {
-    opacity: 0.8;
-    filter: brightness(1.2) drop-shadow(0 0 5px white);
+    opacity: 0.6;
+    filter: brightness(1.1) drop-shadow(0 0 2px white);
   }
 }
 

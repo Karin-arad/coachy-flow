@@ -18,13 +18,6 @@ const EmotionalRating = () => {
     goToPreviousSlider
   } = useFlowContext();
   
-  // Reset scroll position when component becomes visible
-  useEffect(() => {
-    if (currentScreen === 2) {
-      window.scrollTo(0, 0);
-    }
-  }, [currentScreen]);
-  
   const handleRatingChange = (parameter: keyof typeof emotionRatings, value: number[]) => {
     setEmotionRatings({
       ...emotionRatings,
@@ -72,26 +65,26 @@ const EmotionalRating = () => {
   return (
     <AnimatedCard 
       isVisible={currentScreen === 2} 
-      className="screen-2-container h-[calc(100vh-200px)]"
+      className="screen-2-container"
     >
-      <div className="space-y-6 text-sm">
-        <h2 className="text-xl font-medium text-coachy-blue mb-5 flex items-center gap-2">
+      <div className="space-y-4 text-sm">
+        <h2 className="text-xl font-medium text-coachy-blue mb-4 flex items-center gap-2">
           <span>דרגי את עצמך מ־1 עד 7 בכל אחד מהפרמטרים הבאים:</span>
           <Sparkles className="text-amber-500" size={18} />
         </h2>
         
-        <div className="space-y-12">
+        <div className="space-y-6">
           {currentParam && (
             <div key={currentParam.id} className={cn(
-              "space-y-4 bg-gradient-to-r p-6 rounded-xl transition-all duration-300 shadow-sm", // increased padding and added shadow
+              "space-y-3 bg-gradient-to-r p-5 rounded-xl transition-all duration-300 shadow-sm", // reduced padding
               emotionRatings[currentParam.id as keyof typeof emotionRatings] > 4 ? 
-                "from-white/80 to-white/50 shadow-md" : // increased opacity and shadow
-                "from-white/60 to-transparent" // increased opacity
+                "from-white/80 to-white/50 shadow-md" :
+                "from-white/60 to-transparent"
             )}>
-              <div className="flex items-center gap-3 mb-2"> {/* added margin bottom */}
+              <div className="flex items-center gap-3">
                 {currentParam.icon}
                 <div className={cn(
-                  "text-lg font-semibold bg-gradient-to-r bg-clip-text text-transparent", // increased font size and weight
+                  "text-lg font-semibold bg-gradient-to-r bg-clip-text text-transparent",
                   currentParam.id === 'bounciness' && "from-coachy-pink to-pink-600",
                   currentParam.id === 'energy' && "from-coachy-yellow to-amber-500",
                   currentParam.id === 'alertness' && "from-coachy-blue to-indigo-600",
@@ -100,10 +93,10 @@ const EmotionalRating = () => {
                   {currentParam.question}
                 </div>
               </div>
-              <div className="flex justify-between items-center mb-1"> {/* added margin bottom */}
+              <div className="flex justify-between items-center">
                 <div className="text-sm text-coachy-text font-medium">{currentParam.label}</div>
                 <div className={cn(
-                  "text-2xl font-bold bg-gradient-to-r bg-clip-text text-transparent", // increased font size and weight
+                  "text-2xl font-bold bg-gradient-to-r bg-clip-text text-transparent",
                   currentParam.id === 'bounciness' && "from-coachy-pink to-pink-600",
                   currentParam.id === 'energy' && "from-coachy-yellow to-amber-500",
                   currentParam.id === 'alertness' && "from-coachy-blue to-indigo-600",
@@ -119,9 +112,9 @@ const EmotionalRating = () => {
                 max={7}
                 step={1}
                 onValueChange={(value) => handleRatingChange(currentParam.id as keyof typeof emotionRatings, value)}
-                className="py-4" // increased padding
+                className="py-2" // Reduced padding
               />
-              <div className="flex justify-between text-xs text-gray-500 font-medium pt-1"> {/* added padding top and font weight */}
+              <div className="flex justify-between text-xs text-gray-500 font-medium">
                 <span>נמוך</span>
                 <span>גבוה</span>
               </div>
@@ -130,7 +123,7 @@ const EmotionalRating = () => {
         </div>
         
         {/* Navigation buttons */}
-        <div className="flex justify-between mt-8">
+        <div className="flex justify-between mt-4">
           <Button
             variant="outline"
             size="sm"
@@ -146,7 +139,6 @@ const EmotionalRating = () => {
             <Button 
               onClick={goToNextScreen}
               variant="energetic"
-              showCompletionEffect={true}
               className="text-white px-5 py-1.5 transition-all duration-300 transform hover:scale-105 active:scale-95 rounded-xl shadow-sm hover:shadow-md hover:brightness-105 relative overflow-hidden group text-sm"
             >
               <span className="relative z-10">יאללה, נמשיך</span>
@@ -166,7 +158,7 @@ const EmotionalRating = () => {
         </div>
         
         {/* Pagination dots for visual feedback */}
-        <div className="flex justify-center gap-2 mt-4">
+        <div className="flex justify-center gap-2 mt-2">
           {parameters.map((_, index) => (
             <div 
               key={index}
@@ -175,12 +167,9 @@ const EmotionalRating = () => {
                 index === currentSlider ? "bg-coachy-blue w-5" : "bg-gray-300"
               )}
               onClick={() => {
-                // Trigger celebration when changing slider via pagination dots
-                if (index !== currentSlider) {
-                  const { triggerCelebration, setCurrentSlider } = useFlowContext();
-                  triggerCelebration('confetti');
-                  setCurrentSlider(index);
-                }
+                // No celebration on pagination dots
+                const { setCurrentSlider } = useFlowContext();
+                setCurrentSlider(index);
               }}
             />
           ))}

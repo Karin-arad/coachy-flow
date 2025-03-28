@@ -29,27 +29,27 @@ const CoachyFlow = () => {
   };
   
   return (
-    <div className="min-h-screen bg-gradient-to-br from-white via-[#f8f9fa] to-white py-8 app-background">
+    <div className="h-screen overflow-hidden bg-gradient-to-br from-white via-[#f8f9fa] to-white py-8 app-background">
       {/* Global celebration effects */}
       <CelebrationEffects 
         effectType={celebrationType} 
         active={isCelebrating} 
-        duration={2500}
+        duration={1500} // Reduced from 2500
       />
       
-      <div className="container px-4 py-12 flex flex-col items-center">
+      <div className="container h-full px-4 py-6 flex flex-col items-center">
         <div className="w-full max-w-md">
           <ProgressBar currentStep={currentScreen} totalSteps={4} />
         </div>
         
-        <div className="relative w-full mt-6 flex justify-center min-h-[500px]">
+        <div className="relative w-full mt-4 flex justify-center flex-1 overflow-hidden">
           <motion.div
             key={currentScreen}
-            initial={{ opacity: 0, filter: "blur(10px)" }}
+            initial={{ opacity: 0, filter: "blur(5px)" }} // Reduced blur
             animate={{ opacity: 1, filter: "blur(0px)" }}
-            exit={{ opacity: 0, filter: "blur(10px)" }}
-            transition={{ duration: 0.6 }}
-            className="w-full"
+            exit={{ opacity: 0, filter: "blur(5px)" }} // Reduced blur
+            transition={{ duration: 0.4 }} // Reduced from 0.6
+            className="w-full h-full flex items-center justify-center"
           >
             {renderCurrentScreen()}
           </motion.div>

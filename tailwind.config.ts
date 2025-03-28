@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -54,10 +53,11 @@ export default {
 					foreground: 'hsl(var(--card-foreground))'
 				},
 				coachy: {
-					blue: '#2D5D7C', // calm deep blue
+					blue: '#2D5F9A', // calm deep blue - updated
 					lightBlue: '#D3E4FD', // soft light blue
 					gray: '#F1F0FB', // soft gray
 					yellow: '#FEF7CD', // soft yellow
+					text: '#444444', // dark gray for text
 				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',

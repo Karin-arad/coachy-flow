@@ -12,7 +12,7 @@ const ProgressBar = ({ currentStep, totalSteps, className }: ProgressBarProps) =
   const progress = (currentStep / totalSteps) * 100;
   
   return (
-    <div className={cn('w-full max-w-md mx-auto bg-coachy-gray h-2 rounded-full my-4', className)}>
+    <div className={cn('w-full max-w-md mx-auto bg-white/80 h-2 rounded-full my-4 shadow-sm', className)}>
       <div 
         className="h-full bg-coachy-blue rounded-full transition-all duration-500 ease-in-out"
         style={{ width: `${progress}%` }}

@@ -16,6 +16,7 @@ const AnimatedCard = ({ children, isVisible, className }: AnimatedCardProps) => 
         isVisible ? 'animate-slide-in opacity-100 transform-none' : 'opacity-0 translate-y-10 absolute',
         className
       )}
+      style={{ boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)' }}
     >
       {children}
     </div>

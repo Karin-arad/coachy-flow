@@ -26,14 +26,17 @@ const EmotionalPrompt = () => {
           value={freeTextEmotion}
           onChange={(e) => setFreeTextEmotion(e.target.value)}
           placeholder="רשמי את התחושות שלך בחופשיות..."
-          className="min-h-[120px] text-right border-coachy-lightBlue focus:border-coachy-blue"
+          className="min-h-[120px] text-right border-coachy-lightBlue focus:border-coachy-blue resize-none"
+          dir="rtl"
+          lang="he"
+          autoFocus
         />
         
         <div className="flex justify-end">
           <Button 
             onClick={handleNextClick}
             disabled={!freeTextEmotion.trim()}
-            className="bg-coachy-blue hover:bg-coachy-blue/90 text-white"
+            className="bg-coachy-blue hover:bg-coachy-blue/90 text-white px-6 py-2"
           >
             הבא
           </Button>

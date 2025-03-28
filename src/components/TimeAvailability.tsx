@@ -8,13 +8,18 @@ import { Clock, Heart, TimerIcon, HourglassIcon } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const TimeAvailability = () => {
-  const { timeAvailable, setTimeAvailable, goToNextScreen, currentScreen } = useFlowContext();
+  const { timeAvailable, setTimeAvailable, goToNextScreen, currentScreen, triggerCelebration } = useFlowContext();
   
   useEffect(() => {
     if (currentScreen === 3) {
       window.scrollTo(0, 0);
     }
   }, [currentScreen]);
+  
+  const handleTimeSelection = (time: string) => {
+    setTimeAvailable(time);
+    triggerCelebration('colorful-fireworks'); // Trigger celebration on time selection
+  };
   
   const timeOptions = [
     { value: '10 דקות', icon: '⏱️', description: 'זמן בינוני' },
@@ -54,7 +59,7 @@ const TimeAvailability = () => {
               }}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              onClick={() => setTimeAvailable(option.value)}
+              onClick={() => handleTimeSelection(option.value)}
               className={cn(
                 'w-full px-3 py-4 rounded-xl transition-all duration-300 text-base shadow-sm flex flex-col items-center justify-center gap-2 time-option-card',
                 `time-option-${index + 1}`,

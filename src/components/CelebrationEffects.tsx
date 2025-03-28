@@ -36,24 +36,36 @@ const CelebrationEffects: React.FC<CelebrationEffectsProps> = ({ effectType, act
         break;
         
       case 'fireworks':
-        confetti({
-          particleCount: 100,
-          spread: 70,
-          origin: { y: 0.6 }
-        });
+        // Launch multiple fireworks for a more impressive effect
+        for (let i = 0; i < 3; i++) {
+          setTimeout(() => {
+            confetti({
+              particleCount: 150,
+              spread: 70,
+              origin: { y: 0.6, x: 0.3 + (i * 0.2) },
+              colors: ['#FF8DC7', '#5B9BD5', '#4ECDC4', '#FFD166']
+            });
+          }, i * 300);
+        }
         break;
         
       case 'stars':
-        confetti({
-          particleCount: 50,
-          spread: 360,
-          shapes: ['star'],
-          colors: ['#FFE400', '#FFBD00', '#E89400', '#FFCA6C', '#FDFFB8']
-        });
+        // Launch multiple star bursts
+        for (let i = 0; i < 3; i++) {
+          setTimeout(() => {
+            confetti({
+              particleCount: 60,
+              spread: 360,
+              shapes: ['star'],
+              colors: ['#FFE400', '#FFBD00', '#E89400', '#FFCA6C', '#FDFFB8'],
+              origin: { y: 0.3 + (i * 0.2), x: 0.3 + (i * 0.2) }
+            });
+          }, i * 200);
+        }
         break;
         
       case 'emoji':
-        createEmojiRain();
+        createEmojiRain(35); // Increased number of emojis
         break;
         
       case 'colorful-fireworks':
@@ -61,20 +73,27 @@ const CelebrationEffects: React.FC<CelebrationEffectsProps> = ({ effectType, act
         break;
         
       default:
+        // Default to a simple confetti burst if no type specified
+        confetti({
+          particleCount: 100,
+          spread: 70,
+          origin: { y: 0.6 }
+        });
         break;
     }
   };
   
   // Create emoji rain effect
-  const createEmojiRain = () => {
-    const emojis = ['🎉', '🎊', '🎈', '🏆', '⭐', '✨', '💖', '🌟'];
-    for (let i = 0; i < 20; i++) {
+  const createEmojiRain = (count: number = 20) => {
+    const emojis = ['🎉', '🎊', '🎈', '🏆', '⭐', '✨', '💖', '🌟', '👏', '🥳', '🎯', '🔥'];
+    for (let i = 0; i < count; i++) {
       const emoji = document.createElement('div');
       emoji.className = 'emoji-rain';
       emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
       emoji.style.left = `${Math.random() * 100}vw`;
       emoji.style.fontSize = `${Math.random() * 20 + 20}px`;
       emoji.style.animationDuration = `${Math.random() * 2 + 1}s`;
+      emoji.style.transform = `rotate(${Math.random() * 60 - 30}deg)`;
       document.body.appendChild(emoji);
       
       setTimeout(() => {
@@ -102,9 +121,9 @@ const CelebrationEffects: React.FC<CelebrationEffectsProps> = ({ effectType, act
       confetti(Object.assign({}, defaults, { 
         particleCount, 
         origin: { x: Math.random(), y: Math.random() - 0.2 },
-        colors: ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff']
+        colors: ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#FC9E4F', '#A0CED9', '#FFC09F']
       }));
-    }, 250);
+    }, 200); // Increased frequency
   };
   
   return (
@@ -112,9 +131,11 @@ const CelebrationEffects: React.FC<CelebrationEffectsProps> = ({ effectType, act
       {showEffect && effectType === 'confetti' && (
         <Confetti
           recycle={false}
-          numberOfPieces={200}
+          numberOfPieces={300} // Increased from 200
+          gravity={0.3} // Slower falling
           width={window.innerWidth}
           height={window.innerHeight}
+          colors={['#FF8DC7', '#5B9BD5', '#4ECDC4', '#FFD166', '#FC9E4F', '#A0CED9', '#FFC09F']} // More colors
         />
       )}
       
@@ -125,11 +146,12 @@ const CelebrationEffects: React.FC<CelebrationEffectsProps> = ({ effectType, act
           top: -30px;
           z-index: 1000;
           animation: fall linear forwards;
+          text-shadow: 0 0 10px rgba(255,255,255,0.5);
         }
         
         @keyframes fall {
           to {
-            transform: translateY(calc(100vh + 30px));
+            transform: translateY(calc(100vh + 30px)) rotate(360deg);
           }
         }
         `}

@@ -29,7 +29,7 @@ type FlowContextType = {
   goToPreviousScreen: () => void;
   goToNextSlider: () => void;
   goToPreviousSlider: () => void;
-  triggerCelebration: (type: CelebrationType) => void;
+  triggerCelebration: (type?: CelebrationType) => void;
 };
 
 const defaultEmotionRatings: EmotionRatings = {
@@ -87,8 +87,9 @@ export const FlowProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   };
   
-  const triggerCelebration = (type: CelebrationType) => {
-    setCelebrationType(type);
+  const triggerCelebration = (type?: CelebrationType) => {
+    const celebrationType = type || getRandomCelebration();
+    setCelebrationType(celebrationType);
     setIsCelebrating(true);
     
     // Auto-disable celebration after 2 seconds

@@ -3,10 +3,12 @@ import * as React from "react"
 import * as SliderPrimitive from "@radix-ui/react-slider"
 import { Sparkles } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { useFlowContext } from "@/context/FlowContext"
 
 export interface ColoredSliderProps extends React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root> {
   emotionType?: "energy" | "bounciness" | "alertness" | "lightness";
   showSparkles?: boolean;
+  showCelebration?: boolean;
 }
 
 const getEmotionColor = (type?: ColoredSliderProps["emotionType"]) => {
@@ -42,10 +44,12 @@ const getTrackColor = (type?: ColoredSliderProps["emotionType"]) => {
 const Slider = React.forwardRef<
   React.ElementRef<typeof SliderPrimitive.Root>,
   ColoredSliderProps
->(({ className, emotionType, showSparkles = true, ...props }, ref) => {
+>(({ className, emotionType, showSparkles = true, showCelebration = true, ...props }, ref) => {
   const [isDragging, setIsDragging] = React.useState(false);
   const [value, setValue] = React.useState<number[]>(props.value as number[] || [1]);
   const [hasSettled, setHasSettled] = React.useState(false);
+  const [lastValue, setLastValue] = React.useState<number[]>(props.value as number[] || [1]);
+  const { triggerCelebration } = useFlowContext();
   
   React.useEffect(() => {
     if (props.value) {
@@ -56,6 +60,13 @@ const Slider = React.forwardRef<
   const handleValueChange = (newValue: number[]) => {
     setValue(newValue);
     setHasSettled(false);
+    
+    // Trigger celebration only when the value actually changes (not just when dragging)
+    if (showCelebration && !isDragging && newValue[0] !== lastValue[0]) {
+      triggerCelebration();
+      setLastValue(newValue);
+    }
+    
     if (props.onValueChange) {
       props.onValueChange(newValue);
     }
@@ -65,10 +76,16 @@ const Slider = React.forwardRef<
     if (!isDragging && value) {
       const timer = setTimeout(() => {
         setHasSettled(true);
+        
+        // Trigger celebration when the slider settles after dragging
+        if (showCelebration && lastValue[0] !== value[0]) {
+          triggerCelebration();
+          setLastValue(value);
+        }
       }, 300);
       return () => clearTimeout(timer);
     }
-  }, [isDragging, value]);
+  }, [isDragging, value, lastValue, showCelebration, triggerCelebration]);
 
   // Calculate intensity for visual effects based on value
   const intensity = Math.min(((value[0] || 1) / (props.max || 7)) * 100, 100);

@@ -25,11 +25,11 @@
   }
 
   .morning-theme {
-    @apply bg-gradient-to-br from-coachy-pink/20 via-coachy-yellow/20 to-white/60;
+    @apply bg-gradient-to-br from-coachy-pink/30 via-coachy-yellow/20 to-white/60;
   }
 
   .evening-theme {
-    @apply bg-gradient-to-br from-coachy-blue/20 via-coachy-turquoise/20 to-white/60;
+    @apply bg-gradient-to-br from-coachy-blue/30 via-coachy-turquoise/20 to-white/60;
   }
 
   .interactive-button {
@@ -40,14 +40,18 @@
   }
 
   .text-gradient-blue {
-    @apply bg-gradient-to-r from-coachy-blue to-coachy-turquoise bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-coachy-blue to-coachy-turquoise bg-clip-text text-transparent font-bold;
   }
 
   .text-gradient-pink {
-    @apply bg-gradient-to-r from-coachy-pink to-coachy-yellow bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-coachy-pink to-coachy-yellow bg-clip-text text-transparent font-bold;
   }
 
   .text-gradient-full {
-    @apply bg-full-spectrum bg-clip-text text-transparent animate-color-shift bg-[length:300%_100%];
+    @apply bg-full-spectrum bg-clip-text text-transparent animate-color-shift bg-[length:300%_100%] font-bold;
+  }
+
+  .text-shadow {
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
   }
 }

@@ -1,0 +1,34 @@
+
+{
+  "name": "Coachy Harmonized Theme",
+  "description": "A harmonized complementary color palette with improved contrast and accessibility",
+  "version": "1.0.0",
+  "colors": {
+    "primary": {
+      "blue": "#3A78D4",
+      "lightBlue": "#C4DCFF",
+      "turquoise": "#27A193"
+    },
+    "complementary": {
+      "pink": "#DE4A8F",
+      "yellow": "#F1A10C",
+      "red": "#E34848"
+    },
+    "neutral": {
+      "gray": "#F1F0FB",
+      "white": "#FFFFFF",
+      "text": "#FFFFFF"
+    }
+  },
+  "fontWeight": "bold",
+  "accessibility": {
+    "contrastRatio": 4.5,
+    "saturationRange": "60-80",
+    "brightnessRange": "65-85"
+  },
+  "gradients": {
+    "sunrise": "linear-gradient(135deg, #DE4A8F 0%, #F1A10C 100%)",
+    "ocean": "linear-gradient(135deg, #3A78D4 0%, #27A193 100%)",
+    "spectrum": "linear-gradient(to right, #DE4A8F, #3A78D4, #27A193, #F1A10C)"
+  }
+}

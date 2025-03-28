@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -54,14 +53,14 @@ export default {
 					foreground: 'hsl(var(--card-foreground))'
 				},
 				coachy: {
-					blue: '#4285E4', // adjusted blue for better contrast
-					lightBlue: '#D3E5FD', // slightly adjusted light blue
+					blue: '#3A78D4', // balanced blue for better contrast
+					lightBlue: '#C4DCFF', // adjusted light blue
 					gray: '#F1F0FB', // kept the same soft gray
-					yellow: '#F9BC00', // adjusted yellow for more saturation and contrast
-					turquoise: '#39B3A4', // adjusted for better contrast
-					pink: '#E94B97', // adjusted for better contrast 
-					text: '#2D3748', // darker text for better readability
-					red: '#E53E3E', // adjusted heart red
+					yellow: '#F1A10C', // vibrant but accessible yellow
+					turquoise: '#27A193', // darker turquoise for better contrast
+					pink: '#DE4A8F', // adjusted for better contrast with white text
+					text: '#FFFFFF', // white text as requested
+					red: '#E34848', // adjusted heart red for better contrast
 				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
@@ -199,9 +198,9 @@ export default {
 				'check-appear': 'check-appear 1.5s ease-in-out forwards'
 			},
 			backgroundImage: {
-				'sunrise-gradient': 'linear-gradient(135deg, #E94B97 0%, #F9BC00 100%)',
-				'ocean-calm': 'linear-gradient(135deg, #4285E4 0%, #39B3A4 100%)',
-				'full-spectrum': 'linear-gradient(to right, #E94B97, #4285E4, #39B3A4, #F9BC00)',
+				'sunrise-gradient': 'linear-gradient(135deg, #DE4A8F 0%, #F1A10C 100%)',
+				'ocean-calm': 'linear-gradient(135deg, #3A78D4 0%, #27A193 100%)',
+				'full-spectrum': 'linear-gradient(to right, #DE4A8F, #3A78D4, #27A193, #F1A10C)',
 			}
 		}
 	},

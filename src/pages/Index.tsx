@@ -7,8 +7,8 @@ import TimeAvailability from '@/components/TimeAvailability';
 import PracticeSummary from '@/components/PracticeSummary';
 import ProgressBar from '@/components/ProgressBar';
 import CelebrationEffects from '@/components/CelebrationEffects';
+import APIKeyInput from '@/components/APIKeyInput';
 import { motion } from 'framer-motion';
-import { ScrollArea } from '@/components/ui/scroll-area';
 
 const CoachyFlow = () => {
   const { currentScreen, celebrationType, isCelebrating } = useFlowContext();
@@ -37,6 +37,9 @@ const CoachyFlow = () => {
         active={isCelebrating} 
         duration={1500}
       />
+      
+      {/* API Key Input */}
+      <APIKeyInput />
       
       <div className="flex-1 flex flex-col items-center justify-start px-4 py-6">
         <div className="w-full max-w-md mb-4">

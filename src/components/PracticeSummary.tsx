@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { useFlowContext } from '@/context/FlowContext';
 import { Button } from '@/components/ui/button';
@@ -105,7 +106,7 @@ const PracticeSummary = () => {
           >
             <Sparkles className="text-amber-500 animate-float" size={26} />
             <h2 className="text-2xl font-medium text-gray-500">
-              מדהימה! הנה תרגול שיסגור לך פינה
+              נהדר!
             </h2>
             <Heart className="fill-coachy-red stroke-coachy-red animate-heartbeat" size={32} />
           </motion.div>

@@ -12,9 +12,8 @@
   .time-option-1 {
     background-color: #d0e2ff; /* Light blue */
     border: 2px solid #3A78D4;
-    color: #FFFFFF;
-    text-shadow: 1px 1px 3px rgba(50, 50, 50, 0.8);
-    -webkit-text-stroke: 1px #333333;
+    color: #000000;
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
     font-weight: bold;
   }
 
@@ -25,9 +24,8 @@
   .time-option-2 {
     background-color: #d8f2ef; /* Light turquoise */
     border: 2px solid #27A193;
-    color: #FFFFFF;
-    text-shadow: 1px 1px 3px rgba(50, 50, 50, 0.8);
-    -webkit-text-stroke: 1px #333333;
+    color: #000000;
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
     font-weight: bold;
   }
 
@@ -38,9 +36,8 @@
   .time-option-3 {
     background-color: #ffeccc; /* Light orange */
     border: 2px solid #F1A10C;
-    color: #FFFFFF;
-    text-shadow: 1px 1px 3px rgba(50, 50, 50, 0.8);
-    -webkit-text-stroke: 1px #333333;
+    color: #000000;
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
     font-weight: bold;
   }
 
@@ -51,9 +48,8 @@
   .time-option-4 {
     background-color: #f0ddf8; /* Light purple */
     border: 2px solid #9D4EDD;
-    color: #FFFFFF;
-    text-shadow: 1px 1px 3px rgba(50, 50, 50, 0.8);
-    -webkit-text-stroke: 1px #333333;
+    color: #000000;
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
     font-weight: bold;
   }
 
@@ -64,9 +60,8 @@
   .time-option-5 {
     background-color: #fad5e5; /* Light pink */
     border: 2px solid #DE4A8F;
-    color: #FFFFFF;
-    text-shadow: 1px 1px 3px rgba(50, 50, 50, 0.8);
-    -webkit-text-stroke: 1px #333333;
+    color: #000000;
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
     font-weight: bold;
   }
 
@@ -75,10 +70,10 @@
   }
 
   .time-icon {
-    color: #FFFFFF; /* White for accessibility */
+    color: #000000;
   }
 
   .heart-icon {
-    color: #FFFFFF; /* White for accessibility */
+    color: #000000;
   }
 }

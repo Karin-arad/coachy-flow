@@ -116,7 +116,7 @@ const PracticeSummary = () => {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4, duration: 0.5 }}
           >
-            הנה תרגול קטן שיעשה לך טוב היום 💫
+            הנה תרגול שיסגור לך פינה
           </motion.p>
           
           <motion.div 

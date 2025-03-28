@@ -9,6 +9,9 @@ import ProgressBar from '@/components/ProgressBar';
 import CelebrationEffects from '@/components/CelebrationEffects';
 import APIKeyInput from '@/components/APIKeyInput';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
+import { MessageCircle } from 'lucide-react';
 
 const CoachyFlow = () => {
   const { currentScreen, celebrationType, isCelebrating } = useFlowContext();
@@ -40,6 +43,16 @@ const CoachyFlow = () => {
       
       {/* API Key Input */}
       <APIKeyInput />
+      
+      {/* Chat button */}
+      <Link to="/chat" className="fixed bottom-5 right-5 z-50 rtl:right-auto rtl:left-5">
+        <Button 
+          className="rounded-full w-14 h-14 p-0 flex items-center justify-center shadow-lg bg-gradient-to-r from-coachy-blue to-coachy-turquoise hover:brightness-110"
+          size="icon"
+        >
+          <MessageCircle className="h-6 w-6" />
+        </Button>
+      </Link>
       
       <div className="flex-1 flex flex-col items-center justify-start px-4 py-6">
         <div className="w-full max-w-md mb-4">

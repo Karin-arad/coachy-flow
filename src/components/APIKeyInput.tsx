@@ -5,10 +5,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
+import { OPENAI_API_KEY_STORAGE } from '@/utils/apiHelpers';
 
-const LOCAL_STORAGE_API_KEY = 'openai-api-key';
+interface APIKeyInputProps {
+  onClose?: () => void;
+}
 
-const APIKeyInput = () => {
+const APIKeyInput = ({ onClose }: APIKeyInputProps = {}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [apiKey, setApiKey] = useState('');
   const [hasSavedKey, setHasSavedKey] = useState(false);
@@ -16,7 +19,7 @@ const APIKeyInput = () => {
 
   useEffect(() => {
     // Check if API key exists in localStorage on component mount
-    const savedKey = localStorage.getItem(LOCAL_STORAGE_API_KEY);
+    const savedKey = localStorage.getItem(OPENAI_API_KEY_STORAGE);
     if (savedKey) {
       setHasSavedKey(true);
       // For security, we don't display the actual key
@@ -34,7 +37,7 @@ const APIKeyInput = () => {
       return;
     }
 
-    localStorage.setItem(LOCAL_STORAGE_API_KEY, apiKey);
+    localStorage.setItem(OPENAI_API_KEY_STORAGE, apiKey);
     setHasSavedKey(true);
     setIsOpen(false);
     
@@ -43,10 +46,13 @@ const APIKeyInput = () => {
       description: "מפתח ה-API נשמר במכשיר שלך",
       variant: "default"
     });
+
+    // Call onClose callback if provided
+    onClose?.();
   };
 
   const removeApiKey = () => {
-    localStorage.removeItem(LOCAL_STORAGE_API_KEY);
+    localStorage.removeItem(OPENAI_API_KEY_STORAGE);
     setHasSavedKey(false);
     setApiKey('');
     

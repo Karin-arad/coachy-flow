@@ -166,4 +166,37 @@
     transform-origin: top center;
     transform: scale(var(--scale-factor));
   }
+  
+  /* Custom time availability styling */
+  .time-option-card {
+    background: linear-gradient(135deg, #f8e1f4 0%, #e6f0ff 100%);
+    border: 2px solid #d4c1e0;
+    transition: all 0.3s ease;
+  }
+
+  .time-option-card:hover, .time-option-card.selected {
+    background: linear-gradient(135deg, #f9c5e9 0%, #c7dbff 100%);
+    border-color: #b490cc;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Continue button with gradient */
+  .continue-button {
+    background: linear-gradient(90deg, #ff9fb1 0%, #ffbb86 100%);
+    color: white;
+    font-weight: 500;
+    transition: all 0.3s ease;
+  }
+
+  .continue-button:hover {
+    background: linear-gradient(90deg, #ff8ca2 0%, #ffa76c 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(255, 159, 177, 0.4);
+  }
+
+  /* Icon coloring */
+  .time-icon {
+    color: #ae81ff; /* Purple */
+  }
 }

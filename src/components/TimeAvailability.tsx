@@ -41,13 +41,11 @@ const TimeAvailability = () => {
               key={option.value}
               onClick={() => setTimeAvailable(option.value)}
               className={cn(
-                'w-full px-3 py-2 rounded-xl transition-all duration-300 text-base shadow-sm flex flex-col items-center gap-1',
-                timeAvailable === option.value
-                  ? 'bg-gradient-to-r from-coachy-blue to-indigo-600 text-white transform scale-105 shadow-md'
-                  : 'bg-white/70 backdrop-blur-sm text-coachy-blue border border-coachy-lightBlue hover:bg-coachy-blue/10 hover:scale-105'
+                'w-full px-3 py-2 rounded-xl transition-all duration-300 text-base shadow-sm flex flex-col items-center gap-1 time-option-card',
+                timeAvailable === option.value ? 'selected' : ''
               )}
             >
-              <span className="text-lg">{option.icon}</span>
+              <span className="text-lg time-icon">{option.icon}</span>
               <span>{option.value}</span>
               {timeAvailable === option.value && (
                 <div className="w-6 h-1 bg-white mt-1 rounded-full animate-pulse"></div>
@@ -60,9 +58,7 @@ const TimeAvailability = () => {
           <Button 
             onClick={goToNextScreen}
             disabled={!timeAvailable}
-            variant="joyful"
-            showCompletionEffect={true}
-            className="text-white px-5 py-1.5 transition-all duration-300 transform hover:scale-105 active:scale-95 rounded-xl shadow-sm hover:shadow-md relative overflow-hidden group text-sm"
+            className="continue-button px-5 py-1.5 rounded-xl shadow-sm relative overflow-hidden group text-sm"
           >
             <span className="relative z-10">יאללה, נמשיך</span>
             <span className="absolute inset-0 bg-white/20 transform scale-x-0 group-hover:scale-x-100 group-active:scale-x-100 transition-transform origin-right duration-300"></span>

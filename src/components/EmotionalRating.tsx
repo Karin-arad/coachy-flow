@@ -26,14 +26,14 @@ const EmotionalRating = () => {
     <AnimatedCard isVisible={currentScreen === 2}>
       <div className="space-y-6">
         <h2 className="text-2xl font-medium text-coachy-blue mb-6">
-          דרגי את עצמך מ־1 עד 7 בכל אחד מהפרמטרים הבאים:
+          דרגי את עצמך מ־1 עד 7 בכל אחד מהפרמטרים הבאים: ☀️
         </h2>
         
         <div className="space-y-8">
           {parameters.map((param) => (
             <div key={param.id} className="space-y-2">
               <div className="flex justify-between items-center">
-                <div className="text-lg">{param.label}</div>
+                <div className="text-lg text-coachy-text">{param.label}</div>
                 <div className="text-2xl font-medium text-coachy-blue">
                   {emotionRatings[param.id as keyof typeof emotionRatings]}
                 </div>
@@ -54,10 +54,10 @@ const EmotionalRating = () => {
           ))}
         </div>
         
-        <div className="flex justify-end">
+        <div className="flex justify-end mt-4">
           <Button 
             onClick={goToNextScreen}
-            className="bg-coachy-blue hover:bg-coachy-blue/90 text-white"
+            className="bg-coachy-blue hover:bg-coachy-blue/90 active:bg-coachy-blue/70 text-white px-6 py-2 transition-all duration-150 transform active:scale-95 rounded-xl shadow-sm hover:shadow"
           >
             הבא
           </Button>

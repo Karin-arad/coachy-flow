@@ -26,7 +26,7 @@ const EmotionalPrompt = () => {
           value={freeTextEmotion}
           onChange={(e) => setFreeTextEmotion(e.target.value)}
           placeholder="רשמי את התחושות שלך בחופשיות..."
-          className="min-h-[120px] text-right border-coachy-lightBlue focus:border-coachy-blue resize-none bg-white"
+          className="min-h-[120px] text-right border-coachy-lightBlue focus:border-coachy-blue resize-none bg-white rounded-xl p-4 shadow-sm text-coachy-text"
           dir="rtl"
           lang="he"
           autoFocus
@@ -36,7 +36,7 @@ const EmotionalPrompt = () => {
           <Button 
             onClick={handleNextClick}
             disabled={!freeTextEmotion.trim()}
-            className="bg-coachy-blue hover:bg-coachy-blue/90 active:bg-coachy-blue/70 text-white px-6 py-2 transition-all duration-150 transform active:scale-95"
+            className="bg-coachy-blue hover:bg-coachy-blue/90 active:bg-coachy-blue/70 text-white px-6 py-2 transition-all duration-150 transform active:scale-95 rounded-xl shadow-sm hover:shadow"
           >
             הבא
           </Button>

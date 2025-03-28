@@ -20,7 +20,7 @@ const TimeAvailability = () => {
     <AnimatedCard isVisible={currentScreen === 3}>
       <div className="space-y-6">
         <h2 className="text-2xl font-medium text-coachy-blue mb-6">
-          כמה זמן יש לך כרגע?
+          כמה זמן יש לך כרגע? 🧘‍♀️
         </h2>
         
         <div className="flex flex-wrap gap-3 justify-center">
@@ -29,10 +29,10 @@ const TimeAvailability = () => {
               key={option}
               onClick={() => setTimeAvailable(option)}
               className={cn(
-                'px-6 py-3 rounded-full transition-all duration-200 text-lg',
+                'px-6 py-3 rounded-full transition-all duration-200 text-lg shadow-sm',
                 timeAvailable === option
-                  ? 'bg-coachy-blue text-white'
-                  : 'bg-coachy-lightBlue text-coachy-blue hover:bg-coachy-blue/20'
+                  ? 'bg-coachy-blue text-white transform scale-105'
+                  : 'bg-coachy-lightBlue text-coachy-blue hover:bg-coachy-blue/20 hover:scale-105'
               )}
             >
               {option}
@@ -44,7 +44,7 @@ const TimeAvailability = () => {
           <Button 
             onClick={goToNextScreen}
             disabled={!timeAvailable}
-            className="bg-coachy-blue hover:bg-coachy-blue/90 text-white"
+            className="bg-coachy-blue hover:bg-coachy-blue/90 active:bg-coachy-blue/70 text-white px-6 py-2 transition-all duration-150 transform active:scale-95 rounded-xl shadow-sm hover:shadow"
           >
             הבא
           </Button>

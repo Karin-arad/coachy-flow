@@ -20,9 +20,9 @@ const PracticeSummary = () => {
     <AnimatedCard isVisible={currentScreen === 4}>
       <div className="space-y-6">
         <h2 className="text-2xl font-medium text-coachy-blue mb-2">
-          תודה קארין! 
+          תודה קארין! 💛
         </h2>
-        <p className="text-xl">
+        <p className="text-xl text-coachy-text">
           הנה תרגול קטן שיעשה לך טוב היום 💫
         </p>
         
@@ -35,7 +35,7 @@ const PracticeSummary = () => {
         <div className="flex justify-center mt-4">
           <Button 
             onClick={handleStartPractice}
-            className="bg-coachy-blue hover:bg-coachy-blue/90 text-white px-8 py-6 text-lg"
+            className="bg-coachy-blue hover:bg-coachy-blue/90 text-white px-8 py-6 text-lg rounded-xl transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] shadow-sm hover:shadow-md"
           >
             התחילי תרגול
           </Button>

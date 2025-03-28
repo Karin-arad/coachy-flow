@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -54,12 +53,13 @@ export default {
 					foreground: 'hsl(var(--card-foreground))'
 				},
 				coachy: {
-					blue: '#2D5F9A', // calm deep blue - updated
+					blue: '#5B9BD5', // updated primary blue
 					lightBlue: '#D3E4FD', // soft light blue
 					gray: '#F1F0FB', // soft gray
-					yellow: '#FEF7CD', // soft yellow
+					yellow: '#FFD166', // new energetic yellow
+					turquoise: '#4ECDC4', // new calming turquoise
+					pink: '#FF8DC7', // new accent pink
 					text: '#444444', // dark gray for text
-					pink: '#FFF0F5', // soft warm pink
 					red: '#ea384c', // heart red
 				},
 				sidebar: {
@@ -117,6 +117,11 @@ export default {
 				'pulse-gentle': {
 					'0%, 100%': { transform: 'scale(1)' },
 					'50%': { transform: 'scale(1.1)' }
+				},
+				'color-shift': {
+					'0%': { backgroundPosition: '0% 50%' },
+					'50%': { backgroundPosition: '100% 50%' },
+					'100%': { backgroundPosition: '0% 50%' }
 				}
 			},
 			animation: {
@@ -126,7 +131,13 @@ export default {
 				'fade-out': 'fade-out 0.3s ease-out',
 				'slide-in': 'slide-in 0.4s ease-out',
 				'slide-out': 'slide-out 0.4s ease-out',
-				'pulse-gentle': 'pulse-gentle 2s infinite ease-in-out'
+				'pulse-gentle': 'pulse-gentle 2s infinite ease-in-out',
+				'color-shift': 'color-shift 8s ease infinite'
+			},
+			backgroundImage: {
+				'sunrise-gradient': 'linear-gradient(135deg, #FF8DC7 0%, #FFD166 100%)',
+				'ocean-calm': 'linear-gradient(135deg, #5B9BD5 0%, #4ECDC4 100%)',
+				'full-spectrum': 'linear-gradient(to right, #FF8DC7, #5B9BD5, #4ECDC4, #FFD166)',
 			}
 		}
 	},

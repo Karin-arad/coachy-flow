@@ -16,7 +16,7 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 210 83% 33%;
+    --primary: 210 83% 60%;
     --primary-foreground: 210 40% 98%;
 
     --secondary: 210 40% 96.1%;
@@ -111,5 +111,36 @@
   
   .card-shadow {
     @apply shadow-md hover:shadow-lg transition-all duration-300;
+  }
+
+  .glass-card {
+    @apply bg-white/70 backdrop-blur-sm border border-white/30 shadow-lg;
+  }
+
+  .morning-theme {
+    @apply bg-gradient-to-br from-coachy-pink/20 via-coachy-yellow/20 to-white/60;
+  }
+
+  .evening-theme {
+    @apply bg-gradient-to-br from-coachy-blue/20 via-coachy-turquoise/20 to-white/60;
+  }
+
+  .interactive-button {
+    @apply relative overflow-hidden transition-all duration-300 hover:shadow-md
+    before:absolute before:inset-0 before:bg-white/20 before:scale-x-0 before:origin-right
+    before:transition-transform before:duration-300
+    hover:before:scale-x-100 hover:before:origin-left;
+  }
+
+  .text-gradient-blue {
+    @apply bg-gradient-to-r from-coachy-blue to-coachy-turquoise bg-clip-text text-transparent;
+  }
+
+  .text-gradient-pink {
+    @apply bg-gradient-to-r from-coachy-pink to-coachy-yellow bg-clip-text text-transparent;
+  }
+
+  .text-gradient-full {
+    @apply bg-full-spectrum bg-clip-text text-transparent animate-color-shift bg-[length:300%_100%];
   }
 }

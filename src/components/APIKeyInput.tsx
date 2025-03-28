@@ -29,13 +29,20 @@ const APIKeyInput = ({ onClose }: APIKeyInputProps = {}) => {
     removeYouTubeKey
   } = useApiKeys();
 
-  // Show dialog automatically if no API keys are set
+  // Show dialog automatically if no API keys are set and check keys on component mount
   useEffect(() => {
     checkKeys();
     
     // Auto-open dialog if no OpenAI key is set
     if (!hasOpenAIKey) {
       setIsOpen(true);
+    }
+  }, []);
+  
+  // Re-check keys when dialog opens
+  useEffect(() => {
+    if (isOpen) {
+      checkKeys();
     }
   }, [isOpen]);
 

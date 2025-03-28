@@ -36,6 +36,21 @@ export const useApiKeys = () => {
     setIsUsingGlobalYouTubeKey(hasYouTube && !youtubeLocalKey);
   };
 
+  // Initialize and check keys when component mounts
+  useEffect(() => {
+    checkKeys();
+    
+    // Add event listener for storage changes from other tabs/windows
+    const handleStorageChange = () => {
+      checkKeys();
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, []);
+
   // Save OpenAI API key
   const saveOpenAIKey = () => {
     if (!openaiKey.trim()) {
@@ -57,6 +72,9 @@ export const useApiKeys = () => {
       description: "מפתח ה-API של OpenAI נשמר במכשיר שלך",
       variant: "default"
     });
+    
+    // Re-check keys after saving
+    checkKeys();
   };
 
   // Save YouTube API key
@@ -80,6 +98,9 @@ export const useApiKeys = () => {
       description: "מפתח ה-API של YouTube נשמר במכשיר שלך",
       variant: "default"
     });
+    
+    // Re-check keys after saving
+    checkKeys();
   };
 
   // Remove OpenAI API key
@@ -96,6 +117,9 @@ export const useApiKeys = () => {
         (hasGlobalKey ? ". משתמש כעת במפתח הגלובלי" : ""),
       variant: "default"
     });
+    
+    // Re-check keys after removing
+    checkKeys();
   };
 
   // Remove YouTube API key
@@ -112,6 +136,9 @@ export const useApiKeys = () => {
         (hasGlobalKey ? ". משתמש כעת במפתח הגלובלי" : ""),
       variant: "default"
     });
+    
+    // Re-check keys after removing
+    checkKeys();
   };
 
   return {

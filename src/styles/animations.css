@@ -47,4 +47,56 @@
   .animate-check-appear {
     @apply animate-[check-appear_1.5s_ease-in-out_forwards];
   }
+  
+  .animate-fall {
+    @apply animate-[fall_linear_forwards];
+  }
+  
+  .animate-firework {
+    @apply animate-[firework_0.6s_ease-out_forwards];
+  }
+  
+  .animate-spin-slow {
+    @apply animate-[spin_8s_linear_infinite];
+  }
+  
+  .animate-fade-up {
+    @apply animate-[fade-up_0.5s_ease-out_forwards];
+  }
+  
+  .animate-emoji-rain {
+    @apply animate-[emoji-rain_3s_linear_forwards];
+  }
+}
+
+@keyframes emoji-rain {
+  to {
+    transform: translateY(calc(100vh + 30px));
+  }
+}
+
+@keyframes firework {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+@keyframes fade-up {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

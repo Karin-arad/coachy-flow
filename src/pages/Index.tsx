@@ -6,10 +6,11 @@ import EmotionalRating from '@/components/EmotionalRating';
 import TimeAvailability from '@/components/TimeAvailability';
 import PracticeSummary from '@/components/PracticeSummary';
 import ProgressBar from '@/components/ProgressBar';
+import CelebrationEffects from '@/components/CelebrationEffects';
 import { motion } from 'framer-motion';
 
 const CoachyFlow = () => {
-  const { currentScreen } = useFlowContext();
+  const { currentScreen, celebrationType, isCelebrating } = useFlowContext();
   
   // Function to render the current screen component
   const renderCurrentScreen = () => {
@@ -29,6 +30,13 @@ const CoachyFlow = () => {
   
   return (
     <div className="min-h-screen bg-gradient-to-br from-white via-[#f8f9fa] to-white py-8 app-background">
+      {/* Global celebration effects */}
+      <CelebrationEffects 
+        effectType={celebrationType} 
+        active={isCelebrating} 
+        duration={2500}
+      />
+      
       <div className="container px-4 py-12 flex flex-col items-center">
         <div className="w-full max-w-md">
           <ProgressBar currentStep={currentScreen} totalSteps={4} />

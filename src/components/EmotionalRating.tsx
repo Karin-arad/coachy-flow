@@ -4,11 +4,18 @@ import { useFlowContext } from '@/context/FlowContext';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
 import AnimatedCard from './AnimatedCard';
-import { Sparkles, Zap, Eye, Feather } from 'lucide-react';
+import { Sparkles, Zap, Eye, Feather, ChevronRight, ChevronLeft } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const EmotionalRating = () => {
-  const { emotionRatings, setEmotionRatings, goToNextScreen, currentScreen } = useFlowContext();
+  const { 
+    emotionRatings, 
+    setEmotionRatings, 
+    goToNextScreen, 
+    currentScreen, 
+    currentSlider, 
+    setCurrentSlider 
+  } = useFlowContext();
   
   // Reset scroll position when component becomes visible
   useEffect(() => {
@@ -55,6 +62,12 @@ const EmotionalRating = () => {
     },
   ];
 
+  // Get current parameter
+  const currentParam = parameters[currentSlider];
+  
+  // Determine if we're on the last parameter
+  const isLastSlider = currentSlider === parameters.length - 1;
+
   return (
     <AnimatedCard 
       isVisible={currentScreen === 2} 
@@ -67,44 +80,44 @@ const EmotionalRating = () => {
         </h2>
         
         <div className="space-y-12">
-          {parameters.map((param) => (
-            <div key={param.id} className={cn(
+          {currentParam && (
+            <div key={currentParam.id} className={cn(
               "space-y-3 bg-gradient-to-r p-5 rounded-xl transition-all duration-300",
-              emotionRatings[param.id as keyof typeof emotionRatings] > 4 ? 
+              emotionRatings[currentParam.id as keyof typeof emotionRatings] > 4 ? 
                 "from-white/70 to-white/40 shadow-md" : 
                 "from-white/50 to-transparent"
             )}>
               <div className="flex items-center gap-3">
-                {param.icon}
+                {currentParam.icon}
                 <div className={cn(
                   "text-base font-medium bg-gradient-to-r bg-clip-text text-transparent",
-                  param.id === 'bounciness' && "from-coachy-pink to-pink-600",
-                  param.id === 'energy' && "from-coachy-yellow to-amber-500",
-                  param.id === 'alertness' && "from-coachy-blue to-indigo-600",
-                  param.id === 'lightness' && "from-coachy-turquoise to-teal-600"
+                  currentParam.id === 'bounciness' && "from-coachy-pink to-pink-600",
+                  currentParam.id === 'energy' && "from-coachy-yellow to-amber-500",
+                  currentParam.id === 'alertness' && "from-coachy-blue to-indigo-600",
+                  currentParam.id === 'lightness' && "from-coachy-turquoise to-teal-600"
                 )}>
-                  {param.question}
+                  {currentParam.question}
                 </div>
               </div>
               <div className="flex justify-between items-center">
-                <div className="text-sm text-coachy-text font-medium">{param.label}</div>
+                <div className="text-sm text-coachy-text font-medium">{currentParam.label}</div>
                 <div className={cn(
                   "text-xl font-medium bg-gradient-to-r bg-clip-text text-transparent",
-                  param.id === 'bounciness' && "from-coachy-pink to-pink-600",
-                  param.id === 'energy' && "from-coachy-yellow to-amber-500",
-                  param.id === 'alertness' && "from-coachy-blue to-indigo-600",
-                  param.id === 'lightness' && "from-coachy-turquoise to-teal-600"
+                  currentParam.id === 'bounciness' && "from-coachy-pink to-pink-600",
+                  currentParam.id === 'energy' && "from-coachy-yellow to-amber-500",
+                  currentParam.id === 'alertness' && "from-coachy-blue to-indigo-600",
+                  currentParam.id === 'lightness' && "from-coachy-turquoise to-teal-600"
                 )}>
-                  {emotionRatings[param.id as keyof typeof emotionRatings]}
+                  {emotionRatings[currentParam.id as keyof typeof emotionRatings]}
                 </div>
               </div>
               <Slider
-                emotionType={param.type}
-                value={[emotionRatings[param.id as keyof typeof emotionRatings]]}
+                emotionType={currentParam.type}
+                value={[emotionRatings[currentParam.id as keyof typeof emotionRatings]]}
                 min={1}
                 max={7}
                 step={1}
-                onValueChange={(value) => handleRatingChange(param.id as keyof typeof emotionRatings, value)}
+                onValueChange={(value) => handleRatingChange(currentParam.id as keyof typeof emotionRatings, value)}
                 className="py-3"
               />
               <div className="flex justify-between text-xs text-gray-500">
@@ -112,19 +125,57 @@ const EmotionalRating = () => {
                 <span>גבוה</span>
               </div>
             </div>
-          ))}
+          )}
         </div>
         
-        <div className="flex justify-end mt-6">
-          <Button 
-            onClick={goToNextScreen}
-            variant="energetic"
-            showCompletionEffect={true}
-            className="text-white px-5 py-1.5 transition-all duration-300 transform hover:scale-105 active:scale-95 rounded-xl shadow-sm hover:shadow-md hover:brightness-105 relative overflow-hidden group text-sm"
+        {/* Navigation buttons */}
+        <div className="flex justify-between mt-8">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setCurrentSlider(prev => Math.max(0, prev - 1))}
+            disabled={currentSlider === 0}
+            className="flex items-center gap-1"
           >
-            <span className="relative z-10">יאללה, נמשיך</span>
-            <span className="absolute inset-0 bg-white/20 transform scale-x-0 group-hover:scale-x-100 group-active:scale-x-100 transition-transform origin-right duration-300"></span>
+            <ChevronRight size={16} />
+            <span>הקודם</span>
           </Button>
+          
+          {isLastSlider ? (
+            <Button 
+              onClick={goToNextScreen}
+              variant="energetic"
+              showCompletionEffect={true}
+              className="text-white px-5 py-1.5 transition-all duration-300 transform hover:scale-105 active:scale-95 rounded-xl shadow-sm hover:shadow-md hover:brightness-105 relative overflow-hidden group text-sm"
+            >
+              <span className="relative z-10">יאללה, נמשיך</span>
+              <span className="absolute inset-0 bg-white/20 transform scale-x-0 group-hover:scale-x-100 group-active:scale-x-100 transition-transform origin-right duration-300"></span>
+            </Button>
+          ) : (
+            <Button
+              variant="joyful"
+              size="sm"
+              onClick={() => setCurrentSlider(prev => Math.min(parameters.length - 1, prev + 1))}
+              className="flex items-center gap-1"
+            >
+              <span>הבא</span>
+              <ChevronLeft size={16} />
+            </Button>
+          )}
+        </div>
+        
+        {/* Pagination dots for visual feedback */}
+        <div className="flex justify-center gap-2 mt-4">
+          {parameters.map((_, index) => (
+            <div 
+              key={index}
+              className={cn(
+                "h-2 w-2 rounded-full transition-all duration-300",
+                index === currentSlider ? "bg-coachy-blue w-4" : "bg-gray-300"
+              )}
+              onClick={() => setCurrentSlider(index)}
+            />
+          ))}
         </div>
       </div>
     </AnimatedCard>

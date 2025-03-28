@@ -11,6 +11,8 @@ type EmotionRatings = {
 type FlowContextType = {
   currentScreen: number;
   setCurrentScreen: (screen: number) => void;
+  currentSlider: number;
+  setCurrentSlider: (slider: number) => void;
   freeTextEmotion: string;
   setFreeTextEmotion: (text: string) => void;
   emotionRatings: EmotionRatings;
@@ -32,16 +34,19 @@ const FlowContext = createContext<FlowContextType | undefined>(undefined);
 
 export const FlowProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [currentScreen, setCurrentScreen] = useState(1);
+  const [currentSlider, setCurrentSlider] = useState(0);
   const [freeTextEmotion, setFreeTextEmotion] = useState('');
   const [emotionRatings, setEmotionRatings] = useState<EmotionRatings>(defaultEmotionRatings);
   const [timeAvailable, setTimeAvailable] = useState('');
 
   const goToNextScreen = () => {
     setCurrentScreen((prev) => Math.min(prev + 1, 4));
+    setCurrentSlider(0); // Reset slider index when moving to a new screen
   };
 
   const goToPreviousScreen = () => {
     setCurrentScreen((prev) => Math.max(prev - 1, 1));
+    setCurrentSlider(0); // Reset slider index when moving to a new screen
   };
 
   return (
@@ -49,6 +54,8 @@ export const FlowProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       value={{
         currentScreen,
         setCurrentScreen,
+        currentSlider,
+        setCurrentSlider,
         freeTextEmotion,
         setFreeTextEmotion,
         emotionRatings,

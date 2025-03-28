@@ -13,8 +13,8 @@ export const getOpenAIApiKey = (): string | null => {
   const localKey = localStorage.getItem(OPENAI_API_KEY_STORAGE);
   if (localKey) return localKey;
   
-  // Fall back to the config file key
-  return API_KEYS.OPENAI !== "your-openai-api-key-here" ? API_KEYS.OPENAI : null;
+  // Fall back to the config file key, but only if it's not empty
+  return API_KEYS.OPENAI || null;
 };
 
 /**
@@ -26,8 +26,8 @@ export const getYouTubeApiKey = (): string | null => {
   const localKey = localStorage.getItem(YOUTUBE_API_KEY_STORAGE);
   if (localKey) return localKey;
   
-  // Fall back to the config file key
-  return API_KEYS.YOUTUBE !== "your-youtube-api-key-here" ? API_KEYS.YOUTUBE : null;
+  // Fall back to the config file key, but only if it's not empty
+  return API_KEYS.YOUTUBE || null;
 };
 
 /**

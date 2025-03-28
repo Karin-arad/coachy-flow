@@ -20,10 +20,9 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-  // Define default environment variables
+  // Define environment variables with empty strings as defaults
   define: {
-    // Make empty environment variables to prevent errors
-    'import.meta.env.VITE_OPENAI_API_KEY': JSON.stringify(''),
-    'import.meta.env.VITE_YOUTUBE_API_KEY': JSON.stringify(''),
+    'import.meta.env.VITE_OPENAI_API_KEY': JSON.stringify(process.env.VITE_OPENAI_API_KEY || ''),
+    'import.meta.env.VITE_YOUTUBE_API_KEY': JSON.stringify(process.env.VITE_YOUTUBE_API_KEY || ''),
   }
 }));

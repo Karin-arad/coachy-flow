@@ -30,18 +30,26 @@ const APIKeyInput = ({ onClose }: APIKeyInputProps = {}) => {
   const [isUsingGlobalYouTubeKey, setIsUsingGlobalYouTubeKey] = useState(false);
   const { toast } = useToast();
 
+  // Show dialog automatically if no API keys are set
   useEffect(() => {
-    // Check if API keys exist in localStorage on component mount
     const checkKeys = () => {
-      setHasOpenAIKey(hasOpenAIApiKey());
-      setHasYouTubeKey(hasYouTubeApiKey());
+      const hasOpenAI = hasOpenAIApiKey();
+      const hasYouTube = hasYouTubeApiKey();
+      
+      setHasOpenAIKey(hasOpenAI);
+      setHasYouTubeKey(hasYouTube);
       
       // Check if using global keys from config
       const openaiLocalKey = localStorage.getItem(OPENAI_API_KEY_STORAGE);
       const youtubeLocalKey = localStorage.getItem(YOUTUBE_API_KEY_STORAGE);
       
-      setIsUsingGlobalOpenAIKey(hasOpenAIApiKey() && !openaiLocalKey);
-      setIsUsingGlobalYouTubeKey(hasYouTubeApiKey() && !youtubeLocalKey);
+      setIsUsingGlobalOpenAIKey(hasOpenAI && !openaiLocalKey);
+      setIsUsingGlobalYouTubeKey(hasYouTube && !youtubeLocalKey);
+      
+      // Auto-open dialog if no OpenAI key is set
+      if (!hasOpenAI) {
+        setIsOpen(true);
+      }
     };
     
     checkKeys();
@@ -129,11 +137,11 @@ const APIKeyInput = ({ onClose }: APIKeyInputProps = {}) => {
   return (
     <>
       <Button 
-        variant="outline" 
+        variant={hasOpenAIKey ? "outline" : "destructive"}
         onClick={() => setIsOpen(true)}
         className="text-xs px-3 py-1 h-8 bg-white/80 border border-gray-200 shadow-sm hover:bg-white fixed top-3 right-3 z-50 rtl:right-auto rtl:left-3"
       >
-        {hasOpenAIKey || hasYouTubeKey ? "עדכון מפתחות API" : "הגדרת מפתחות API"}
+        {hasOpenAIKey ? "עדכון מפתחות API" : "⚠️ נדרש מפתח API"}
       </Button>
       
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -157,10 +165,16 @@ const APIKeyInput = ({ onClose }: APIKeyInputProps = {}) => {
             <TabsContent value="openai" className="mt-4">
               <div className="grid gap-2">
                 <Label htmlFor="openaiKey">מפתח API של OpenAI</Label>
-                {isUsingGlobalOpenAIKey && (
+                {isUsingGlobalOpenAIKey ? (
                   <div className="text-sm text-green-600 mb-2">
                     משתמש במפתח גלובלי של האפליקציה
                   </div>
+                ) : (
+                  !hasOpenAIKey && (
+                    <div className="text-sm text-red-600 mb-2">
+                      נדרש להזין מפתח OpenAI API כדי להשתמש בפונקציות בינה מלאכותית
+                    </div>
+                  )
                 )}
                 <Input
                   id="openaiKey"
@@ -187,10 +201,16 @@ const APIKeyInput = ({ onClose }: APIKeyInputProps = {}) => {
             <TabsContent value="youtube" className="mt-4">
               <div className="grid gap-2">
                 <Label htmlFor="youtubeKey">מפתח API של YouTube</Label>
-                {isUsingGlobalYouTubeKey && (
+                {isUsingGlobalYouTubeKey ? (
                   <div className="text-sm text-green-600 mb-2">
                     משתמש במפתח גלובלי של האפליקציה
                   </div>
+                ) : (
+                  !hasYouTubeKey && (
+                    <div className="text-sm text-yellow-600 mb-2">
+                      נדרש להזין מפתח YouTube API כדי להשתמש בפונקציות חיפוש וידאו
+                    </div>
+                  )
                 )}
                 <Input
                   id="youtubeKey"
@@ -216,8 +236,8 @@ const APIKeyInput = ({ onClose }: APIKeyInputProps = {}) => {
           </Tabs>
           
           <DialogFooter className="mt-4">
-            <Button type="button" onClick={handleClose} variant="outline">
-              סגירה
+            <Button type="button" onClick={handleClose} variant={hasOpenAIKey ? "outline" : "default"}>
+              {hasOpenAIKey ? "סגירה" : "המשך ללא מפתח API"}
             </Button>
           </DialogFooter>
         </DialogContent>

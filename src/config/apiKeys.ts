@@ -8,6 +8,7 @@
  */
 
 export const API_KEYS = {
-  OPENAI: import.meta.env.VITE_OPENAI_API_KEY || "your-openai-api-key-here",
-  YOUTUBE: import.meta.env.VITE_YOUTUBE_API_KEY || "your-youtube-api-key-here"
+  // Use empty strings as fallbacks instead of placeholder text
+  OPENAI: import.meta.env.VITE_OPENAI_API_KEY || "",
+  YOUTUBE: import.meta.env.VITE_YOUTUBE_API_KEY || ""
 };

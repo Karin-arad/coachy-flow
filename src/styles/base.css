@@ -1,9 +1,10 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;900&display=swap');
 
 @layer base {
   :root {
@@ -90,14 +91,17 @@
   * {
     @apply border-border;
     color: #000000;
-    font-weight: bold;
-    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+    font-weight: 900;
+    text-shadow: 0.5px 0.5px 1px rgba(0, 0, 0, 0.2);
   }
 
   input, textarea, .input-field, .user-text, .user-input, [contenteditable='true'] {
-    color: #333333;
-    font-weight: normal;
+    color: #222222;
+    font-weight: 600 !important;
     text-shadow: none;
+    letter-spacing: 0.02em;
+    -webkit-text-stroke: 0.2px !important;
+    text-stroke: 0.2px !important;
   }
 
   html {
@@ -121,5 +125,10 @@
     background-color: rgba(255, 255, 255, 0.7);
     padding: 10px;
     border-radius: 8px;
+  }
+
+  h1, h2, h3, h4, .heading, .title, .subtitle, .question-text {
+    -webkit-text-stroke: 0.6px #000000;
+    text-stroke: 0.6px #000000;
   }
 }

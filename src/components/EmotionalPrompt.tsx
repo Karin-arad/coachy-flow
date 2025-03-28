@@ -52,14 +52,14 @@ const EmotionalPrompt = () => {
             className="flex items-center bg-gradient-to-r from-white/50 to-white/30 px-4 py-2 rounded-xl shadow-sm"
             whileHover={{ scale: 1.03 }}
           >
-            <span className="text-2xl font-medium text-coachy-blue">{greeting}</span>
+            <span className="text-2xl font-black text-coachy-blue">{greeting}</span>
             <Heart className="fill-coachy-red stroke-coachy-red animate-pulse-gentle mr-2" size={24} />
             <TimeIcon className="text-amber-500 ml-2 animate-[spin_30s_linear_infinite]" size={20} />
           </motion.div>
         </motion.div>
         
         <motion.h2 
-          className="text-2xl font-medium text-coachy-blue mb-6 bg-gradient-to-r from-coachy-blue to-indigo-600 bg-clip-text text-transparent"
+          className="text-2xl font-black text-coachy-blue mb-6 bg-gradient-to-r from-coachy-blue to-indigo-600 bg-clip-text text-transparent heading"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2, duration: 0.5 }}
@@ -71,6 +71,7 @@ const EmotionalPrompt = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 0.5 }}
+          className="emotional-prompt"
         >
           <Textarea
             value={freeTextEmotion}
@@ -92,7 +93,7 @@ const EmotionalPrompt = () => {
           <Button 
             onClick={handleNextClick}
             disabled={!freeTextEmotion.trim()}
-            className="continue-button px-6 py-2 rounded-xl shadow-sm relative overflow-hidden group"
+            className="continue-button px-6 py-2 rounded-xl shadow-sm relative overflow-hidden group font-black"
           >
             <span className="relative z-10">יאללה, נמשיך</span>
             <span className="absolute inset-0 bg-white/20 transform scale-x-0 group-hover:scale-x-100 group-active:scale-x-100 transition-transform origin-right duration-300"></span>

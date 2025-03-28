@@ -24,7 +24,9 @@ const AnimatedCard = ({ children, isVisible, className }: AnimatedCardProps) => 
         className
       )}
       style={{ 
-        boxShadow: isVisible ? '0 10px 40px rgba(31, 38, 135, 0.2)' : '0 8px 32px rgba(31, 38, 135, 0.15)'
+        boxShadow: isVisible ? 
+          '0 10px 40px rgba(31, 38, 135, 0.2)' : 
+          '0 8px 32px rgba(31, 38, 135, 0.15)'
       }}
     >
       <div className={cn(
@@ -33,6 +35,14 @@ const AnimatedCard = ({ children, isVisible, className }: AnimatedCardProps) => 
       )}>
         {children}
       </div>
+      
+      {/* Decorative elements */}
+      {isVisible && (
+        <>
+          <div className="absolute -top-2 -right-2 w-10 h-10 rounded-full bg-gradient-to-br from-white/40 to-white/10 blur-sm z-0"></div>
+          <div className="absolute -bottom-3 -left-3 w-12 h-12 rounded-full bg-gradient-to-tr from-white/30 to-white/5 blur-sm z-0"></div>
+        </>
+      )}
     </div>
   );
 };

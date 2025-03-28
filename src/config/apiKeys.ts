@@ -8,7 +8,6 @@
  */
 
 export const API_KEYS = {
-  OPENAI: process.env.OPENAI_API_KEY || "your-openai-api-key-here",
-  YOUTUBE: process.env.YOUTUBE_API_KEY || "your-youtube-api-key-here"
+  OPENAI: import.meta.env.VITE_OPENAI_API_KEY || "your-openai-api-key-here",
+  YOUTUBE: import.meta.env.VITE_YOUTUBE_API_KEY || "your-youtube-api-key-here"
 };
-

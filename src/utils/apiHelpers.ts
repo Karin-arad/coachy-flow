@@ -1,22 +1,33 @@
+import { API_KEYS } from "@/config/apiKeys";
 
 // API Key Constants
 export const OPENAI_API_KEY_STORAGE = 'openai-api-key';
 export const YOUTUBE_API_KEY_STORAGE = 'youtube-api-key';
 
 /**
- * גישה למפתח ה-API של OpenAI מה-localStorage
+ * גישה למפתח ה-API של OpenAI מה-localStorage או מקובץ הקונפיגורציה
  * @returns מפתח ה-API או null אם לא קיים
  */
 export const getOpenAIApiKey = (): string | null => {
-  return localStorage.getItem(OPENAI_API_KEY_STORAGE);
+  // First try to get from localStorage (for user-specific keys)
+  const localKey = localStorage.getItem(OPENAI_API_KEY_STORAGE);
+  if (localKey) return localKey;
+  
+  // Fall back to the config file key
+  return API_KEYS.OPENAI !== "your-openai-api-key-here" ? API_KEYS.OPENAI : null;
 };
 
 /**
- * גישה למפתח ה-API של YouTube מה-localStorage
+ * גישה למפתח ה-API של YouTube מה-localStorage או מקובץ הקונפיגורציה
  * @returns מפתח ה-API או null אם לא קיים
  */
 export const getYouTubeApiKey = (): string | null => {
-  return localStorage.getItem(YOUTUBE_API_KEY_STORAGE);
+  // First try to get from localStorage (for user-specific keys)
+  const localKey = localStorage.getItem(YOUTUBE_API_KEY_STORAGE);
+  if (localKey) return localKey;
+  
+  // Fall back to the config file key
+  return API_KEYS.YOUTUBE !== "your-youtube-api-key-here" ? API_KEYS.YOUTUBE : null;
 };
 
 /**

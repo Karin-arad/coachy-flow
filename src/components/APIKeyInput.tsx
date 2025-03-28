@@ -10,8 +10,11 @@ import {
   OPENAI_API_KEY_STORAGE, 
   YOUTUBE_API_KEY_STORAGE,
   hasOpenAIApiKey,
-  hasYouTubeApiKey
+  hasYouTubeApiKey,
+  getOpenAIApiKey,
+  getYouTubeApiKey
 } from '@/utils/apiHelpers';
+import { API_KEYS } from '@/config/apiKeys';
 
 interface APIKeyInputProps {
   onClose?: () => void;
@@ -23,13 +26,26 @@ const APIKeyInput = ({ onClose }: APIKeyInputProps = {}) => {
   const [youtubeKey, setYoutubeKey] = useState('');
   const [hasOpenAIKey, setHasOpenAIKey] = useState(false);
   const [hasYouTubeKey, setHasYouTubeKey] = useState(false);
+  const [isUsingGlobalOpenAIKey, setIsUsingGlobalOpenAIKey] = useState(false);
+  const [isUsingGlobalYouTubeKey, setIsUsingGlobalYouTubeKey] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
     // Check if API keys exist in localStorage on component mount
-    setHasOpenAIKey(hasOpenAIApiKey());
-    setHasYouTubeKey(hasYouTubeApiKey());
-  }, []);
+    const checkKeys = () => {
+      setHasOpenAIKey(hasOpenAIApiKey());
+      setHasYouTubeKey(hasYouTubeApiKey());
+      
+      // Check if using global keys from config
+      const openaiLocalKey = localStorage.getItem(OPENAI_API_KEY_STORAGE);
+      const youtubeLocalKey = localStorage.getItem(YOUTUBE_API_KEY_STORAGE);
+      
+      setIsUsingGlobalOpenAIKey(hasOpenAIApiKey() && !openaiLocalKey);
+      setIsUsingGlobalYouTubeKey(hasYouTubeApiKey() && !youtubeLocalKey);
+    };
+    
+    checkKeys();
+  }, [isOpen]);
 
   const saveOpenAIKey = () => {
     if (!openaiKey.trim()) {
@@ -43,6 +59,7 @@ const APIKeyInput = ({ onClose }: APIKeyInputProps = {}) => {
 
     localStorage.setItem(OPENAI_API_KEY_STORAGE, openaiKey);
     setHasOpenAIKey(true);
+    setIsUsingGlobalOpenAIKey(false);
     setOpenaiKey('');
     
     toast({
@@ -64,6 +81,7 @@ const APIKeyInput = ({ onClose }: APIKeyInputProps = {}) => {
 
     localStorage.setItem(YOUTUBE_API_KEY_STORAGE, youtubeKey);
     setHasYouTubeKey(true);
+    setIsUsingGlobalYouTubeKey(false);
     setYoutubeKey('');
     
     toast({
@@ -75,24 +93,30 @@ const APIKeyInput = ({ onClose }: APIKeyInputProps = {}) => {
 
   const removeOpenAIKey = () => {
     localStorage.removeItem(OPENAI_API_KEY_STORAGE);
-    setHasOpenAIKey(false);
+    const hasGlobalKey = API_KEYS.OPENAI !== "your-openai-api-key-here";
+    setHasOpenAIKey(hasGlobalKey);
+    setIsUsingGlobalOpenAIKey(hasGlobalKey);
     setOpenaiKey('');
     
     toast({
       title: "הוסר",
-      description: "מפתח ה-API של OpenAI הוסר מהמכשיר שלך",
+      description: "מפתח ה-API האישי של OpenAI הוסר מהמכשיר שלך" + 
+        (hasGlobalKey ? ". משתמש כעת במפתח הגלובלי" : ""),
       variant: "default"
     });
   };
 
   const removeYouTubeKey = () => {
     localStorage.removeItem(YOUTUBE_API_KEY_STORAGE);
-    setHasYouTubeKey(false);
+    const hasGlobalKey = API_KEYS.YOUTUBE !== "your-youtube-api-key-here";
+    setHasYouTubeKey(hasGlobalKey);
+    setIsUsingGlobalYouTubeKey(hasGlobalKey);
     setYoutubeKey('');
     
     toast({
       title: "הוסר",
-      description: "מפתח ה-API של YouTube הוסר מהמכשיר שלך",
+      description: "מפתח ה-API האישי של YouTube הוסר מהמכשיר שלך" + 
+        (hasGlobalKey ? ". משתמש כעת במפתח הגלובלי" : ""),
       variant: "default"
     });
   };
@@ -119,6 +143,8 @@ const APIKeyInput = ({ onClose }: APIKeyInputProps = {}) => {
             <DialogDescription>
               הכנס את מפתחות ה-API כדי לאפשר פונקציונליות של בינה מלאכותית ושירותי YouTube.
               המפתחות יישמרו באופן מקומי במכשיר שלך בלבד.
+              {(isUsingGlobalOpenAIKey || isUsingGlobalYouTubeKey) && 
+                " כרגע משתמש במפתחות גלובליים שהוגדרו על ידי מנהל האפליקציה."}
             </DialogDescription>
           </DialogHeader>
           
@@ -131,6 +157,11 @@ const APIKeyInput = ({ onClose }: APIKeyInputProps = {}) => {
             <TabsContent value="openai" className="mt-4">
               <div className="grid gap-2">
                 <Label htmlFor="openaiKey">מפתח API של OpenAI</Label>
+                {isUsingGlobalOpenAIKey && (
+                  <div className="text-sm text-green-600 mb-2">
+                    משתמש במפתח גלובלי של האפליקציה
+                  </div>
+                )}
                 <Input
                   id="openaiKey"
                   type="password"
@@ -141,7 +172,7 @@ const APIKeyInput = ({ onClose }: APIKeyInputProps = {}) => {
                   dir="ltr"
                 />
                 <div className="flex justify-between mt-2">
-                  {hasOpenAIKey && (
+                  {hasOpenAIKey && !isUsingGlobalOpenAIKey && (
                     <Button variant="outline" type="button" onClick={removeOpenAIKey}>
                       הסרת מפתח
                     </Button>
@@ -156,6 +187,11 @@ const APIKeyInput = ({ onClose }: APIKeyInputProps = {}) => {
             <TabsContent value="youtube" className="mt-4">
               <div className="grid gap-2">
                 <Label htmlFor="youtubeKey">מפתח API של YouTube</Label>
+                {isUsingGlobalYouTubeKey && (
+                  <div className="text-sm text-green-600 mb-2">
+                    משתמש במפתח גלובלי של האפליקציה
+                  </div>
+                )}
                 <Input
                   id="youtubeKey"
                   type="password"
@@ -166,7 +202,7 @@ const APIKeyInput = ({ onClose }: APIKeyInputProps = {}) => {
                   dir="ltr"
                 />
                 <div className="flex justify-between mt-2">
-                  {hasYouTubeKey && (
+                  {hasYouTubeKey && !isUsingGlobalYouTubeKey && (
                     <Button variant="outline" type="button" onClick={removeYouTubeKey}>
                       הסרת מפתח
                     </Button>

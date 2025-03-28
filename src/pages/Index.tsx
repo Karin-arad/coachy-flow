@@ -6,6 +6,7 @@ import EmotionalRating from '@/components/EmotionalRating';
 import TimeAvailability from '@/components/TimeAvailability';
 import PracticeSummary from '@/components/PracticeSummary';
 import ProgressBar from '@/components/ProgressBar';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const CoachyFlow = () => {
   const { currentScreen } = useFlowContext();
@@ -18,10 +19,21 @@ const CoachyFlow = () => {
         </div>
         
         <div className="relative w-full mt-6 flex justify-center min-h-[500px]">
-          <EmotionalPrompt />
-          <EmotionalRating />
-          <TimeAvailability />
-          <PracticeSummary />
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentScreen}
+              initial={{ opacity: 0, filter: "blur(10px)" }}
+              animate={{ opacity: 1, filter: "blur(0px)" }}
+              exit={{ opacity: 0, filter: "blur(10px)" }}
+              transition={{ duration: 0.6 }}
+              className="w-full"
+            >
+              {currentScreen === 1 && <EmotionalPrompt />}
+              {currentScreen === 2 && <EmotionalRating />}
+              {currentScreen === 3 && <TimeAvailability />}
+              {currentScreen === 4 && <PracticeSummary />}
+            </motion.div>
+          </AnimatePresence>
         </div>
       </div>
     </div>

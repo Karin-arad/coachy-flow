@@ -1,9 +1,11 @@
+
 import React from 'react';
 import { useFlowContext } from '@/context/FlowContext';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import AnimatedCard from './AnimatedCard';
-import { Heart, Sun, Moon, Cloud } from 'lucide-react';
+import { Heart, Sun, Moon } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 const EmotionalPrompt = () => {
   const { freeTextEmotion, setFreeTextEmotion, goToNextScreen, currentScreen } = useFlowContext();
@@ -40,29 +42,53 @@ const EmotionalPrompt = () => {
   return (
     <AnimatedCard isVisible={currentScreen === 1}>
       <div className="space-y-6">
-        <div className="flex items-center gap-2 mb-4">
-          <div className="flex items-center bg-gradient-to-r from-white/50 to-white/30 px-4 py-2 rounded-xl shadow-sm">
+        <motion.div 
+          className="flex items-center gap-2 mb-4"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <motion.div 
+            className="flex items-center bg-gradient-to-r from-white/50 to-white/30 px-4 py-2 rounded-xl shadow-sm"
+            whileHover={{ scale: 1.03 }}
+          >
             <span className="text-2xl font-medium text-coachy-blue">{greeting}</span>
             <Heart className="fill-coachy-red stroke-coachy-red animate-pulse-gentle mr-2" size={24} />
             <TimeIcon className="text-amber-500 ml-2 animate-[spin_30s_linear_infinite]" size={20} />
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
         
-        <h2 className="text-2xl font-medium text-coachy-blue mb-6 bg-gradient-to-r from-coachy-blue to-indigo-600 bg-clip-text text-transparent">
+        <motion.h2 
+          className="text-2xl font-medium text-coachy-blue mb-6 bg-gradient-to-r from-coachy-blue to-indigo-600 bg-clip-text text-transparent"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2, duration: 0.5 }}
+        >
           איך את/ה היום?
-        </h2>
+        </motion.h2>
         
-        <Textarea
-          value={freeTextEmotion}
-          onChange={(e) => setFreeTextEmotion(e.target.value)}
-          placeholder="רשמי את הרגשות שלך בחופשיות..."
-          className="min-h-[120px] text-right border-coachy-lightBlue focus:border-coachy-blue resize-none bg-white/80 backdrop-blur-sm rounded-xl p-4 shadow-md text-coachy-text transition-all duration-300 focus:ring-2 focus:ring-coachy-blue/30 focus:shadow-lg"
-          dir="rtl"
-          lang="he"
-          autoFocus
-        />
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3, duration: 0.5 }}
+        >
+          <Textarea
+            value={freeTextEmotion}
+            onChange={(e) => setFreeTextEmotion(e.target.value)}
+            placeholder="רשמי את הרגשות שלך בחופשיות..."
+            className="min-h-[120px] text-right border-coachy-lightBlue focus:border-coachy-blue resize-none bg-white/80 backdrop-blur-sm rounded-xl p-4 shadow-md text-coachy-text transition-all duration-300 focus:ring-2 focus:ring-coachy-blue/30 focus:shadow-lg"
+            dir="rtl"
+            lang="he"
+            autoFocus
+          />
+        </motion.div>
         
-        <div className="flex justify-end">
+        <motion.div 
+          className="flex justify-end"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.4, duration: 0.5 }}
+        >
           <Button 
             onClick={handleNextClick}
             disabled={!freeTextEmotion.trim()}
@@ -71,7 +97,7 @@ const EmotionalPrompt = () => {
             <span className="relative z-10">יאללה, נמשיך</span>
             <span className="absolute inset-0 bg-white/20 transform scale-x-0 group-hover:scale-x-100 group-active:scale-x-100 transition-transform origin-right duration-300"></span>
           </Button>
-        </div>
+        </motion.div>
       </div>
     </AnimatedCard>
   );

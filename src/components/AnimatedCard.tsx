@@ -30,7 +30,7 @@ const AnimatedCard = ({ children, isVisible, className }: AnimatedCardProps) => 
       }}
     >
       <div className={cn(
-        'transition-all duration-500',
+        'transition-all duration-500 h-full',
         isVisible && 'motion-safe:animate-fade-in motion-safe:delay-200'
       )}>
         {children}
@@ -41,6 +41,7 @@ const AnimatedCard = ({ children, isVisible, className }: AnimatedCardProps) => 
         <>
           <div className="absolute -top-2 -right-2 w-10 h-10 rounded-full bg-gradient-to-br from-white/40 to-white/10 blur-sm z-0"></div>
           <div className="absolute -bottom-3 -left-3 w-12 h-12 rounded-full bg-gradient-to-tr from-white/30 to-white/5 blur-sm z-0"></div>
+          <div className="absolute bottom-4 right-6 w-8 h-8 rounded-full bg-gradient-to-tr from-coachy-yellow/20 to-coachy-pink/10 blur-sm z-0"></div>
         </>
       )}
     </div>

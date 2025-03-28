@@ -18,8 +18,8 @@ const TimeAvailability = () => {
   ];
 
   return (
-    <AnimatedCard isVisible={currentScreen === 3}>
-      <div className="space-y-6">
+    <AnimatedCard isVisible={currentScreen === 3} className="min-h-[400px] flex flex-col">
+      <div className="space-y-6 h-full flex flex-col">
         <h2 className="text-2xl font-medium bg-gradient-to-r from-coachy-blue to-indigo-600 bg-clip-text text-transparent mb-6 flex items-center gap-2">
           <span>כמה זמן יש לך כרגע?</span>
           <Clock className="text-coachy-blue animate-[spin_10s_linear_infinite]" size={20} />
@@ -46,7 +46,7 @@ const TimeAvailability = () => {
           ))}
         </div>
         
-        <div className="flex justify-end mt-8">
+        <div className="flex justify-end mt-auto pt-6">
           <Button 
             onClick={goToNextScreen}
             disabled={!timeAvailable}

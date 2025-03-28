@@ -21,6 +21,7 @@ const ConfettiParticle = ({ color, delay, left }: { color: string; delay: number
 const PracticeSummary = () => {
   const { currentScreen, freeTextEmotion, emotionRatings, timeAvailable } = useFlowContext();
   const [showConfetti, setShowConfetti] = useState(false);
+  const [buttonClicked, setButtonClicked] = useState(false);
   
   // Confetti colors from our new palette
   const confettiColors = ['#FF8DC7', '#5B9BD5', '#4ECDC4', '#FFD166'];
@@ -40,6 +41,16 @@ const PracticeSummary = () => {
   }, [currentScreen]);
   
   const handleStartPractice = () => {
+    // Trigger confetti explosion on button click
+    setButtonClicked(true);
+    setShowConfetti(true);
+    
+    // Hide confetti after animation completes
+    setTimeout(() => {
+      setShowConfetti(false);
+      setButtonClicked(false);
+    }, 2000);
+    
     // This would connect to the practice system in the future
     console.log('Starting practice with data:', {
       freeTextEmotion,
@@ -49,22 +60,22 @@ const PracticeSummary = () => {
   };
 
   return (
-    <AnimatedCard isVisible={currentScreen === 4}>
+    <AnimatedCard isVisible={currentScreen === 4} className="min-h-[400px] flex flex-col">
       {showConfetti && (
         <>
           {/* Generate 20 confetti particles with random positions and delays */}
-          {Array.from({ length: 20 }).map((_, i) => (
+          {Array.from({ length: 30 }).map((_, i) => (
             <ConfettiParticle 
               key={i}
               color={confettiColors[i % confettiColors.length]}
-              delay={i * 100} 
-              left={`${10 + (i * 4)}%`}
+              delay={i * 50} 
+              left={`${5 + (i * 3)}%`}
             />
           ))}
         </>
       )}
       
-      <div className="space-y-6">
+      <div className="space-y-6 h-full flex flex-col">
         <div className="flex items-center justify-center gap-3 mb-4">
           <Sparkles className="text-amber-500 animate-float" size={26} />
           <h2 className="text-2xl font-medium bg-gradient-to-r from-coachy-blue to-indigo-600 bg-clip-text text-transparent">
@@ -87,16 +98,20 @@ const PracticeSummary = () => {
           </div>
         </div>
         
-        <div className="flex justify-center mt-6">
+        <div className="flex justify-center mt-auto pt-6 mb-2">
           <Button 
             onClick={handleStartPractice}
-            className="bg-gradient-to-r from-coachy-blue to-indigo-600 hover:brightness-105 text-white px-8 py-6 text-lg rounded-xl transition-all duration-500 transform hover:scale-110 active:scale-95 shadow-sm hover:shadow-lg group"
+            className="bg-gradient-to-r from-coachy-pink to-coachy-yellow hover:brightness-105 text-white px-8 py-6 text-lg rounded-xl transition-all duration-500 transform hover:scale-110 active:scale-95 shadow-sm hover:shadow-lg group relative overflow-hidden"
           >
             <span className="relative z-10 flex items-center gap-2">
               <span>התחילי תרגול</span>
               <Play className="h-5 w-5 ml-1 group-hover:animate-bounce-button" />
             </span>
             <span className="absolute inset-0 bg-white/20 transform scale-x-0 group-hover:scale-x-100 group-active:scale-x-100 transition-transform origin-right duration-300 rounded-xl"></span>
+            
+            {buttonClicked && (
+              <span className="absolute inset-0 animate-pulse bg-white/20 rounded-xl"></span>
+            )}
           </Button>
         </div>
       </div>

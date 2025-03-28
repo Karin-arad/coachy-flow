@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useFlowContext } from '@/context/FlowContext';
 import { Button } from '@/components/ui/button';
@@ -56,7 +55,7 @@ const EmotionalPrompt = () => {
         <Textarea
           value={freeTextEmotion}
           onChange={(e) => setFreeTextEmotion(e.target.value)}
-          placeholder="רשמי את התחושות שלך בחופשיות..."
+          placeholder="רשמי את הרגשות שלך בחופשיות..."
           className="min-h-[120px] text-right border-coachy-lightBlue focus:border-coachy-blue resize-none bg-white/80 backdrop-blur-sm rounded-xl p-4 shadow-md text-coachy-text transition-all duration-300 focus:ring-2 focus:ring-coachy-blue/30 focus:shadow-lg"
           dir="rtl"
           lang="he"
@@ -67,8 +66,7 @@ const EmotionalPrompt = () => {
           <Button 
             onClick={handleNextClick}
             disabled={!freeTextEmotion.trim()}
-            variant="green"
-            className="text-white px-6 py-2 transition-all duration-300 transform hover:scale-105 active:scale-95 rounded-xl shadow-sm hover:shadow-md hover:brightness-105 relative overflow-hidden group"
+            className="continue-button px-6 py-2 rounded-xl shadow-sm relative overflow-hidden group"
           >
             <span className="relative z-10">יאללה, נמשיך</span>
             <span className="absolute inset-0 bg-white/20 transform scale-x-0 group-hover:scale-x-100 group-active:scale-x-100 transition-transform origin-right duration-300"></span>

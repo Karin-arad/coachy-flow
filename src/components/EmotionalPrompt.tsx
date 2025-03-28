@@ -64,7 +64,7 @@ const EmotionalPrompt = () => {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2, duration: 0.5 }}
         >
-          איך את/ה היום?
+          איך המרגש היום?
         </motion.h2>
         
         <motion.div

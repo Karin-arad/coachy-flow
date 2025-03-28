@@ -76,7 +76,7 @@ const EmotionalPrompt = () => {
             value={freeTextEmotion}
             onChange={(e) => setFreeTextEmotion(e.target.value)}
             placeholder="רשמי את הרגשות שלך בחופשיות..."
-            className="min-h-[120px] text-right border-coachy-lightBlue focus:border-coachy-blue resize-none bg-white/80 backdrop-blur-sm rounded-xl p-4 shadow-md text-coachy-text transition-all duration-300 focus:ring-2 focus:ring-coachy-blue/30 focus:shadow-lg"
+            className="min-h-[120px] text-right border-coachy-lightBlue focus:border-coachy-blue resize-none bg-white/80 backdrop-blur-sm rounded-xl p-4 shadow-md transition-all duration-300 focus:ring-2 focus:ring-coachy-blue/30 focus:shadow-lg user-text"
             dir="rtl"
             lang="he"
             autoFocus

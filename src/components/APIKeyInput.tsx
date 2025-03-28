@@ -4,8 +4,14 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
-import { OPENAI_API_KEY_STORAGE } from '@/utils/apiHelpers';
+import { 
+  OPENAI_API_KEY_STORAGE, 
+  YOUTUBE_API_KEY_STORAGE,
+  hasOpenAIApiKey,
+  hasYouTubeApiKey
+} from '@/utils/apiHelpers';
 
 interface APIKeyInputProps {
   onClose?: () => void;
@@ -13,22 +19,20 @@ interface APIKeyInputProps {
 
 const APIKeyInput = ({ onClose }: APIKeyInputProps = {}) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [apiKey, setApiKey] = useState('');
-  const [hasSavedKey, setHasSavedKey] = useState(false);
+  const [openaiKey, setOpenaiKey] = useState('');
+  const [youtubeKey, setYoutubeKey] = useState('');
+  const [hasOpenAIKey, setHasOpenAIKey] = useState(false);
+  const [hasYouTubeKey, setHasYouTubeKey] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
-    // Check if API key exists in localStorage on component mount
-    const savedKey = localStorage.getItem(OPENAI_API_KEY_STORAGE);
-    if (savedKey) {
-      setHasSavedKey(true);
-      // For security, we don't display the actual key
-      setApiKey(''); 
-    }
+    // Check if API keys exist in localStorage on component mount
+    setHasOpenAIKey(hasOpenAIApiKey());
+    setHasYouTubeKey(hasYouTubeApiKey());
   }, []);
 
-  const saveApiKey = () => {
-    if (!apiKey.trim()) {
+  const saveOpenAIKey = () => {
+    if (!openaiKey.trim()) {
       toast({
         title: "שגיאה",
         description: "אנא הכנס מפתח API תקין",
@@ -37,30 +41,65 @@ const APIKeyInput = ({ onClose }: APIKeyInputProps = {}) => {
       return;
     }
 
-    localStorage.setItem(OPENAI_API_KEY_STORAGE, apiKey);
-    setHasSavedKey(true);
-    setIsOpen(false);
+    localStorage.setItem(OPENAI_API_KEY_STORAGE, openaiKey);
+    setHasOpenAIKey(true);
+    setOpenaiKey('');
     
     toast({
       title: "נשמר בהצלחה",
-      description: "מפתח ה-API נשמר במכשיר שלך",
+      description: "מפתח ה-API של OpenAI נשמר במכשיר שלך",
       variant: "default"
     });
-
-    // Call onClose callback if provided
-    onClose?.();
   };
 
-  const removeApiKey = () => {
+  const saveYouTubeKey = () => {
+    if (!youtubeKey.trim()) {
+      toast({
+        title: "שגיאה",
+        description: "אנא הכנס מפתח API תקין",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    localStorage.setItem(YOUTUBE_API_KEY_STORAGE, youtubeKey);
+    setHasYouTubeKey(true);
+    setYoutubeKey('');
+    
+    toast({
+      title: "נשמר בהצלחה",
+      description: "מפתח ה-API של YouTube נשמר במכשיר שלך",
+      variant: "default"
+    });
+  };
+
+  const removeOpenAIKey = () => {
     localStorage.removeItem(OPENAI_API_KEY_STORAGE);
-    setHasSavedKey(false);
-    setApiKey('');
+    setHasOpenAIKey(false);
+    setOpenaiKey('');
     
     toast({
       title: "הוסר",
-      description: "מפתח ה-API הוסר מהמכשיר שלך",
+      description: "מפתח ה-API של OpenAI הוסר מהמכשיר שלך",
       variant: "default"
     });
+  };
+
+  const removeYouTubeKey = () => {
+    localStorage.removeItem(YOUTUBE_API_KEY_STORAGE);
+    setHasYouTubeKey(false);
+    setYoutubeKey('');
+    
+    toast({
+      title: "הוסר",
+      description: "מפתח ה-API של YouTube הוסר מהמכשיר שלך",
+      variant: "default"
+    });
+  };
+
+  const handleClose = () => {
+    setIsOpen(false);
+    onClose?.();
   };
 
   return (
@@ -70,48 +109,80 @@ const APIKeyInput = ({ onClose }: APIKeyInputProps = {}) => {
         onClick={() => setIsOpen(true)}
         className="text-xs px-3 py-1 h-8 bg-white/80 border border-gray-200 shadow-sm hover:bg-white fixed top-3 right-3 z-50 rtl:right-auto rtl:left-3"
       >
-        {hasSavedKey ? "עדכון מפתח API" : "הגדרת מפתח API"}
+        {hasOpenAIKey || hasYouTubeKey ? "עדכון מפתחות API" : "הגדרת מפתחות API"}
       </Button>
       
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent className="sm:max-w-md" dir="rtl">
           <DialogHeader>
-            <DialogTitle>מפתח API של OpenAI</DialogTitle>
+            <DialogTitle>מפתחות API</DialogTitle>
             <DialogDescription>
-              הכנס את מפתח ה-API של OpenAI כדי לאפשר פונקציונליות של בינה מלאכותית.
-              המפתח יישמר באופן מקומי במכשיר שלך בלבד.
+              הכנס את מפתחות ה-API כדי לאפשר פונקציונליות של בינה מלאכותית ושירותי YouTube.
+              המפתחות יישמרו באופן מקומי במכשיר שלך בלבד.
             </DialogDescription>
           </DialogHeader>
           
-          <div className="grid gap-4 py-4">
-            <div className="grid gap-2">
-              <Label htmlFor="apiKey">מפתח API</Label>
-              <Input
-                id="apiKey"
-                type="password"
-                placeholder="sk-..."
-                value={apiKey}
-                onChange={(e) => setApiKey(e.target.value)}
-                className="font-mono text-sm"
-                dir="ltr"
-              />
-            </div>
-          </div>
+          <Tabs defaultValue="openai" className="w-full">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="openai">OpenAI</TabsTrigger>
+              <TabsTrigger value="youtube">YouTube</TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="openai" className="mt-4">
+              <div className="grid gap-2">
+                <Label htmlFor="openaiKey">מפתח API של OpenAI</Label>
+                <Input
+                  id="openaiKey"
+                  type="password"
+                  placeholder="sk-..."
+                  value={openaiKey}
+                  onChange={(e) => setOpenaiKey(e.target.value)}
+                  className="font-mono text-sm"
+                  dir="ltr"
+                />
+                <div className="flex justify-between mt-2">
+                  {hasOpenAIKey && (
+                    <Button variant="outline" type="button" onClick={removeOpenAIKey}>
+                      הסרת מפתח
+                    </Button>
+                  )}
+                  <Button type="button" onClick={saveOpenAIKey}>
+                    שמירה
+                  </Button>
+                </div>
+              </div>
+            </TabsContent>
+            
+            <TabsContent value="youtube" className="mt-4">
+              <div className="grid gap-2">
+                <Label htmlFor="youtubeKey">מפתח API של YouTube</Label>
+                <Input
+                  id="youtubeKey"
+                  type="password"
+                  placeholder="AIza..."
+                  value={youtubeKey}
+                  onChange={(e) => setYoutubeKey(e.target.value)}
+                  className="font-mono text-sm"
+                  dir="ltr"
+                />
+                <div className="flex justify-between mt-2">
+                  {hasYouTubeKey && (
+                    <Button variant="outline" type="button" onClick={removeYouTubeKey}>
+                      הסרת מפתח
+                    </Button>
+                  )}
+                  <Button type="button" onClick={saveYouTubeKey}>
+                    שמירה
+                  </Button>
+                </div>
+              </div>
+            </TabsContent>
+          </Tabs>
           
-          <DialogFooter className="sm:justify-between flex flex-row-reverse">
-            {hasSavedKey && (
-              <Button variant="outline" type="button" onClick={removeApiKey} className="ms-2">
-                הסרת מפתח
-              </Button>
-            )}
-            <div>
-              <Button type="button" onClick={() => setIsOpen(false)} variant="outline" className="ml-2">
-                ביטול
-              </Button>
-              <Button type="button" onClick={saveApiKey}>
-                שמירה
-              </Button>
-            </div>
+          <DialogFooter className="mt-4">
+            <Button type="button" onClick={handleClose} variant="outline">
+              סגירה
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

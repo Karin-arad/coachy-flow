@@ -76,6 +76,8 @@ export default {
 			},
 			fontFamily: {
 				'rubik': ['Rubik', 'sans-serif'],
+				'heebo': ['Heebo', 'sans-serif'],
+				'hebrew': ['Rubik', 'Heebo', 'sans-serif'],
 			},
 			borderRadius: {
 				lg: 'var(--radius)',

@@ -87,7 +87,7 @@ const Slider = React.forwardRef<
       {...props}
     >
       <SliderPrimitive.Track className={cn(
-        "relative h-3 w-full grow overflow-hidden rounded-full bg-gradient-to-r",
+        "relative h-4 w-full grow overflow-hidden rounded-full bg-gradient-to-r shadow-md", // increased height and added shadow
         getTrackColor(emotionType)
       )}>
         <SliderPrimitive.Range className={cn(
@@ -95,27 +95,27 @@ const Slider = React.forwardRef<
           hasSettled ? "animate-pulse-gentle" : "",
           getEmotionColor(emotionType),
           // Apply stronger shadow based on value
-          intensity > 50 && "shadow-[0_0_10px_rgba(255,255,255,0.5)]"
+          intensity > 40 && "shadow-[0_0_15px_rgba(255,255,255,0.7)]" // enhanced glow effect
         )} 
         style={{
           // Add extra shadow/glow effect based on value
-          filter: `brightness(${100 + intensity * 0.2}%)`,
-          boxShadow: `0 0 ${shadowIntensity * 15}px rgba(255,255,255,${shadowIntensity * 0.6})`,
+          filter: `brightness(${100 + intensity * 0.3}%)`, // increased brightness
+          boxShadow: `0 0 ${shadowIntensity * 20}px rgba(255,255,255,${shadowIntensity * 0.8})`, // stronger glow
           transition: "filter 0.3s ease, box-shadow 0.3s ease"
         }}
         />
       </SliderPrimitive.Track>
       <SliderPrimitive.Thumb className={cn(
-        "block h-8 w-8 rounded-full border-2 border-white bg-gradient-to-r shadow-md transition-all duration-200",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+        "block h-9 w-9 rounded-full border-2 border-white bg-gradient-to-r shadow-lg transition-all duration-200", // increased size and shadow
+        "focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring focus-visible:ring-offset-2", // stronger focus ring
         "disabled:pointer-events-none disabled:opacity-50",
-        isDragging ? "scale-110" : "hover:scale-110",
+        isDragging ? "scale-115" : "hover:scale-115", // increased scale effect
         getEmotionColor(emotionType),
         isDragging && "animate-pulse"
       )}
       style={{
         // Add transition for the thumb shadow
-        boxShadow: intensity > 60 ? `0 0 ${intensity / 10}px rgba(255,255,255,0.8)` : "",
+        boxShadow: intensity > 50 ? `0 0 ${intensity / 8}px rgba(255,255,255,0.9)` : "", // increased glow
         transition: "box-shadow 0.3s ease, transform 0.2s ease"
       }}
       >
@@ -124,18 +124,18 @@ const Slider = React.forwardRef<
             <Sparkles 
               className={cn(
                 "text-white drop-shadow-md", 
-                value[0] > (props.max || 7) * 0.8 ? "animate-sparkle" : ""
+                value[0] > (props.max || 7) * 0.7 ? "animate-sparkle" : "" // lowered threshold for animation
               )} 
-              size={12} 
+              size={14} // increased size
             />
           </div>
         )}
         {/* Add extra sparkles at high values */}
-        {showSparkles && value[0] > (props.max || 7) * 0.8 && (
+        {showSparkles && value[0] > (props.max || 7) * 0.7 && ( // lowered threshold
           <div className="absolute -bottom-1 -left-1">
             <Sparkles 
               className="text-white drop-shadow-md animate-sparkle-delayed" 
-              size={10} 
+              size={12} // increased size
             />
           </div>
         )}

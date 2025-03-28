@@ -63,7 +63,7 @@ const Slider = React.forwardRef<
     
     // Trigger celebration only when the value actually changes (not just when dragging)
     if (showCelebration && !isDragging && newValue[0] !== lastValue[0]) {
-      triggerCelebration();
+      triggerCelebration('confetti');
       setLastValue(newValue);
     }
     
@@ -79,7 +79,7 @@ const Slider = React.forwardRef<
         
         // Trigger celebration when the slider settles after dragging
         if (showCelebration && lastValue[0] !== value[0]) {
-          triggerCelebration();
+          triggerCelebration('stars');
           setLastValue(value);
         }
       }, 300);
@@ -90,6 +90,49 @@ const Slider = React.forwardRef<
   // Calculate intensity for visual effects based on value
   const intensity = Math.min(((value[0] || 1) / (props.max || 7)) * 100, 100);
   const shadowIntensity = Math.min(intensity / 80, 1);
+
+  // Generate more sparkles based on value
+  const getSparkles = () => {
+    if (!showSparkles) return null;
+    
+    const sparklePositions = [
+      { top: -1, right: -1, size: 16, delay: 0 },
+      { top: -3, right: 4, size: 14, delay: 0.2 },
+      { top: 4, right: -3, size: 12, delay: 0.4 },
+      { bottom: -1, left: -1, size: 15, delay: 0.3 },
+      { bottom: 4, right: 0, size: 10, delay: 0.5 },
+    ];
+    
+    // Only show sparkles if the value is high enough
+    const threshold = (props.max || 7) * 0.4; // Lowered threshold to show more sparkles
+    
+    if (value[0] <= threshold) {
+      return null;
+    }
+    
+    // Calculate how many sparkles to show based on value
+    const sparkleCount = Math.floor(((value[0] - threshold) / (props.max || 7)) * sparklePositions.length) + 1;
+    
+    return sparklePositions.slice(0, sparkleCount).map((pos, index) => (
+      <div 
+        key={index}
+        className="absolute" 
+        style={{
+          top: pos.top !== undefined ? `${pos.top}px` : undefined,
+          right: pos.right !== undefined ? `${pos.right}px` : undefined,
+          bottom: pos.bottom !== undefined ? `${pos.bottom}px` : undefined,
+          left: pos.left !== undefined ? `${pos.left}px` : undefined,
+          animation: `sparkle ${1.5 + pos.delay}s infinite ease-in-out`,
+          animationDelay: `${pos.delay}s`
+        }}
+      >
+        <Sparkles 
+          className="text-white drop-shadow-lg" 
+          size={pos.size} 
+        />
+      </div>
+    ));
+  };
 
   return (
     <SliderPrimitive.Root
@@ -104,7 +147,7 @@ const Slider = React.forwardRef<
       {...props}
     >
       <SliderPrimitive.Track className={cn(
-        "relative h-4 w-full grow overflow-hidden rounded-full bg-gradient-to-r shadow-md", // increased height and added shadow
+        "relative h-5 w-full grow overflow-hidden rounded-full bg-gradient-to-r shadow-md", // increased height even more
         getTrackColor(emotionType)
       )}>
         <SliderPrimitive.Range className={cn(
@@ -112,50 +155,31 @@ const Slider = React.forwardRef<
           hasSettled ? "animate-pulse-gentle" : "",
           getEmotionColor(emotionType),
           // Apply stronger shadow based on value
-          intensity > 40 && "shadow-[0_0_15px_rgba(255,255,255,0.7)]" // enhanced glow effect
+          intensity > 30 && "shadow-[0_0_20px_rgba(255,255,255,0.8)]" // enhanced glow effect
         )} 
         style={{
           // Add extra shadow/glow effect based on value
-          filter: `brightness(${100 + intensity * 0.3}%)`, // increased brightness
-          boxShadow: `0 0 ${shadowIntensity * 20}px rgba(255,255,255,${shadowIntensity * 0.8})`, // stronger glow
+          filter: `brightness(${100 + intensity * 0.5}%)`, // increased brightness
+          boxShadow: `0 0 ${shadowIntensity * 25}px rgba(255,255,255,${shadowIntensity * 0.9})`, // stronger glow
           transition: "filter 0.3s ease, box-shadow 0.3s ease"
         }}
         />
       </SliderPrimitive.Track>
       <SliderPrimitive.Thumb className={cn(
-        "block h-9 w-9 rounded-full border-2 border-white bg-gradient-to-r shadow-lg transition-all duration-200", // increased size and shadow
+        "block h-10 w-10 rounded-full border-2 border-white bg-gradient-to-r shadow-lg transition-all duration-200", // increased size and shadow
         "focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring focus-visible:ring-offset-2", // stronger focus ring
         "disabled:pointer-events-none disabled:opacity-50",
-        isDragging ? "scale-115" : "hover:scale-115", // increased scale effect
+        isDragging ? "scale-120" : "hover:scale-120", // increased scale effect
         getEmotionColor(emotionType),
         isDragging && "animate-pulse"
       )}
       style={{
         // Add transition for the thumb shadow
-        boxShadow: intensity > 50 ? `0 0 ${intensity / 8}px rgba(255,255,255,0.9)` : "", // increased glow
+        boxShadow: intensity > 40 ? `0 0 ${intensity / 6}px ${intensity / 3}px rgba(255,255,255,0.9)` : "", // increased glow
         transition: "box-shadow 0.3s ease, transform 0.2s ease"
       }}
       >
-        {showSparkles && value[0] > (props.max || 7) / 2 && (
-          <div className="absolute -top-1 -right-1">
-            <Sparkles 
-              className={cn(
-                "text-white drop-shadow-md", 
-                value[0] > (props.max || 7) * 0.7 ? "animate-sparkle" : "" // lowered threshold for animation
-              )} 
-              size={14} // increased size
-            />
-          </div>
-        )}
-        {/* Add extra sparkles at high values */}
-        {showSparkles && value[0] > (props.max || 7) * 0.7 && ( // lowered threshold
-          <div className="absolute -bottom-1 -left-1">
-            <Sparkles 
-              className="text-white drop-shadow-md animate-sparkle-delayed" 
-              size={12} // increased size
-            />
-          </div>
-        )}
+        {getSparkles()}
       </SliderPrimitive.Thumb>
     </SliderPrimitive.Root>
   )

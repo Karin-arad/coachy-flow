@@ -29,22 +29,77 @@ const ConfettiParticle = ({ color, delay, left }: { color: string; delay: number
   />
 );
 
+const SparkleEffect = ({ delay }: { delay: number }) => (
+  <motion.div
+    className="absolute z-40"
+    style={{
+      top: `${Math.random() * 80}%`,
+      left: `${Math.random() * 80}%`,
+    }}
+    initial={{ opacity: 0, scale: 0 }}
+    animate={{ 
+      opacity: [0, 1, 0],
+      scale: [0, 1, 0]
+    }}
+    transition={{
+      duration: 2,
+      delay: delay / 1000,
+      ease: "easeOut"
+    }}
+  >
+    <Sparkles 
+      className="text-amber-400" 
+      size={Math.random() * 20 + 10} 
+    />
+  </motion.div>
+);
+
 const PracticeSummary = () => {
   const { currentScreen, freeTextEmotion, emotionRatings, timeAvailable } = useFlowContext();
   const [showConfetti, setShowConfetti] = useState(false);
+  const [showSparkles, setShowSparkles] = useState(false);
   const [buttonClicked, setButtonClicked] = useState(false);
   const [celebrationType, setCelebrationType] = useState<'confetti' | 'fireworks' | 'stars' | 'emoji' | 'colorful-fireworks' | ''>('');
   const [celebrationActive, setCelebrationActive] = useState(false);
   
-  const confettiColors = ['#FF8DC7', '#5B9BD5', '#4ECDC4', '#FFD166'];
+  const confettiColors = ['#FF8DC7', '#5B9BD5', '#4ECDC4', '#FFD166', '#FC9E4F', '#A0CED9', '#FFC09F'];
   
   useEffect(() => {
     if (currentScreen === 4) {
+      // Show initial sparkles
+      setShowSparkles(true);
+      
+      // Show initial celebration
       setCelebrationType('stars');
       setCelebrationActive(true);
       
+      // Schedule additional celebrations for a continuous effect
+      const celebrations = [
+        { type: 'confetti', delay: 1000 },
+        { type: 'colorful-fireworks', delay: 2500 },
+        { type: 'emoji', delay: 4000 }
+      ];
+      
+      celebrations.forEach(({ type, delay }) => {
+        setTimeout(() => {
+          setCelebrationType(type as any);
+          setCelebrationActive(true);
+          
+          // Auto-disable after a duration
+          setTimeout(() => {
+            setCelebrationActive(false);
+          }, 2000);
+        }, delay);
+      });
+      
+      // Auto-disable initial celebration
       const timer = setTimeout(() => {
         setCelebrationActive(false);
+        
+        // Turn off sparkles after all celebrations
+        setTimeout(() => {
+          setShowSparkles(false);
+        }, 5000);
       }, 2000);
       
       return () => clearTimeout(timer);
@@ -54,17 +109,32 @@ const PracticeSummary = () => {
   const handleStartPractice = () => {
     setButtonClicked(true);
     setShowConfetti(true);
+    setShowSparkles(true);
     
-    const celebrations = ['confetti', 'fireworks', 'emoji', 'colorful-fireworks'] as const;
-    const randomCelebration = celebrations[Math.floor(Math.random() * celebrations.length)];
-    setCelebrationType(randomCelebration);
-    setCelebrationActive(true);
+    // Trigger multiple celebration types in sequence
+    const celebrations = [
+      { type: 'confetti', delay: 0 },
+      { type: 'fireworks', delay: 800 },
+      { type: 'emoji', delay: 1600 }
+    ];
+    
+    celebrations.forEach(({ type, delay }) => {
+      setTimeout(() => {
+        setCelebrationType(type as any);
+        setCelebrationActive(true);
+        
+        // Auto-disable after a duration
+        setTimeout(() => {
+          setCelebrationActive(false);
+        }, 2000);
+      }, delay);
+    });
     
     setTimeout(() => {
       setShowConfetti(false);
       setButtonClicked(false);
-      setCelebrationActive(false);
-    }, 3000);
+      setShowSparkles(false);
+    }, 4000);
     
     console.log('Starting practice with data:', {
       freeTextEmotion,
@@ -85,13 +155,21 @@ const PracticeSummary = () => {
         <AnimatePresence>
           {showConfetti && (
             <>
-              {Array.from({ length: 40 }).map((_, i) => (
+              {Array.from({ length: 60 }).map((_, i) => (
                 <ConfettiParticle 
                   key={i}
                   color={confettiColors[i % confettiColors.length]}
-                  delay={i * 30} 
+                  delay={i * 20} 
                   left={`${Math.random() * 90}%`}
                 />
+              ))}
+            </>
+          )}
+          
+          {showSparkles && (
+            <>
+              {Array.from({ length: 20 }).map((_, i) => (
+                <SparkleEffect key={i} delay={i * 100} />
               ))}
             </>
           )}
@@ -104,11 +182,11 @@ const PracticeSummary = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.5 }}
           >
-            <Sparkles className="text-amber-500 animate-float" size={26} />
+            <Sparkles className="text-amber-500 animate-float" size={30} />
             <h2 className="text-2xl font-medium text-gray-500">
               נהדר!
             </h2>
-            <Heart className="fill-coachy-red stroke-coachy-red animate-heartbeat" size={32} />
+            <Heart className="fill-coachy-red stroke-coachy-red animate-heartbeat" size={34} />
           </motion.div>
 
           <motion.p 
@@ -133,11 +211,14 @@ const PracticeSummary = () => {
                 whileHover={{ scale: 1.05 }}
               >
                 <motion.div 
-                  className="w-16 h-16 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center shadow-lg group-hover:scale-125 transition-transform duration-500 hover:bg-gradient-to-r hover:from-coachy-blue hover:to-indigo-600"
+                  className="w-20 h-20 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center shadow-lg group-hover:scale-125 transition-transform duration-500 hover:bg-gradient-to-r hover:from-coachy-blue hover:to-indigo-600 relative"
                   whileHover={{ scale: 1.2 }}
                   whileTap={{ scale: 0.9 }}
                 >
-                  <Play className="text-coachy-blue group-hover:text-white h-8 w-8 ml-1 transition-colors duration-500" />
+                  {/* Add sparkles around the play button */}
+                  <Sparkles className="absolute -top-2 -right-2 text-amber-400" size={15} />
+                  <Sparkles className="absolute -bottom-3 -left-1 text-amber-400" size={12} />
+                  <Play className="text-coachy-blue group-hover:text-white h-10 w-10 ml-1 transition-colors duration-500" />
                 </motion.div>
                 <p>כאן יופיע סרטון YouTube עם תרגול מותאם אישית</p>
               </motion.div>
@@ -161,12 +242,16 @@ const PracticeSummary = () => {
               </span>
               <span className="absolute inset-0 bg-white/20 transform scale-x-0 group-hover:scale-x-100 group-active:scale-x-100 transition-transform origin-right duration-300 rounded-xl"></span>
               
+              {/* Add sparkles around the button */}
+              <Sparkles className="absolute -top-2 -right-2 text-white animate-sparkle" size={15} />
+              <Sparkles className="absolute bottom-0 left-1/4 text-white animate-sparkle-delayed" size={12} />
+              
               {buttonClicked && (
                 <motion.span 
-                  className="absolute inset-0 bg-white/20 rounded-xl"
+                  className="absolute inset-0 bg-white/30 rounded-xl"
                   initial={{ opacity: 0 }}
-                  animate={{ opacity: [0, 0.2, 0] }}
-                  transition={{ duration: 0.5 }}
+                  animate={{ opacity: [0, 0.3, 0] }}
+                  transition={{ duration: 0.8 }}
                 />
               )}
             </Button>

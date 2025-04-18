@@ -1,5 +1,4 @@
 import React from 'react';
-import { Feather, Eye, Flame, Weight } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 type EmotionAnimationType = 'bounciness' | 'energy' | 'alertness' | 'lightness';
@@ -98,7 +97,7 @@ const EmotionAnimation: React.FC<EmotionAnimationProps> = ({ type, value, maxVal
                 }}
                 className="text-6xl"
               >
-                {intensity < 0.3 ? "😴" : intensity < 0.6 ? "😊" : "👀"}
+                {intensity < 0.3 ? "😴" : intensity < 0.6 ? "🧐" : "🚨"}
               </motion.div>
             </motion.div>
           </div>

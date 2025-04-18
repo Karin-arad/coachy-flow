@@ -1,9 +1,9 @@
+
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
 import { Check, Sparkles } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { useFlowContext } from "@/context/FlowContext"
 
 const buttonVariants = cva(
   "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
@@ -64,7 +64,25 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const [isClicked, setIsClicked] = React.useState(false);
     const [showCompletion, setShowCompletion] = React.useState(false);
     const [showSparkles, setShowSparkles] = React.useState(false);
-    const { triggerCelebration } = useFlowContext();
+    
+    // Import FlowContext only if it's needed
+    const { useFlowContext } = require('@/context/FlowContext');
+    
+    // Check if the FlowContext is available (safety check)
+    const safeUseFlowContext = () => {
+      try {
+        return useFlowContext();
+      } catch (error) {
+        // Return a dummy object with the methods we need
+        return {
+          triggerCelebration: () => {
+            console.log('triggerCelebration called, but FlowContext is not available');
+          }
+        };
+      }
+    };
+    
+    const flowContext = safeUseFlowContext();
 
     const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
       setIsClicked(true);
@@ -83,8 +101,8 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         }, 200);
       }
       
-      if (showCelebration && !props.disabled) {
-        triggerCelebration('confetti');
+      if (showCelebration && !props.disabled && flowContext.triggerCelebration) {
+        flowContext.triggerCelebration('confetti');
       }
       
       setTimeout(() => {

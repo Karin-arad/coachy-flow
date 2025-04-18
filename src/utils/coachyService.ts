@@ -11,8 +11,10 @@
  */
 export const askCoachyAI = async (question: string): Promise<string> => {
   console.log('🔵 Sending question to Coachy API:', question);
+  console.log('🌐 API URL:', 'https://coachylovable.karinzahav.repl.co/ask');
   
   try {
+    console.log('📡 Preparing request with question:', question);
     const response = await fetch('https://coachylovable.karinzahav.repl.co/ask', {
       method: 'POST',
       headers: {
@@ -23,12 +25,15 @@ export const askCoachyAI = async (question: string): Promise<string> => {
       }),
     });
     
+    console.log('📡 Raw response:', response);
+    
     if (!response.ok) {
+      console.error('⛔ Server error:', response.status, response.statusText);
       throw new Error(`שגיאה בתקשורת עם השרת: ${response.status}`);
     }
     
     const data = await response.json();
-    console.log('✅ Received response from Coachy API:', data);
+    console.log('✅ Received response data from Coachy API:', data);
     return data.answer;
   } catch (error) {
     console.error('❌ Error communicating with Coachy API:', error);

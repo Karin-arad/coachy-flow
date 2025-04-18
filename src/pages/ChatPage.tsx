@@ -24,6 +24,7 @@ const ChatPage = () => {
 
   // Initial welcome message
   useEffect(() => {
+    console.log('💬 Chat page loaded - initializing welcome message');
     setMessages([
       {
         id: 'welcome',
@@ -40,9 +41,13 @@ const ChatPage = () => {
   }, [messages]);
 
   const handleSendMessage = async (e?: React.FormEvent) => {
+    console.log('🔘 Send button clicked or form submitted', { inputValue: input });
     e?.preventDefault();
     
-    if (!input.trim()) return;
+    if (!input.trim()) {
+      console.log('⚠️ Empty input, not sending message');
+      return;
+    }
     
     const userMessage: Message = {
       id: `user-${Date.now()}`,
@@ -79,6 +84,12 @@ const ChatPage = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  // Log whenever input changes
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInput(e.target.value);
+    console.log('✏️ Input changed:', e.target.value);
   };
 
   return (
@@ -144,11 +155,15 @@ const ChatPage = () => {
           <Input
             placeholder="הקלד את הודעתך כאן..."
             value={input}
-            onChange={(e) => setInput(e.target.value)}
+            onChange={handleInputChange}
             disabled={isLoading}
             className="flex-1"
           />
-          <Button type="submit" disabled={isLoading || !input.trim()}>
+          <Button 
+            type="submit" 
+            disabled={isLoading || !input.trim()}
+            onClick={() => console.log('🔘 Send button clicked directly')}
+          >
             <Send className="h-5 w-5" />
           </Button>
         </div>

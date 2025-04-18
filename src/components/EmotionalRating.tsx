@@ -1,4 +1,3 @@
-
 import React, { useEffect } from 'react';
 import { useFlowContext } from '@/context/FlowContext';
 import { Button } from '@/components/ui/button';
@@ -31,35 +30,49 @@ const EmotionalRating = () => {
       label: 'קופצנות', 
       question: 'כמה קופצנית את מרגישה?', 
       icon: <Feather className="text-coachy-pink animate-float" size={16} />,
-      type: 'bounciness' as const
+      type: 'bounciness' as const,
+      scaleLabels: {
+        min: 'כלל לא קופצנית',
+        max: 'מאוד קופצנית'
+      }
     },
     { 
       id: 'energy', 
       label: 'אנרגיה', 
       question: 'מה רמת האנרגיה שלך?', 
       icon: <Zap className="text-coachy-yellow animate-pulse-gentle" size={16} />,
-      type: 'energy' as const
+      type: 'energy' as const,
+      scaleLabels: {
+        min: 'חסר אנרגיה',
+        max: 'מלא אנרגיה'
+      }
     },
     { 
       id: 'alertness', 
       label: 'ערנות', 
       question: 'כמה ערנית את מרגישה?', 
       icon: <Eye className="text-coachy-blue animate-pulse-gentle" size={16} />,
-      type: 'alertness' as const
+      type: 'alertness' as const,
+      scaleLabels: {
+        min: 'מאוד עייפה',
+        max: 'מאוד ערנית'
+      }
     },
     { 
       id: 'lightness', 
       label: 'קלילות', 
       question: 'מה תחושת הקלילות שלך?', 
       icon: <Feather className="text-coachy-turquoise animate-float" size={16} />,
-      type: 'lightness' as const
+      type: 'lightness' as const,
+      scaleLabels: {
+        min: 'לא קליל כלל',
+        max: 'מאוד קליל'
+      }
     },
   ];
 
-  // Get current parameter
   const currentParam = parameters[currentSlider];
   
-  // Determine if we're on the last parameter
   const isLastSlider = currentSlider === parameters.length - 1;
 
   return (
@@ -115,14 +128,13 @@ const EmotionalRating = () => {
                 className="py-1"
               />
               <div className="flex justify-between text-xs text-gray-500 font-medium">
-                <span>נמוך</span>
-                <span>גבוה</span>
+                <span>{currentParam.scaleLabels.min}</span>
+                <span>{currentParam.scaleLabels.max}</span>
               </div>
             </div>
           )}
         </div>
         
-        {/* Navigation buttons */}
         <div className="flex justify-between mt-2">
           <Button
             variant="outline"
@@ -157,7 +169,6 @@ const EmotionalRating = () => {
           )}
         </div>
         
-        {/* Pagination dots for visual feedback */}
         <div className="flex justify-center gap-2 mt-1">
           {parameters.map((_, index) => (
             <div 

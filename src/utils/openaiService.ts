@@ -1,4 +1,5 @@
-import { getOpenAIHeaders, getYouTubeApiKey } from './apiHelpers';
+
+import { getYouTubeApiKey } from './apiHelpers';
 
 export interface ChatMessage {
   role: 'system' | 'user' | 'assistant';
@@ -19,12 +20,16 @@ export interface ChatCompletionResponse {
   }[];
 }
 
+// Since we're not using OpenAI API directly, but instead relying on our custom server,
+// this function is kept for compatibility but will likely not be used
 export const createChatCompletion = async (
   messages: ChatMessage[],
   model: string = 'gpt-3.5-turbo'
 ): Promise<string> => {
   try {
-    const headers = getOpenAIHeaders();
+    const headers = {
+      'Content-Type': 'application/json'
+    };
     
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',

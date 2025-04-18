@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useFlowContext } from '@/context/FlowContext';
 import { Button } from '@/components/ui/button';
@@ -15,16 +14,40 @@ interface VideoData {
   title: string;
 }
 
+const WORKOUT_TYPES = [
+  { type: "yoga", keywords: ["yoga", "יוגה", "גמישות", "מתיחות", "רוגע", "נשימה"] },
+  { type: "pilates", keywords: ["pilates", "פילאטיס", "ליבה", "חיזוק"] },
+  { type: "hiit", keywords: ["hiit", "היט", "אינטרוול", "אינטנסיבי", "קרדיו"] },
+  { type: "meditation", keywords: ["meditation", "מדיטציה", "מיינדפולנס", "רוגע", "נשימות"] },
+  { type: "dance", keywords: ["dance", "ריקוד", "זומבה", "תנועה"] },
+  { type: "strength", keywords: ["strength", "חיזוק", "כוח", "שרירים", "משקולות"] },
+  { type: "stretching", keywords: ["stretching", "מתיחות", "גמישות"] },
+  { type: "cardio", keywords: ["cardio", "קרדיו", "אירובי", "לב", "ריצה"] },
+  { type: "walking", keywords: ["walking", "הליכה", "צעידה"] },
+  { type: "barre", keywords: ["barre", "באר", "בלט"] },
+  { type: "functional", keywords: ["functional", "פונקציונלי", "תפקודי"] }
+];
+
 const PracticeSummary = () => {
   const { currentScreen, freeTextEmotion, emotionRatings, timeAvailable } = useFlowContext();
   const [buttonClicked, setButtonClicked] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [videoData, setVideoData] = useState<VideoData | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [workoutHistory, setWorkoutHistory] = useState<string[]>([]);
   const { toast } = useToast();
   
   useEffect(() => {
-    // Only search for videos when we reach this screen
+    const history = localStorage.getItem('workout-history');
+    if (history) {
+      try {
+        setWorkoutHistory(JSON.parse(history));
+      } catch (e) {
+        console.error('Error parsing workout history:', e);
+        setWorkoutHistory([]);
+      }
+    }
+    
     if (currentScreen === 4) {
       searchForWorkoutVideo();
     }
@@ -45,8 +68,7 @@ const PracticeSummary = () => {
         return;
       }
       
-      // Generate search query based on user inputs
-      let searchQuery = generateSearchQuery(freeTextEmotion, emotionRatings, timeAvailable);
+      let searchQuery = generateSearchQuery(freeTextEmotion, emotionRatings, timeAvailable, workoutHistory);
       console.log('🔍 Generated search query:', searchQuery);
       
       const response = await fetchYouTubeData(searchQuery);
@@ -67,6 +89,8 @@ const PracticeSummary = () => {
           id: video.id.videoId,
           title: video.snippet.title
         });
+        
+        updateWorkoutHistory(searchQuery);
       } else {
         console.warn('⚠️ No YouTube videos found for the search query');
         setError('No videos found for your preferences');
@@ -84,38 +108,79 @@ const PracticeSummary = () => {
     }
   };
   
+  const updateWorkoutHistory = (searchQuery: string) => {
+    const workoutType = WORKOUT_TYPES.find(workout => 
+      searchQuery.toLowerCase().includes(workout.type)
+    )?.type || "unknown";
+    
+    const updatedHistory = [...workoutHistory, workoutType].slice(-5);
+    setWorkoutHistory(updatedHistory);
+    
+    try {
+      localStorage.setItem('workout-history', JSON.stringify(updatedHistory));
+    } catch (e) {
+      console.error('Error saving workout history:', e);
+    }
+    
+    console.log('🔄 Updated workout history:', updatedHistory);
+  };
+  
   const generateSearchQuery = (
     freeText: string, 
     ratings: typeof emotionRatings, 
-    time: string
+    time: string,
+    history: string[]
   ): string => {
-    // Create intensity description based on ratings
     let intensity = "moderate";
     const averageEnergy = (ratings.energy + ratings.bounciness) / 2;
     if (averageEnergy <= 3) intensity = "gentle";
     else if (averageEnergy >= 5) intensity = "energetic";
     
-    // Create focus area based on free text
-    let focusArea = "";
-    const keywords = ["yoga", "pilates", "hiit", "stretching", "meditation", "cardio", "strength"];
-    for (const keyword of keywords) {
-      if (freeText.toLowerCase().includes(keyword)) {
-        focusArea = keyword;
-        break;
+    const suggestedWorkouts = findMatchingWorkouts(freeText.toLowerCase());
+    
+    let filteredWorkouts = suggestedWorkouts.filter(workout => !history.includes(workout.type));
+    
+    if (filteredWorkouts.length === 0) {
+      filteredWorkouts = suggestedWorkouts.length > 0 ? suggestedWorkouts : WORKOUT_TYPES;
+    }
+    
+    let selectedWorkout;
+    
+    if (filteredWorkouts.length > 0) {
+      const randomIndex = Math.floor(Math.random() * filteredWorkouts.length);
+      selectedWorkout = filteredWorkouts[randomIndex];
+    } else {
+      if (averageEnergy <= 3) {
+        const gentleWorkouts = WORKOUT_TYPES.filter(w => 
+          ["yoga", "stretching", "meditation", "walking"].includes(w.type)
+        );
+        selectedWorkout = gentleWorkouts[Math.floor(Math.random() * gentleWorkouts.length)];
+      } else if (averageEnergy >= 5) {
+        const intenseWorkouts = WORKOUT_TYPES.filter(w => 
+          ["hiit", "cardio", "dance", "strength"].includes(w.type)
+        );
+        selectedWorkout = intenseWorkouts[Math.floor(Math.random() * intenseWorkouts.length)];
+      } else {
+        const balancedWorkouts = WORKOUT_TYPES.filter(w => 
+          ["pilates", "barre", "functional", "strength"].includes(w.type)
+        );
+        selectedWorkout = balancedWorkouts[Math.floor(Math.random() * balancedWorkouts.length)];
       }
     }
     
-    // Default to yoga if no specific focus found
-    if (!focusArea) focusArea = "yoga";
-    
-    // Extract time duration
     let duration = "";
     if (time.includes("10")) duration = "10 minute";
     else if (time.includes("20")) duration = "20 minute";
     else if (time.includes("חצי")) duration = "30 minute";
     else if (time.includes("שעה")) duration = "60 minute";
     
-    return `${intensity} ${focusArea} workout ${duration}`.trim();
+    return `${intensity} ${selectedWorkout.type} workout ${duration}`.trim();
+  };
+  
+  const findMatchingWorkouts = (text: string): typeof WORKOUT_TYPES => {
+    return WORKOUT_TYPES.filter(workout => 
+      workout.keywords.some(keyword => text.includes(keyword))
+    );
   };
 
   const handleStartPractice = () => {
@@ -128,7 +193,6 @@ const PracticeSummary = () => {
       videoData
     });
     
-    // If we have video data, let's open YouTube in a new tab
     if (videoData) {
       window.open(`https://www.youtube.com/watch?v=${videoData.id}`, '_blank');
     }

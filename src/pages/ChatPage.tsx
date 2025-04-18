@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { askCoachyAI } from '@/utils/coachyService';
 import { Button } from '@/components/ui/button';
@@ -24,22 +23,43 @@ interface Message {
   video?: VideoData;
 }
 
+const WORKOUT_TYPES = [
+  { type: "yoga", keywords: ["yoga", "יוגה", "גמישות", "מתיחות", "רוגע", "נשימה"] },
+  { type: "pilates", keywords: ["pilates", "פילאטיס", "ליבה", "חיזוק"] },
+  { type: "hiit", keywords: ["hiit", "היט", "אינטרוול", "אינטנסיבי", "קרדיו"] },
+  { type: "meditation", keywords: ["meditation", "מדיטציה", "מיינדפולנס", "רוגע", "נשימות"] },
+  { type: "dance", keywords: ["dance", "ריקוד", "זומבה", "תנועה"] },
+  { type: "strength", keywords: ["strength", "חיזוק", "כוח", "שרירים", "משקולות"] },
+  { type: "stretching", keywords: ["stretching", "מתיחות", "גמישות"] },
+  { type: "cardio", keywords: ["cardio", "קרדיו", "אירובי", "לב", "ריצה"] }
+];
+
 const ChatPage = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
+  const [workoutHistory, setWorkoutHistory] = useState<string[]>([]);
 
   useEffect(() => {
     console.log('💬 Chat page loaded - initializing welcome message');
     const hasYTKey = hasYouTubeApiKey();
     console.log('🔑 YouTube API key availability:', hasYTKey ? `Available (starts with: ${getYouTubeApiKey()?.substring(0, 3)}...)` : 'Not available');
     
+    const history = localStorage.getItem('workout-history');
+    if (history) {
+      try {
+        setWorkoutHistory(JSON.parse(history));
+      } catch (e) {
+        console.error('Error parsing workout history:', e);
+      }
+    }
+    
     setMessages([
       {
         id: 'welcome',
-        content: 'שלום! אני כאן כדי לעזור לך. במה אוכל לסייע היום?',
+        content: 'שלום! אני כאן כדי לעזור ל��. במה אוכל לסייע היום?',
         sender: 'assistant',
         timestamp: new Date(),
       },
@@ -61,15 +81,35 @@ const ChatPage = () => {
         return null;
       }
       
-      let searchQuery = `${aiResponse.substring(0, 100)} workout tutorial`;
+      const combinedText = `${userInput.toLowerCase()} ${aiResponse.toLowerCase()}`;
       
-      const keywords = ['yoga', 'pilates', 'hiit', 'stretching', 'meditation', 'cardio', 'strength'];
-      for (const keyword of keywords) {
-        if (userInput.toLowerCase().includes(keyword) || 
-            aiResponse.toLowerCase().includes(keyword)) {
-          searchQuery = `${keyword} ${searchQuery}`;
-          break;
-        }
+      const matchingWorkouts = WORKOUT_TYPES.filter(workout => 
+        workout.keywords.some(keyword => combinedText.includes(keyword))
+      );
+      
+      let filteredWorkouts = matchingWorkouts.filter(workout => 
+        !workoutHistory.includes(workout.type)
+      );
+      
+      if (filteredWorkouts.length === 0) {
+        filteredWorkouts = matchingWorkouts.length > 0 ? matchingWorkouts : WORKOUT_TYPES;
+      }
+      
+      const randomIndex = Math.floor(Math.random() * filteredWorkouts.length);
+      const selectedWorkout = filteredWorkouts[randomIndex];
+      
+      let searchQuery = `${selectedWorkout.type} workout`;
+      
+      if (combinedText.includes("gentle") || combinedText.includes("קל")) {
+        searchQuery = `gentle ${searchQuery}`;
+      } else if (combinedText.includes("intense") || combinedText.includes("אינטנסיבי")) {
+        searchQuery = `intense ${searchQuery}`;
+      }
+      
+      if (combinedText.includes("quick") || combinedText.includes("מהיר")) {
+        searchQuery = `${searchQuery} 10 minutes`;
+      } else if (combinedText.includes("long") || combinedText.includes("ארוך")) {
+        searchQuery = `${searchQuery} 30 minutes`;
       }
       
       console.log('🔍 Search query for YouTube:', searchQuery);
@@ -84,6 +124,16 @@ const ChatPage = () => {
         console.log('✅ Found YouTube videos:', videoData.items.length);
         const video = videoData.items[0];
         console.log('📺 Selected video:', video.snippet.title);
+        
+        const updatedHistory = [...workoutHistory, selectedWorkout.type].slice(-5);
+        setWorkoutHistory(updatedHistory);
+        
+        try {
+          localStorage.setItem('workout-history', JSON.stringify(updatedHistory));
+        } catch (e) {
+          console.error('Error saving workout history:', e);
+        }
+        
         return {
           id: video.id.videoId,
           title: video.snippet.title

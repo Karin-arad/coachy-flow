@@ -85,10 +85,7 @@ const EmotionalRating = () => {
       className="screen-2-container"
     >
       <div className="space-y-3 text-sm">
-        <h2 className="text-lg font-medium text-coachy-blue mb-2 flex items-center gap-2">
-          <span>דרגי את עצמך מ־1 עד 7 בכל אחד מהפרמטרים הבאים:</span>
-          <Sparkles className="text-amber-500" size={16} />
-        </h2>
+        {/* Removed the instruction text as requested */}
         
         <div className="space-y-4">
           {currentParam && (
@@ -122,14 +119,30 @@ const EmotionalRating = () => {
                   {emotionRatings[currentParam.id as keyof typeof emotionRatings]}
                 </div>
               </div>
-              <EmotionAnimation
-                type={currentParam.id as 'bounciness' | 'energy' | 'alertness' | 'lightness'}
-                value={emotionRatings[currentParam.id as keyof typeof emotionRatings]}
-                maxValue={maxSliderValue}
+              
+              {/* Add the slider here with explicit styling to ensure visibility */}
+              <Slider
+                value={[maxSliderValue + 1 - emotionRatings[currentParam.id as keyof typeof emotionRatings]]}
+                min={1}
+                max={maxSliderValue}
+                step={1}
+                onValueChange={(value) => handleRatingChange(currentParam.id as keyof typeof emotionRatings, value)}
+                className="my-4 w-full"
+                emotionType={currentParam.id as "energy" | "bounciness" | "alertness" | "lightness"}
               />
+              
               <div className="flex justify-between text-xs text-gray-500 font-medium">
                 <span>{currentParam.scaleLabels.min}</span>
                 <span>{currentParam.scaleLabels.max}</span>
+              </div>
+              
+              {/* Animation container with better spacing */}
+              <div className="mt-4 mb-2">
+                <EmotionAnimation
+                  type={currentParam.id as 'bounciness' | 'energy' | 'alertness' | 'lightness'}
+                  value={emotionRatings[currentParam.id as keyof typeof emotionRatings]}
+                  maxValue={maxSliderValue}
+                />
               </div>
             </div>
           )}
@@ -186,4 +199,3 @@ const EmotionalRating = () => {
 };
 
 export default EmotionalRating;
-

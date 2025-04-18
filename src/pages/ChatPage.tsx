@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { askCoachyAI } from '@/utils/coachyService';
 import { Button } from '@/components/ui/button';
@@ -34,6 +35,52 @@ const WORKOUT_TYPES = [
   { type: "cardio", keywords: ["cardio", "קרדיו", "אירובי", "לב", "ריצה"] }
 ];
 
+// Custom responses to avoid generic messages
+const PERSONALIZED_RESPONSES = [
+  (userText: string) => {
+    if (userText.includes("עייפ") || userText.includes("עייף")) {
+      return "אני רואה שאת מרגישה עייפות. זה לגמרי בסדר, לפעמים הגוף שלנו צריך מנוחה. אולי תנועה עדינה תעזור לך להתרענן?";
+    }
+    return "";
+  },
+  (userText: string) => {
+    if (userText.includes("שמח") || userText.includes("טוב")) {
+      return "כיף לשמוע שאת במצב רוח טוב! בואי ננצל את האנרגיה החיובית הזאת לתרגול שישמור על התחושה הטובה הזו.";
+    }
+    return "";
+  },
+  (userText: string) => {
+    if (userText.includes("לחץ") || userText.includes("מתח") || userText.includes("מתוח")) {
+      return "אני מבינה שאת מרגישה לחץ. תרגול גופני יכול לעזור לשחרר את המתח הזה. בואי נמצא משהו שיעזור לך להירגע.";
+    }
+    return "";
+  },
+  (userText: string) => {
+    if (userText.includes("כאב") || userText.includes("כואב")) {
+      return "אני שומעת שיש לך כאבים. חשוב להקשיב לגוף שלך. אולי תרגול עדין במיוחד יעזור להקל על הכאב בלי להחמיר אותו?";
+    }
+    return "";
+  },
+];
+
+// Avoid repetitive generic responses
+const getPersonalizedResponse = (userInput: string): string => {
+  for (const responseGenerator of PERSONALIZED_RESPONSES) {
+    const response = responseGenerator(userInput);
+    if (response) return response;
+  }
+  
+  // Vary generic responses to avoid repetition
+  const genericResponses = [
+    "תודה שחלקת איתי! אני אנסה למצוא תרגול שיתאים למה שאת צריכה כרגע.",
+    "אני מעריכה את השיתוף שלך. בואי נמצא יחד תרגול שמתאים למצב הרוח שלך.",
+    "קלטתי את מה שאת מרגישה. בואי נחשוב על תרגול שיכול להתאים במיוחד בשבילך.",
+    "תודה על השיתוף. אשתדל להציע לך תרגול שמתאים לאיך שאת מרגישה עכשיו."
+  ];
+  
+  return genericResponses[Math.floor(Math.random() * genericResponses.length)];
+};
+
 const ChatPage = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
@@ -59,7 +106,7 @@ const ChatPage = () => {
     setMessages([
       {
         id: 'welcome',
-        content: 'שלום! אני כאן כדי לעזור ל��. במה אוכל לסייע היום?',
+        content: 'שלום! אני כאן כדי לעזור לך. במה אוכל לסייע היום?',
         sender: 'assistant',
         timestamp: new Date(),
       },
@@ -176,14 +223,23 @@ const ChatPage = () => {
     
     try {
       console.log('⏳ Waiting for AI response...');
-      const response = await askCoachyAI(input);
-      console.log('📥 AI response received:', response);
+      const rawResponse = await askCoachyAI(input);
+      console.log('📥 AI response received:', rawResponse);
       
-      const videoData = await findWorkoutVideo(input, response);
+      // Process the response to make it more personalized
+      let personalizedResponse = getPersonalizedResponse(input);
+      if (personalizedResponse && rawResponse) {
+        // Combine personalized intro with the AI response
+        personalizedResponse += " " + rawResponse;
+      } else {
+        personalizedResponse = rawResponse;
+      }
+      
+      const videoData = await findWorkoutVideo(input, personalizedResponse);
       
       const assistantMessage: Message = {
         id: `assistant-${Date.now()}`,
-        content: response,
+        content: personalizedResponse,
         sender: 'assistant',
         timestamp: new Date(),
         video: videoData || undefined
@@ -208,7 +264,7 @@ const ChatPage = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-gradient-to-br from-white via-[#f8f9fa] to-white">
+    <div className="flex flex-col h-screen w-full max-w-full bg-gradient-to-br from-white via-[#f8f9fa] to-white">
       <APIKeyInput />
       
       <header className="p-4 border-b flex items-center justify-between">

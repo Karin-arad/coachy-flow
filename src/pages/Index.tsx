@@ -37,7 +37,7 @@ const CoachyFlow = () => {
   };
   
   return (
-    <div className={`h-screen flex flex-col bg-gradient-to-br from-white via-[#f8f9fa] to-white app-background ${isMobile ? 'px-1' : ''}`}>
+    <div className="h-screen w-screen flex flex-col bg-gradient-to-br from-white via-[#f8f9fa] to-white overflow-hidden">
       {/* Global celebration effects */}
       <CelebrationEffects 
         effectType={celebrationType} 
@@ -68,7 +68,7 @@ const CoachyFlow = () => {
         </Button>
       </Link>
       
-      <div className="flex-1 flex flex-col items-center justify-start px-2 py-3 sm:px-4 sm:py-6">
+      <div className="flex-1 flex flex-col items-center justify-start px-2 py-3 sm:px-4 sm:py-6 w-full">
         <div className="w-full max-w-md mb-2 sm:mb-4">
           <ProgressBar currentStep={currentScreen} totalSteps={4} />
         </div>

@@ -1,16 +1,18 @@
 
 #root {
-  margin: 0 auto;
-  padding: 0.5rem;  /* Reduced padding for mobile */
+  margin: 0;
+  padding: 0;
   text-align: center;
   min-height: 100vh;
-  width: 100%;
+  width: 100vw;
+  max-width: 100vw;
+  overflow-x: hidden;
   display: flex;
   flex-direction: column;
 }
 
 .logo {
-  height: 4em; /* Smaller for mobile */
+  height: 4em;
   padding: 1em;
   will-change: filter;
   transition: filter 300ms;
@@ -38,7 +40,7 @@
 }
 
 .card {
-  padding: 1em; /* Reduced padding for mobile */
+  padding: 1em;
 }
 
 .read-the-docs {
@@ -48,10 +50,20 @@
 /* Mobile-specific styles */
 @media (max-width: 768px) {
   #root {
-    padding: 0.25rem;
+    padding: 0;
   }
   
   .card {
     padding: 0.75em;
+  }
+  
+  /* Fix for mobile views */
+  body, html {
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow-x: hidden;
+    position: fixed;
   }
 }

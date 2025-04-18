@@ -7,6 +7,7 @@
     transform: scale(var(--scale-factor));
     max-height: calc(100vh - 4rem);
     overflow: visible;
+    width: 100%;
   }
   
   .screen-3-container {
@@ -16,6 +17,7 @@
     transform: scale(var(--scale-factor));
     max-height: calc(100vh - 4rem);
     overflow: visible;
+    width: 100%;
   }
   
   .continue-button {
@@ -35,13 +37,20 @@
   /* Mobile responsive styles */
   @media (max-width: 768px) {
     .screen-2-container, .screen-3-container {
-      --scale-factor: 0.95;
+      --scale-factor: 0.98;
       max-height: calc(100vh - 2rem);
+      width: 100%;
     }
     
     .continue-button {
       font-size: 0.9rem;
       padding: 0.6rem 1.2rem;
+    }
+    
+    /* Additional mobile fixes */
+    body, html, #root {
+      overflow-x: hidden;
+      width: 100%;
     }
   }
 }

@@ -1,15 +1,45 @@
-
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useFlowContext } from '@/context/FlowContext';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import AnimatedCard from './AnimatedCard';
-import { Heart, Sun, Moon } from 'lucide-react';
+import { Heart, Sun, Moon, Sparkles } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const EmotionalPrompt = () => {
   const { freeTextEmotion, setFreeTextEmotion, goToNextScreen, currentScreen } = useFlowContext();
+  const [encouragingResponse, setEncouragingResponse] = useState<string | null>(null);
   
+  const getEncouragingResponse = (text: string) => {
+    const lowerText = text.toLowerCase();
+    
+    if (lowerText.includes('טוב') || lowerText.includes('שמח') || lowerText.includes('נהדר')) {
+      return "איזה כיף! בואי נשמור על האנרגיה החיובית הזו עם קצת תנועה!";
+    }
+    
+    if (lowerText.includes('עייפ') || lowerText.includes('עייף')) {
+      return "לגיטימי להרגיש עייפות! קצת תנועה עדינה יכולה לעזור לך להתרענן.";
+    }
+    
+    if (lowerText.includes('בינוני') || lowerText.includes('ככה ככה')) {
+      return "יום בינוני? בואי נהפוך אותו ליום טוב יותר עם קצת פעילות!";
+    }
+    
+    if (lowerText.includes('רע') || lowerText.includes('לא טוב') || lowerText.includes('קשה')) {
+      return "אני מבינה שקשה כרגע. תנועה יכולה לעזור לשחרר מתח ולשפר את מצב הרוח.";
+    }
+    
+    return "תודה ששיתפת! בואי נמצא יחד את התרגול המושלם בשבילך.";
+  };
+
+  useEffect(() => {
+    if (freeTextEmotion.trim()) {
+      setEncouragingResponse(getEncouragingResponse(freeTextEmotion));
+    } else {
+      setEncouragingResponse(null);
+    }
+  }, [freeTextEmotion]);
+
   const handleNextClick = () => {
     if (freeTextEmotion.trim()) {
       goToNextScreen();
@@ -84,6 +114,20 @@ const EmotionalPrompt = () => {
           />
         </motion.div>
         
+        {encouragingResponse && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, duration: 0.5 }}
+            className="bg-white/80 backdrop-blur-sm rounded-xl p-4 shadow-md"
+          >
+            <div className="flex items-center gap-2 text-gray-700">
+              <Sparkles className="text-amber-500 h-5 w-5" />
+              <p className="text-right text-sm">{encouragingResponse}</p>
+            </div>
+          </motion.div>
+        )}
+        
         <motion.div 
           className="flex justify-end"
           initial={{ opacity: 0 }}
@@ -105,4 +149,3 @@ const EmotionalPrompt = () => {
 };
 
 export default EmotionalPrompt;
-

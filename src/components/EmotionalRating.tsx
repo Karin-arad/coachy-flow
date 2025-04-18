@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useFlowContext } from '@/context/FlowContext';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
 import AnimatedCard from './AnimatedCard';
-import { Sparkles, Zap, Eye, Feather, ChevronRight, ChevronLeft } from 'lucide-react';
+import { ChevronRight, ChevronLeft } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import EmotionAnimation from './EmotionAnimation';
 
 const EmotionalRating = () => {
   const { 
@@ -19,7 +20,6 @@ const EmotionalRating = () => {
   } = useFlowContext();
   
   const handleRatingChange = (parameter: keyof typeof emotionRatings, value: number[]) => {
-    // Reverse the value back to original scale
     const originalValue = maxSliderValue + 1 - value[0];
     setEmotionRatings({
       ...emotionRatings,
@@ -121,14 +121,10 @@ const EmotionalRating = () => {
                   {emotionRatings[currentParam.id as keyof typeof emotionRatings]}
                 </div>
               </div>
-              <Slider
-                emotionType={currentParam.type}
-                value={[maxSliderValue + 1 - (emotionRatings[currentParam.id as keyof typeof emotionRatings])]}
-                min={1}
-                max={maxSliderValue}
-                step={1}
-                onValueChange={(value) => handleRatingChange(currentParam.id as keyof typeof emotionRatings, value)}
-                className="py-1"
+              <EmotionAnimation
+                type={currentParam.id as 'bounciness' | 'energy' | 'alertness' | 'lightness'}
+                value={emotionRatings[currentParam.id as keyof typeof emotionRatings]}
+                maxValue={maxSliderValue}
               />
               <div className="flex justify-between text-xs text-gray-500 font-medium">
                 <span>{currentParam.scaleLabels.min}</span>

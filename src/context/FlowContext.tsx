@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 type EmotionRatings = {
@@ -29,6 +30,7 @@ type FlowContextType = {
   goToNextSlider: () => void;
   goToPreviousSlider: () => void;
   triggerCelebration: (type?: CelebrationType) => void;
+  maxSliderValue: number;
 };
 
 const defaultEmotionRatings: EmotionRatings = {
@@ -48,6 +50,7 @@ export const FlowProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [timeAvailable, setTimeAvailable] = useState('');
   const [celebrationType, setCelebrationType] = useState<CelebrationType>('');
   const [isCelebrating, setIsCelebrating] = useState(false);
+  const maxSliderValue = 7;
 
   const getRandomCelebration = (): CelebrationType => {
     const celebrations: CelebrationType[] = [
@@ -120,6 +123,7 @@ export const FlowProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         goToNextSlider,
         goToPreviousSlider,
         triggerCelebration,
+        maxSliderValue,
       }}
     >
       {children}

@@ -42,6 +42,7 @@ const YouTubeVideo = ({ videoId, title }: YouTubeVideoProps) => {
   };
 
   if (!videoId) {
+    console.warn('⚠️ No videoId provided to YouTubeVideo component');
     return (
       <div className="w-full max-w-[560px] aspect-video rounded-lg bg-gray-100 flex items-center justify-center text-gray-500">
         No video available

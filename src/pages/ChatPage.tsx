@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { askCoachyAI } from '@/utils/coachyService';
 import { Button } from '@/components/ui/button';
@@ -8,7 +9,7 @@ import { useToast } from '@/hooks/use-toast';
 import APIKeyInput from '@/components/APIKeyInput';
 import YouTubeVideo from '@/components/YouTubeVideo';
 import { fetchYouTubeData } from '@/utils/openaiService';
-import { hasYouTubeApiKey } from '@/utils/apiHelpers';
+import { hasYouTubeApiKey, getYouTubeApiKey } from '@/utils/apiHelpers';
 
 interface VideoData {
   id: string;
@@ -33,7 +34,7 @@ const ChatPage = () => {
   useEffect(() => {
     console.log('💬 Chat page loaded - initializing welcome message');
     const hasYTKey = hasYouTubeApiKey();
-    console.log('🔑 YouTube API key availability:', hasYTKey ? 'Available' : 'Not available');
+    console.log('🔑 YouTube API key availability:', hasYTKey ? `Available (starts with: ${getYouTubeApiKey()?.substring(0, 3)}...)` : 'Not available');
     
     setMessages([
       {
@@ -52,6 +53,8 @@ const ChatPage = () => {
   const findWorkoutVideo = async (userInput: string, aiResponse: string) => {
     try {
       console.log('🎥 Searching for workout video based on conversation');
+      console.log('🔍 User input:', userInput);
+      console.log('🤖 AI response:', aiResponse);
       
       if (!hasYouTubeApiKey()) {
         console.warn('⚠️ No YouTube API key available, skipping video search');
@@ -71,6 +74,11 @@ const ChatPage = () => {
       
       console.log('🔍 Search query for YouTube:', searchQuery);
       const videoData = await fetchYouTubeData(searchQuery);
+      
+      if (!videoData) {
+        console.error('❌ YouTube API returned no data');
+        return null;
+      }
       
       if (videoData.items && videoData.items.length > 0) {
         console.log('✅ Found YouTube videos:', videoData.items.length);
@@ -179,6 +187,7 @@ const ChatPage = () => {
               {message.video && (
                 <div className="mt-3">
                   <YouTubeVideo videoId={message.video.id} title={message.video.title} />
+                  <p className="text-xs mt-1 text-gray-500">Video ID: {message.video.id}</p>
                 </div>
               )}
               <div

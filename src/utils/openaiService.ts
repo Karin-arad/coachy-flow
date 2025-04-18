@@ -1,3 +1,4 @@
+
 import { getYouTubeApiKey } from './apiHelpers';
 
 export interface ChatMessage {
@@ -37,7 +38,7 @@ export const fetchYouTubeData = async (query: string): Promise<any> => {
       throw new Error('YouTube API key is not set. Please set your YouTube API key first.');
     }
     
-    console.log('📡 Making YouTube API request with key:', apiKey.substring(0, 3) + '...');
+    console.log('📡 Making YouTube API request with key:', apiKey.substring(0, 3) + '...' + apiKey.substring(apiKey.length - 3));
     
     const maxResults = 5; // Get top 5 results to have alternatives if needed
     const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(query)}&maxResults=${maxResults}&type=video&key=${apiKey}`;
@@ -58,7 +59,18 @@ export const fetchYouTubeData = async (query: string): Promise<any> => {
     }
     
     const data = await response.json();
-    console.log('✅ YouTube API response received with', data.items?.length || 0, 'items');
+    console.log('✅ YouTube API response received:', data);
+    console.log('📊 YouTube API response items count:', data.items?.length || 0);
+    
+    if (data.items && data.items.length > 0) {
+      console.log('🎥 First video found:', {
+        id: data.items[0].id.videoId,
+        title: data.items[0].snippet.title
+      });
+    } else {
+      console.warn('⚠️ No videos found in YouTube API response');
+    }
+    
     return data;
   } catch (error) {
     console.error('❌ Error in YouTube API request:', error);

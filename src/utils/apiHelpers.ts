@@ -1,3 +1,4 @@
+
 import { API_KEYS } from "@/config/apiKeys";
 
 // YouTube API Key Constants
@@ -10,10 +11,19 @@ export const YOUTUBE_API_KEY_STORAGE = 'youtube-api-key';
 export const getYouTubeApiKey = (): string | null => {
   // First try to get from localStorage (for user-specific keys)
   const localKey = localStorage.getItem(YOUTUBE_API_KEY_STORAGE);
-  if (localKey) return localKey;
+  if (localKey) {
+    console.log('🔑 Using YouTube API key from localStorage');
+    return localKey;
+  }
   
   // Fall back to the config file key, but only if it's not empty
-  return API_KEYS.YOUTUBE || null;
+  if (API_KEYS.YOUTUBE) {
+    console.log('🔑 Using YouTube API key from config');
+    return API_KEYS.YOUTUBE;
+  }
+  
+  console.warn('⚠️ No YouTube API key found in localStorage or config');
+  return null;
 };
 
 /**
@@ -21,7 +31,9 @@ export const getYouTubeApiKey = (): string | null => {
  * @returns בוליאני המציין האם המפתח קיים
  */
 export const hasYouTubeApiKey = (): boolean => {
-  return !!getYouTubeApiKey();
+  const hasKey = !!getYouTubeApiKey();
+  console.log('🔍 YouTube API key check:', hasKey ? 'Available' : 'Not available');
+  return hasKey;
 };
 
 /**
@@ -41,5 +53,6 @@ export const getYouTubeHeaders = (): HeadersInit => {
 };
 
 export const setYouTubeApiKey = (apiKey: string): void => {
+  console.log('🔑 Setting new YouTube API key in localStorage');
   localStorage.setItem(YOUTUBE_API_KEY_STORAGE, apiKey);
 };

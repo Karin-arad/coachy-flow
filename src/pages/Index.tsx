@@ -7,16 +7,18 @@ import TimeAvailability from '@/components/TimeAvailability';
 import PracticeSummary from '@/components/PracticeSummary';
 import ProgressBar from '@/components/ProgressBar';
 import CelebrationEffects from '@/components/CelebrationEffects';
-import APIKeyInput from '@/components/APIKeyInput';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { MessageCircle } from 'lucide-react';
+import { MessageCircle, Settings } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useState } from 'react';
+import APIKeyInput from '@/components/APIKeyInput';
 
 const CoachyFlow = () => {
   const { currentScreen, celebrationType, isCelebrating } = useFlowContext();
   const isMobile = useIsMobile();
+  const [showApiKeyModal, setShowApiKeyModal] = useState(false);
   
   // Function to render the current screen component
   const renderCurrentScreen = () => {
@@ -43,8 +45,18 @@ const CoachyFlow = () => {
         duration={1500}
       />
       
-      {/* API Key Input */}
-      <APIKeyInput />
+      {/* API Key Input - Only show modal when settings button is clicked */}
+      {showApiKeyModal && <APIKeyInput onClose={() => setShowApiKeyModal(false)} />}
+      
+      {/* Settings button for API keys */}
+      <Button 
+        variant="outline"
+        onClick={() => setShowApiKeyModal(true)}
+        className="text-xs px-3 py-1 h-8 bg-white/80 border border-gray-200 shadow-sm hover:bg-white fixed bottom-5 left-5 z-50 rtl:left-auto rtl:right-5"
+        size="sm"
+      >
+        <Settings className="h-4 w-4 mr-1" /> הגדרות
+      </Button>
       
       {/* Chat button */}
       <Link to="/chat" className="fixed bottom-5 right-5 z-50 rtl:right-auto rtl:left-5">

@@ -6,8 +6,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useApiKeys } from '@/hooks/useApiKeys';
 import YouTubeTab from './api-key-tabs/YouTubeTab';
 
-const APIKeyInput = ({ onClose }: { onClose?: () => void } = {}) => {
-  const [isOpen, setIsOpen] = useState(false);
+const APIKeyInput = ({ onClose }: { onClose?: () => void }) => {
+  const [isOpen, setIsOpen] = useState(true);
   const {
     youtubeKey,
     setYoutubeKey,
@@ -29,57 +29,49 @@ const APIKeyInput = ({ onClose }: { onClose?: () => void } = {}) => {
   
   const handleClose = () => {
     setIsOpen(false);
-    onClose?.();
+    if (onClose) onClose();
   };
 
   return (
-    <>
-      <Button 
-        variant="outline"
-        onClick={() => setIsOpen(true)}
-        className="text-xs px-3 py-1 h-8 bg-white/80 border border-gray-200 shadow-sm hover:bg-white fixed top-3 right-3 z-50 rtl:right-auto rtl:left-3"
-      >
-        עדכון מפתחות API
-      </Button>
-      
-      <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className="sm:max-w-md" dir="rtl">
-          <DialogHeader>
-            <DialogTitle>מפתחות API</DialogTitle>
-            <DialogDescription>
-              הכנס את מפתחות ה-API כדי לאפשר פונקציונליות של YouTube.
-              המפתחות יישמרו באופן מקומי במכשיר שלך בלבד.
-              {isUsingGlobalYouTubeKey && " כרגע משתמש במפתחות גלובליים שהוגדרו על ידי מנהל האפליקציה."}
-            </DialogDescription>
-          </DialogHeader>
+    <Dialog open={isOpen} onOpenChange={(open) => {
+      setIsOpen(open);
+      if (!open && onClose) onClose();
+    }}>
+      <DialogContent className="sm:max-w-md" dir="rtl">
+        <DialogHeader>
+          <DialogTitle>מפתחות API</DialogTitle>
+          <DialogDescription>
+            הכנס את מפתחות ה-API כדי לאפשר פונקציונליות של YouTube.
+            המפתחות יישמרו באופן מקומי במכשיר שלך בלבד.
+            {isUsingGlobalYouTubeKey && " כרגע משתמש במפתחות גלובליים שהוגדרו על ידי מנהל האפליקציה."}
+          </DialogDescription>
+        </DialogHeader>
+        
+        <Tabs defaultValue="youtube" className="w-full">
+          <TabsList className="grid w-full grid-cols-1">
+            <TabsTrigger value="youtube">YouTube</TabsTrigger>
+          </TabsList>
           
-          <Tabs defaultValue="youtube" className="w-full">
-            <TabsList className="grid w-full grid-cols-1">
-              <TabsTrigger value="youtube">YouTube</TabsTrigger>
-            </TabsList>
-            
-            <TabsContent value="youtube" className="mt-4">
-              <YouTubeTab 
-                youtubeKey={youtubeKey}
-                setYoutubeKey={setYoutubeKey}
-                isUsingGlobalYouTubeKey={isUsingGlobalYouTubeKey}
-                hasYouTubeKey={hasYouTubeKey}
-                saveYouTubeKey={saveYouTubeKey}
-                removeYouTubeKey={removeYouTubeKey}
-              />
-            </TabsContent>
-          </Tabs>
-          
-          <DialogFooter className="mt-4">
-            <Button type="button" onClick={handleClose} variant="default">
-              סגירה
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    </>
+          <TabsContent value="youtube" className="mt-4">
+            <YouTubeTab 
+              youtubeKey={youtubeKey}
+              setYoutubeKey={setYoutubeKey}
+              isUsingGlobalYouTubeKey={isUsingGlobalYouTubeKey}
+              hasYouTubeKey={hasYouTubeKey}
+              saveYouTubeKey={saveYouTubeKey}
+              removeYouTubeKey={removeYouTubeKey}
+            />
+          </TabsContent>
+        </Tabs>
+        
+        <DialogFooter className="mt-4">
+          <Button type="button" onClick={handleClose} variant="default">
+            סגירה
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 };
 
 export default APIKeyInput;
-

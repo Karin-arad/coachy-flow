@@ -51,12 +51,15 @@ const ChatPage = () => {
       timestamp: new Date(),
     };
     
+    console.log('📤 User message:', userMessage);
     setMessages((prev) => [...prev, userMessage]);
     setInput('');
     setIsLoading(true);
     
     try {
+      console.log('⏳ Waiting for AI response...');
       const response = await askCoachyAI(input);
+      console.log('📥 AI response received:', response);
       
       const assistantMessage: Message = {
         id: `assistant-${Date.now()}`,
@@ -67,6 +70,7 @@ const ChatPage = () => {
       
       setMessages((prev) => [...prev, assistantMessage]);
     } catch (error) {
+      console.error('❌ Chat error:', error);
       toast({
         title: 'שגיאה',
         description: error instanceof Error ? error.message : 'אירעה שגיאה בתקשורת עם השרת',

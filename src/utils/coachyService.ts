@@ -10,6 +10,8 @@
  * @returns The AI's response message
  */
 export const askCoachyAI = async (question: string): Promise<string> => {
+  console.log('🔵 Sending question to Coachy API:', question);
+  
   try {
     const response = await fetch('https://coachylovable.karinzahav.repl.co/ask', {
       method: 'POST',
@@ -26,9 +28,10 @@ export const askCoachyAI = async (question: string): Promise<string> => {
     }
     
     const data = await response.json();
+    console.log('✅ Received response from Coachy API:', data);
     return data.answer;
   } catch (error) {
-    console.error('Error communicating with Coachy API:', error);
+    console.error('❌ Error communicating with Coachy API:', error);
     throw new Error('לא ניתן להתחבר לשירות הבינה המלאכותית כרגע. אנא נסה שוב מאוחר יותר.');
   }
 };

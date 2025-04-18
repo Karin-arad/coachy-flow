@@ -1,148 +1,154 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { useToast } from "@/hooks/use-toast";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { createChatCompletion, ChatMessage } from '@/utils/openaiService';
-import { hasOpenAIApiKey } from '@/utils/apiHelpers';
+import { askCoachyAI } from '@/utils/coachyService';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Send, ArrowLeft } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { useToast } from '@/hooks/use-toast';
 import APIKeyInput from '@/components/APIKeyInput';
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import { ArrowRight, Loader2 } from 'lucide-react';
 
-const SYSTEM_PROMPT = "את קואצ׳י, מלווה רגשית רכה שפונה לקארין באהבה, עדינות, והומור עדין. תני לה חיבוק במילים, תשאלי שאלה פתוחה על איך היא מרגישה, ותציעי תרגול רגשי קצר או תנועה מתאימה.";
+interface Message {
+  id: string;
+  content: string;
+  sender: 'user' | 'assistant';
+  timestamp: Date;
+}
 
 const ChatPage = () => {
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [isApiKeyPresent, setIsApiKeyPresent] = useState(hasOpenAIApiKey());
-  const [isApiSheetOpen, setIsApiSheetOpen] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
-  // Check if API key is set every time the component is mounted or when API sheet is closed
+  // Initial welcome message
   useEffect(() => {
-    setIsApiKeyPresent(hasOpenAIApiKey());
-  }, [isApiSheetOpen]);
+    setMessages([
+      {
+        id: 'welcome',
+        content: 'שלום! אני כאן כדי לעזור לך. במה אוכל לסייע היום?',
+        sender: 'assistant',
+        timestamp: new Date(),
+      },
+    ]);
+  }, []);
 
-  // Scroll to bottom of messages when new messages are added
+  // Auto-scroll to bottom on new messages
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  const handleSendMessage = async () => {
+  const handleSendMessage = async (e?: React.FormEvent) => {
+    e?.preventDefault();
+    
     if (!input.trim()) return;
     
-    if (!isApiKeyPresent) {
-      setIsApiSheetOpen(true);
-      return;
-    }
-
-    const userMessage: ChatMessage = { role: 'user', content: input };
-    setMessages(prev => [...prev, userMessage]);
+    const userMessage: Message = {
+      id: `user-${Date.now()}`,
+      content: input,
+      sender: 'user',
+      timestamp: new Date(),
+    };
+    
+    setMessages((prev) => [...prev, userMessage]);
     setInput('');
     setIsLoading(true);
-
+    
     try {
-      // Build complete message history with system prompt
-      const fullMessageHistory: ChatMessage[] = [
-        { role: 'system', content: SYSTEM_PROMPT },
-        ...messages,
-        userMessage
-      ];
-
-      const response = await createChatCompletion(fullMessageHistory);
+      const response = await askCoachyAI(input);
       
-      const assistantMessage: ChatMessage = { 
-        role: 'assistant', 
-        content: response 
+      const assistantMessage: Message = {
+        id: `assistant-${Date.now()}`,
+        content: response,
+        sender: 'assistant',
+        timestamp: new Date(),
       };
       
-      setMessages(prev => [...prev, assistantMessage]);
+      setMessages((prev) => [...prev, assistantMessage]);
     } catch (error) {
       toast({
-        title: "שגיאה",
-        description: error instanceof Error ? error.message : "אירעה שגיאה בתקשורת עם OpenAI",
-        variant: "destructive"
+        title: 'שגיאה',
+        description: error instanceof Error ? error.message : 'אירעה שגיאה בתקשורת עם השרת',
+        variant: 'destructive',
       });
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleSendMessage();
-    }
-  };
-
   return (
-    <div className="h-screen flex flex-col bg-gradient-to-br from-white via-[#f8f9fa] to-white">
-      <div className="flex-1 flex flex-col p-4 max-w-3xl mx-auto w-full">
-        <h1 className="text-2xl font-bold mb-6 text-center">שיחה עם קואצ׳י</h1>
-        
-        {/* Messages container */}
-        <div className="flex-1 overflow-y-auto mb-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
-          {messages.length === 0 ? (
-            <div className="h-full flex items-center justify-center text-gray-400 text-center p-4">
-              <p>התחילי שיחה עם קואצ׳י, המלווה הרגשית שלך</p>
+    <div className="flex flex-col h-screen bg-gradient-to-br from-white via-[#f8f9fa] to-white">
+      {/* API Key Input */}
+      <APIKeyInput />
+      
+      {/* Header */}
+      <header className="p-4 border-b flex items-center justify-between">
+        <Link to="/" className="flex items-center gap-1 text-gray-600 hover:text-gray-900">
+          <ArrowLeft className="h-5 w-5" />
+          <span>חזרה</span>
+        </Link>
+        <h1 className="text-xl font-bold text-center flex-1">שיחה עם קואוצ׳י</h1>
+        <div className="w-10"></div>
+      </header>
+      
+      {/* Messages Container */}
+      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+        {messages.map((message) => (
+          <div
+            key={message.id}
+            className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+          >
+            <div
+              className={`max-w-[80%] rounded-lg p-3 ${
+                message.sender === 'user'
+                  ? 'bg-coachy-blue text-white rounded-tr-none'
+                  : 'bg-gray-100 text-gray-800 rounded-tl-none'
+              }`}
+            >
+              <p>{message.content}</p>
+              <div
+                className={`text-xs mt-1 ${
+                  message.sender === 'user' ? 'text-blue-100' : 'text-gray-500'
+                }`}
+              >
+                {message.timestamp.toLocaleTimeString([], {
+                  hour: '2-digit',
+                  minute: '2-digit',
+                })}
+              </div>
             </div>
-          ) : (
-            <div className="space-y-4">
-              {messages.map((message, index) => (
-                <div
-                  key={index}
-                  className={`p-4 rounded-lg ${
-                    message.role === 'user'
-                      ? 'bg-blue-100 mr-auto ml-8 text-right'
-                      : 'bg-gray-100 ml-auto mr-8'
-                  } max-w-[80%] shadow-sm`}
-                >
-                  <p className="whitespace-pre-wrap">{message.content}</p>
-                </div>
-              ))}
-              <div ref={messagesEndRef} />
+          </div>
+        ))}
+        {isLoading && (
+          <div className="flex justify-start">
+            <div className="max-w-[80%] rounded-lg p-4 bg-gray-100 text-gray-800 rounded-tl-none flex items-center">
+              <div className="flex space-x-1 rtl:space-x-reverse">
+                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-100"></div>
+                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-200"></div>
+              </div>
             </div>
-          )}
-        </div>
-
-        {/* Input area */}
-        <div className="flex items-end gap-2">
-          <Textarea
-            placeholder="כתבי הודעה..."
+          </div>
+        )}
+        <div ref={messagesEndRef} />
+      </div>
+      
+      {/* Message Input */}
+      <form onSubmit={handleSendMessage} className="p-4 border-t">
+        <div className="flex items-center gap-2">
+          <Input
+            placeholder="הקלד את הודעתך כאן..."
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            onKeyDown={handleKeyPress}
-            className="resize-none min-h-[100px] border-gray-300"
-            dir="rtl"
+            disabled={isLoading}
+            className="flex-1"
           />
-          <Button
-            onClick={handleSendMessage}
-            disabled={isLoading || !input.trim()}
-            className="h-[50px] w-[50px] p-0 rounded-full"
-          >
-            {isLoading ? (
-              <Loader2 className="h-5 w-5 animate-spin" />
-            ) : (
-              <ArrowRight className="h-5 w-5" />
-            )}
+          <Button type="submit" disabled={isLoading || !input.trim()}>
+            <Send className="h-5 w-5" />
           </Button>
         </div>
-      </div>
-
-      {/* API Key Sheet */}
-      <Sheet open={isApiSheetOpen} onOpenChange={setIsApiSheetOpen}>
-        <SheetContent className="sm:max-w-md" dir="rtl">
-          <SheetHeader>
-            <SheetTitle>הגדרת מפתח API</SheetTitle>
-          </SheetHeader>
-          <div className="py-6">
-            <p className="mb-4">יש להגדיר מפתח API של OpenAI לפני השימוש בצ'אט.</p>
-            <APIKeyInput onClose={() => setIsApiSheetOpen(false)} />
-          </div>
-        </SheetContent>
-      </Sheet>
+      </form>
     </div>
   );
 };

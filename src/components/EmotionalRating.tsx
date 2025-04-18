@@ -124,7 +124,7 @@ const EmotionalRating = () => {
                 min={1}
                 max={7}
                 step={1}
-                onValueChange={(value) => handleRatingChange(currentParam.id as keyof typeof emotionRatings, value)}
+                onValueChange={(value) => handleRatingChange(currentParam.id as keyof typeof emotionRatings, value.reverse())}
                 className="py-1"
               />
               <div className="flex justify-between text-xs text-gray-500 font-medium">

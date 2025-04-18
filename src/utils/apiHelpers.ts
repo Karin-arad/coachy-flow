@@ -1,4 +1,3 @@
-
 import { API_KEYS } from "@/config/apiKeys";
 
 // YouTube API Key Constants
@@ -41,3 +40,6 @@ export const getYouTubeHeaders = (): HeadersInit => {
   };
 };
 
+export const setYouTubeApiKey = (apiKey: string): void => {
+  localStorage.setItem(YOUTUBE_API_KEY_STORAGE, apiKey);
+};

@@ -1,4 +1,3 @@
-
 @layer utilities {
   .animate-pulse-gentle {
     @apply animate-[pulse-gentle_3s_infinite_ease-in-out];

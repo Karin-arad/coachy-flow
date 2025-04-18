@@ -4,48 +4,29 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useApiKeys } from '@/hooks/useApiKeys';
-import OpenAITab from './api-key-tabs/OpenAITab';
 import YouTubeTab from './api-key-tabs/YouTubeTab';
 
-interface APIKeyInputProps {
-  onClose?: () => void;
-}
-
-const APIKeyInput = ({ onClose }: APIKeyInputProps = {}) => {
+const APIKeyInput = ({ onClose }: { onClose?: () => void } = {}) => {
   const [isOpen, setIsOpen] = useState(false);
   const {
-    openaiKey,
-    setOpenaiKey,
     youtubeKey,
     setYoutubeKey,
-    hasOpenAIKey,
     hasYouTubeKey,
-    isUsingGlobalOpenAIKey,
     isUsingGlobalYouTubeKey,
     checkKeys,
-    saveOpenAIKey,
     saveYouTubeKey,
-    removeOpenAIKey,
     removeYouTubeKey
   } = useApiKeys();
 
-  // Show dialog automatically if no API keys are set and check keys on component mount
+  // Always consider OpenAI key as set for this custom server
+  const hasOpenAIKey = true;
+  const isUsingGlobalOpenAIKey = false;
+
+  // No need to check OpenAI keys
   useEffect(() => {
     checkKeys();
-    
-    // Auto-open dialog if no OpenAI key is set
-    if (!hasOpenAIKey) {
-      setIsOpen(true);
-    }
   }, []);
   
-  // Re-check keys when dialog opens
-  useEffect(() => {
-    if (isOpen) {
-      checkKeys();
-    }
-  }, [isOpen]);
-
   const handleClose = () => {
     setIsOpen(false);
     onClose?.();
@@ -54,11 +35,11 @@ const APIKeyInput = ({ onClose }: APIKeyInputProps = {}) => {
   return (
     <>
       <Button 
-        variant={hasOpenAIKey ? "outline" : "destructive"}
+        variant="outline"
         onClick={() => setIsOpen(true)}
         className="text-xs px-3 py-1 h-8 bg-white/80 border border-gray-200 shadow-sm hover:bg-white fixed top-3 right-3 z-50 rtl:right-auto rtl:left-3"
       >
-        {hasOpenAIKey ? "עדכון מפתחות API" : "⚠️ נדרש מפתח API"}
+        עדכון מפתחות API
       </Button>
       
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -66,29 +47,16 @@ const APIKeyInput = ({ onClose }: APIKeyInputProps = {}) => {
           <DialogHeader>
             <DialogTitle>מפתחות API</DialogTitle>
             <DialogDescription>
-              הכנס את מפתחות ה-API כדי לאפשר פונקציונליות של בינה מלאכותית ושירותי YouTube.
+              הכנס את מפתחות ה-API כדי לאפשר פונקציונליות של YouTube.
               המפתחות יישמרו באופן מקומי במכשיר שלך בלבד.
-              {(isUsingGlobalOpenAIKey || isUsingGlobalYouTubeKey) && 
-                " כרגע משתמש במפתחות גלובליים שהוגדרו על ידי מנהל האפליקציה."}
+              {isUsingGlobalYouTubeKey && " כרגע משתמש במפתחות גלובליים שהוגדרו על ידי מנהל האפליקציה."}
             </DialogDescription>
           </DialogHeader>
           
-          <Tabs defaultValue="openai" className="w-full">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="openai">OpenAI</TabsTrigger>
+          <Tabs defaultValue="youtube" className="w-full">
+            <TabsList className="grid w-full grid-cols-1">
               <TabsTrigger value="youtube">YouTube</TabsTrigger>
             </TabsList>
-            
-            <TabsContent value="openai" className="mt-4">
-              <OpenAITab 
-                openaiKey={openaiKey}
-                setOpenaiKey={setOpenaiKey}
-                isUsingGlobalOpenAIKey={isUsingGlobalOpenAIKey}
-                hasOpenAIKey={hasOpenAIKey}
-                saveOpenAIKey={saveOpenAIKey}
-                removeOpenAIKey={removeOpenAIKey}
-              />
-            </TabsContent>
             
             <TabsContent value="youtube" className="mt-4">
               <YouTubeTab 
@@ -103,8 +71,8 @@ const APIKeyInput = ({ onClose }: APIKeyInputProps = {}) => {
           </Tabs>
           
           <DialogFooter className="mt-4">
-            <Button type="button" onClick={handleClose} variant={hasOpenAIKey ? "outline" : "default"}>
-              {hasOpenAIKey ? "סגירה" : "המשך ללא מפתח API"}
+            <Button type="button" onClick={handleClose} variant="default">
+              סגירה
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -114,3 +82,4 @@ const APIKeyInput = ({ onClose }: APIKeyInputProps = {}) => {
 };
 
 export default APIKeyInput;
+

@@ -1,21 +1,8 @@
+
 import { API_KEYS } from "@/config/apiKeys";
 
-// API Key Constants
-export const OPENAI_API_KEY_STORAGE = 'openai-api-key';
+// YouTube API Key Constants
 export const YOUTUBE_API_KEY_STORAGE = 'youtube-api-key';
-
-/**
- * גישה למפתח ה-API של OpenAI מה-localStorage או מקובץ הקונפיגורציה
- * @returns מפתח ה-API או null אם לא קיים
- */
-export const getOpenAIApiKey = (): string | null => {
-  // First try to get from localStorage (for user-specific keys)
-  const localKey = localStorage.getItem(OPENAI_API_KEY_STORAGE);
-  if (localKey) return localKey;
-  
-  // Fall back to the config file key, but only if it's not empty
-  return API_KEYS.OPENAI || null;
-};
 
 /**
  * גישה למפתח ה-API של YouTube מה-localStorage או מקובץ הקונפיגורציה
@@ -31,20 +18,11 @@ export const getYouTubeApiKey = (): string | null => {
 };
 
 /**
- * יצירת הכותרות הדרושות לבקשות API של OpenAI
- * @returns אובייקט headers לשימוש בבקשות fetch
+ * בדיקה האם מפתח API של YouTube קיים
+ * @returns בוליאני המציין האם המפתח קיים
  */
-export const getOpenAIHeaders = (): HeadersInit => {
-  const apiKey = getOpenAIApiKey();
-  
-  if (!apiKey) {
-    throw new Error('API key is not set. Please set your OpenAI API key first.');
-  }
-  
-  return {
-    'Content-Type': 'application/json',
-    'Authorization': `Bearer ${apiKey}`
-  };
+export const hasYouTubeApiKey = (): boolean => {
+  return !!getYouTubeApiKey();
 };
 
 /**
@@ -63,18 +41,3 @@ export const getYouTubeHeaders = (): HeadersInit => {
   };
 };
 
-/**
- * בדיקה האם מפתח API של OpenAI קיים
- * @returns בוליאני המציין האם המפתח קיים
- */
-export const hasOpenAIApiKey = (): boolean => {
-  return !!getOpenAIApiKey();
-};
-
-/**
- * בדיקה האם מפתח API של YouTube קיים
- * @returns בוליאני המציין האם המפתח קיים
- */
-export const hasYouTubeApiKey = (): boolean => {
-  return !!getYouTubeApiKey();
-};

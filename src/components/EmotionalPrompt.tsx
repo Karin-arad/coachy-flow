@@ -34,7 +34,11 @@ const EmotionalPrompt = () => {
 
   useEffect(() => {
     if (freeTextEmotion.trim()) {
-      setEncouragingResponse(getEncouragingResponse(freeTextEmotion));
+      const timer = setTimeout(() => {
+        setEncouragingResponse(getEncouragingResponse(freeTextEmotion));
+      }, 1500); // 1.5 שניות
+
+      return () => clearTimeout(timer);
     } else {
       setEncouragingResponse(null);
     }
@@ -46,7 +50,6 @@ const EmotionalPrompt = () => {
     }
   };
   
-  // Get current hour to display appropriate greeting and icon
   const hour = new Date().getHours();
   const isNight = hour >= 18 || hour < 6;
   const isEvening = hour >= 16 && hour < 18;

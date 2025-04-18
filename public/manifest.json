@@ -9,14 +9,17 @@
   "theme_color": "#4F46E5",
   "icons": [
     {
-      "src": "/icon-192x192.png",
+      "src": "/lovable-uploads/9e41fe91-9357-4b0e-9232-1db2e8d5dd7c.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
-      "src": "/icon-512x512.png",
+      "src": "/lovable-uploads/9e41fe91-9357-4b0e-9232-1db2e8d5dd7c.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }
+

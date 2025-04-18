@@ -1,4 +1,3 @@
-
 const CACHE_NAME = 'coachy-cache-v1';
 
 self.addEventListener('install', (event) => {
@@ -8,8 +7,7 @@ self.addEventListener('install', (event) => {
         '/',
         '/index.html',
         '/manifest.json',
-        '/icon-192x192.png',
-        '/icon-512x512.png'
+        '/lovable-uploads/9e41fe91-9357-4b0e-9232-1db2e8d5dd7c.png'
       ]);
     })
   );

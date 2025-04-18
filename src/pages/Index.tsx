@@ -1,6 +1,5 @@
 import React from 'react';
 import { FlowProvider, useFlowContext } from '@/context/FlowContext';
-import EmotionalPrompt from '@/components/EmotionalPrompt';
 import EmotionalRating from '@/components/EmotionalRating';
 import TimeAvailability from '@/components/TimeAvailability';
 import PracticeSummary from '@/components/PracticeSummary';
@@ -20,11 +19,8 @@ const CoachyFlow = () => {
   const isMobile = useIsMobile();
   const [showApiKeyModal, setShowApiKeyModal] = useState(false);
   
-  // Function to render the current screen component
   const renderCurrentScreen = () => {
     switch(currentScreen) {
-      case 1:
-        return <EmotionalPrompt />;
       case 2:
         return <EmotionalRating />;
       case 3:
@@ -32,7 +28,7 @@ const CoachyFlow = () => {
       case 4:
         return <PracticeSummary />;
       default:
-        return <EmotionalPrompt />;
+        return <EmotionalRating />;
     }
   };
   
@@ -41,17 +37,14 @@ const CoachyFlow = () => {
       "h-screen w-screen flex flex-col bg-gradient-to-br from-white via-[#f8f9fa] to-white",
       "overflow-hidden aspect-[9/16] max-w-[calc(100vh * 9/16)] mx-auto"
     )}>
-      {/* Global celebration effects */}
       <CelebrationEffects 
         effectType={celebrationType} 
         active={isCelebrating} 
         duration={1500}
       />
       
-      {/* API Key Input - Only show modal when settings button is clicked */}
       {showApiKeyModal && <APIKeyInput onClose={() => setShowApiKeyModal(false)} />}
       
-      {/* Settings button for API keys */}
       <Button 
         variant="outline"
         onClick={() => setShowApiKeyModal(true)}
@@ -61,7 +54,6 @@ const CoachyFlow = () => {
         <Settings className="h-4 w-4 mr-1" /> הגדרות
       </Button>
       
-      {/* Chat button */}
       <Link to="/chat" className="fixed bottom-5 right-5 z-50 rtl:right-auto rtl:left-5">
         <Button 
           className={`rounded-full ${isMobile ? 'w-12 h-12' : 'w-14 h-14'} p-0 flex items-center justify-center shadow-lg bg-gradient-to-r from-coachy-blue to-coachy-turquoise hover:brightness-110`}
@@ -73,7 +65,7 @@ const CoachyFlow = () => {
       
       <div className="flex-1 flex flex-col items-center justify-start px-2 py-3 sm:px-4 sm:py-6 w-full">
         <div className="w-full max-w-md mb-2 sm:mb-4">
-          <ProgressBar currentStep={currentScreen} totalSteps={4} />
+          <ProgressBar currentStep={currentScreen} totalSteps={3} />
         </div>
         
         <div className="w-full flex-1 flex justify-center items-center">

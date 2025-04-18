@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 type EmotionRatings = {
@@ -42,7 +41,7 @@ const defaultEmotionRatings: EmotionRatings = {
 const FlowContext = createContext<FlowContextType | undefined>(undefined);
 
 export const FlowProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [currentScreen, setCurrentScreen] = useState(1);
+  const [currentScreen, setCurrentScreen] = useState(2);
   const [currentSlider, setCurrentSlider] = useState(0);
   const [freeTextEmotion, setFreeTextEmotion] = useState('');
   const [emotionRatings, setEmotionRatings] = useState<EmotionRatings>(defaultEmotionRatings);
@@ -50,7 +49,6 @@ export const FlowProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [celebrationType, setCelebrationType] = useState<CelebrationType>('');
   const [isCelebrating, setIsCelebrating] = useState(false);
 
-  // Helper function to get a random celebration type with weighted probabilities
   const getRandomCelebration = (): CelebrationType => {
     const celebrations: CelebrationType[] = [
       'confetti', 'stars'
@@ -61,36 +59,32 @@ export const FlowProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const goToNextScreen = () => {
     const nextScreen = Math.min(currentScreen + 1, 4);
     
-    // Only trigger celebration if we're advancing to a new screen
     if (nextScreen > currentScreen) {
-      // Simplified celebration - just one quick effect
       triggerCelebration(getRandomCelebration());
     }
     
     setCurrentScreen(nextScreen);
-    setCurrentSlider(0); // Reset slider index when moving to a new screen
+    setCurrentSlider(0);
   };
 
   const goToPreviousScreen = () => {
-    setCurrentScreen((prev) => Math.max(prev - 1, 1));
-    setCurrentSlider(0); // Reset slider index when moving to a new screen
+    setCurrentScreen((prev) => Math.max(prev - 1, 2));
+    setCurrentSlider(0);
   };
   
   const goToNextSlider = () => {
-    if (currentScreen === 2) { // Only on the emotional rating screen
-      // Reduced celebration - only trigger one subtle effect
+    if (currentScreen === 2) {
       setCurrentSlider(prev => Math.min(prev + 1, 3));
     }
   };
   
   const goToPreviousSlider = () => {
-    if (currentScreen === 2) { // Only on the emotional rating screen
+    if (currentScreen === 2) {
       setCurrentSlider(prev => Math.max(prev - 1, 0));
     }
   };
   
   const triggerCelebration = (type?: CelebrationType) => {
-    // Skip celebrations sometimes to reduce frequency
     if (Math.random() > 0.5) {
       return;
     }
@@ -99,7 +93,6 @@ export const FlowProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setCelebrationType(celebrationType);
     setIsCelebrating(true);
     
-    // Auto-disable celebration after 1.5 seconds (reduced from 3 seconds)
     setTimeout(() => {
       setIsCelebrating(false);
     }, 1500);

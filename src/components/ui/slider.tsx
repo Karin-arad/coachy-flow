@@ -1,3 +1,4 @@
+
 import * as React from "react"
 import * as SliderPrimitive from "@radix-ui/react-slider"
 import { Sparkles } from "lucide-react"
@@ -62,7 +63,7 @@ const Slider = React.forwardRef<
     setHasSettled(false);
     
     if (showCelebration && !isDragging && reversedValue[0] !== lastValue[0]) {
-      // Apply this condition to ALL sliders when the value crosses 3
+      // Only trigger celebration if value is above 3
       if (reversedValue[0] > 3) {
         triggerCelebration('confetti');
       }
@@ -80,7 +81,7 @@ const Slider = React.forwardRef<
         setHasSettled(true);
         
         if (showCelebration && lastValue[0] !== value[0]) {
-          // Apply this condition to ALL sliders when the value crosses 3
+          // Only trigger celebration if value is above 3
           if (value[0] > 3) {
             triggerCelebration('stars');
           }
@@ -181,6 +182,5 @@ const Slider = React.forwardRef<
     </SliderPrimitive.Root>
   )
 })
-Slider.displayName = SliderPrimitive.Root.displayName
 
 export { Slider }

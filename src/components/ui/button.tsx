@@ -65,24 +65,22 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const [showCompletion, setShowCompletion] = React.useState(false);
     const [showSparkles, setShowSparkles] = React.useState(false);
     
-    // Import FlowContext only if it's needed
-    const { useFlowContext } = require('@/context/FlowContext');
-    
-    // Check if the FlowContext is available (safety check)
-    const safeUseFlowContext = () => {
-      try {
-        return useFlowContext();
-      } catch (error) {
-        // Return a dummy object with the methods we need
-        return {
-          triggerCelebration: () => {
-            console.log('triggerCelebration called, but FlowContext is not available');
-          }
-        };
+    // Create a safer way to handle celebrations without direct dependency
+    const triggerCelebration = React.useCallback((type: string) => {
+      // Check if we're in a context where window is defined
+      if (typeof window !== 'undefined') {
+        // Check if FlowContext exists and is accessible
+        try {
+          // Use a global event to communicate with FlowContext if needed
+          const event = new CustomEvent('coachy-celebration', { 
+            detail: { type } 
+          });
+          window.dispatchEvent(event);
+        } catch (error) {
+          console.log('Celebration effect unavailable');
+        }
       }
-    };
-    
-    const flowContext = safeUseFlowContext();
+    }, []);
 
     const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
       setIsClicked(true);
@@ -101,8 +99,8 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         }, 200);
       }
       
-      if (showCelebration && !props.disabled && flowContext.triggerCelebration) {
-        flowContext.triggerCelebration('confetti');
+      if (showCelebration && !props.disabled) {
+        triggerCelebration('confetti');
       }
       
       setTimeout(() => {

@@ -1,16 +1,17 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useFlowContext } from '@/context/FlowContext';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import AnimatedCard from './AnimatedCard';
-import { Heart, Sun, Moon, Sparkles, CloudMoon, Sunrise } from 'lucide-react';
+import { Heart, Sun, Moon, Sparkles, CloudMoon, Sunrise, SendHorizonal } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 const EmotionalPrompt = () => {
   const { freeTextEmotion, setFreeTextEmotion, goToNextScreen, currentScreen } = useFlowContext();
   const [encouragingResponse, setEncouragingResponse] = useState<string | null>(null);
+  const [hasSubmitted, setHasSubmitted] = useState(false);
   const isMobile = useIsMobile();
   
   const getEncouragingResponse = (text: string) => {
@@ -35,17 +36,12 @@ const EmotionalPrompt = () => {
     return "תודה ששיתפת! בואי נמצא יחד את התרגול המושלם בשבילך.";
   };
 
-  useEffect(() => {
+  const handleSubmit = () => {
     if (freeTextEmotion.trim()) {
-      const timer = setTimeout(() => {
-        setEncouragingResponse(getEncouragingResponse(freeTextEmotion));
-      }, 1500); // 1.5 שניות
-
-      return () => clearTimeout(timer);
-    } else {
-      setEncouragingResponse(null);
+      setHasSubmitted(true);
+      setEncouragingResponse(getEncouragingResponse(freeTextEmotion));
     }
-  }, [freeTextEmotion]);
+  };
 
   const handleNextClick = () => {
     if (freeTextEmotion.trim()) {
@@ -105,18 +101,33 @@ const EmotionalPrompt = () => {
           transition={{ delay: 0.3, duration: 0.5 }}
           className="emotional-prompt"
         >
-          <Textarea
-            value={freeTextEmotion}
-            onChange={(e) => setFreeTextEmotion(e.target.value)}
-            placeholder="רשמי את הרגשות שלך בחופשיות..."
-            className={`min-h-[60px] sm:min-h-[80px] max-h-[80px] sm:max-h-[100px] text-right border-coachy-lightBlue focus:border-coachy-blue resize-none bg-white/80 backdrop-blur-sm rounded-xl p-3 shadow-md transition-all duration-300 focus:ring-2 focus:ring-coachy-blue/30 focus:shadow-lg user-text ${isMobile ? 'text-xs' : 'text-sm'}`}
-            dir="rtl"
-            lang="he"
-            autoFocus
-          />
+          <div className="relative">
+            <Textarea
+              value={freeTextEmotion}
+              onChange={(e) => {
+                setFreeTextEmotion(e.target.value);
+                if (hasSubmitted) setHasSubmitted(false);
+              }}
+              placeholder="רשמי את הרגשות שלך בחופשיות..."
+              className={`min-h-[60px] sm:min-h-[80px] max-h-[80px] sm:max-h-[100px] text-right border-coachy-lightBlue focus:border-coachy-blue resize-none bg-white/80 backdrop-blur-sm rounded-xl p-3 shadow-md transition-all duration-300 focus:ring-2 focus:ring-coachy-blue/30 focus:shadow-lg user-text ${isMobile ? 'text-xs' : 'text-sm'}`}
+              dir="rtl"
+              lang="he"
+              autoFocus
+            />
+            {freeTextEmotion.trim() && !hasSubmitted && (
+              <Button
+                onClick={handleSubmit}
+                size="sm"
+                className="absolute left-2 bottom-2 px-2 py-1"
+                variant="ghost"
+              >
+                <SendHorizonal className="h-4 w-4" />
+              </Button>
+            )}
+          </div>
         </motion.div>
         
-        {encouragingResponse && (
+        {hasSubmitted && encouragingResponse && (
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -132,21 +143,23 @@ const EmotionalPrompt = () => {
           </motion.div>
         )}
         
-        <motion.div 
-          className="flex justify-end"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.4, duration: 0.5 }}
-        >
-          <Button 
-            onClick={handleNextClick}
-            disabled={!freeTextEmotion.trim()}
-            className={`continue-button px-3 sm:px-4 py-1 rounded-xl shadow-sm relative overflow-hidden group ${isMobile ? 'text-xs' : 'text-sm'}`}
+        {hasSubmitted && (
+          <motion.div 
+            className="flex justify-end"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4, duration: 0.5 }}
           >
-            <span className="relative z-10">יאללה, נמשיך</span>
-            <span className="absolute inset-0 bg-white/20 transform scale-x-0 group-hover:scale-x-100 group-active:scale-x-100 transition-transform origin-right duration-300"></span>
-          </Button>
-        </motion.div>
+            <Button 
+              onClick={handleNextClick}
+              disabled={!freeTextEmotion.trim()}
+              className={`continue-button px-3 sm:px-4 py-1 rounded-xl shadow-sm relative overflow-hidden group ${isMobile ? 'text-xs' : 'text-sm'}`}
+            >
+              <span className="relative z-10">יאללה, נמשיך</span>
+              <span className="absolute inset-0 bg-white/20 transform scale-x-0 group-hover:scale-x-100 group-active:scale-x-100 transition-transform origin-right duration-300"></span>
+            </Button>
+          </motion.div>
+        )}
       </div>
     </AnimatedCard>
   );

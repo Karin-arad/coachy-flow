@@ -20,39 +20,13 @@ export interface ChatCompletionResponse {
   }[];
 }
 
-// Since we're not using OpenAI API directly, but instead relying on our custom server,
-// this function is kept for compatibility but will likely not be used
+// Kept for potential future compatibility, but not actively used
 export const createChatCompletion = async (
   messages: ChatMessage[],
   model: string = 'gpt-3.5-turbo'
 ): Promise<string> => {
-  try {
-    const headers = {
-      'Content-Type': 'application/json'
-    };
-    
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers,
-      body: JSON.stringify({
-        model,
-        messages,
-        temperature: 0.7,
-        max_tokens: 500,
-      }),
-    });
-    
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error?.message || 'שגיאה בבקשה לשירות OpenAI');
-    }
-    
-    const data: ChatCompletionResponse = await response.json();
-    return data.choices[0].message.content;
-  } catch (error) {
-    console.error('Error in OpenAI request:', error);
-    throw error;
-  }
+  console.warn('This method is deprecated. Using custom server communication.');
+  return messages[messages.length - 1].content; // Return last message content as a placeholder
 };
 
 // For future use with YouTube API
@@ -85,3 +59,4 @@ export const fetchYouTubeData = async (query: string): Promise<any> => {
     throw error;
   }
 };
+

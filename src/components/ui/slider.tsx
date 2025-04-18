@@ -63,7 +63,7 @@ const Slider = React.forwardRef<
     setHasSettled(false);
     
     if (showCelebration && !isDragging && reversedValue[0] !== lastValue[0]) {
-      // Only trigger celebration if value is above 3
+      // Only trigger confetti if value is above 3
       if (reversedValue[0] > 3) {
         triggerCelebration('confetti');
       }
@@ -81,7 +81,7 @@ const Slider = React.forwardRef<
         setHasSettled(true);
         
         if (showCelebration && lastValue[0] !== value[0]) {
-          // Only trigger celebration if value is above 3
+          // Only trigger star celebration if value is above 3
           if (value[0] > 3) {
             triggerCelebration('stars');
           }
@@ -182,5 +182,7 @@ const Slider = React.forwardRef<
     </SliderPrimitive.Root>
   )
 })
+
+Slider.displayName = SliderPrimitive.Root.displayName
 
 export { Slider }

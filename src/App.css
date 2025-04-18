@@ -1,14 +1,15 @@
-
 #root {
   margin: 0;
   padding: 0;
   text-align: center;
-  min-height: 100vh;
-  width: 100vw;
-  max-width: 100vw;
-  overflow-x: hidden;
+  height: 100dvh; /* Use dynamic viewport height */
+  width: 100dvw; /* Use dynamic viewport width */
+  max-width: 100dvw;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
+  aspect-ratio: 9 / 16; /* Force 9:16 aspect ratio */
+  margin: 0 auto; /* Center the app horizontally */
 }
 
 .logo {

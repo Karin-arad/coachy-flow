@@ -1,4 +1,3 @@
-
 import React, { ReactNode } from 'react';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
@@ -10,10 +9,6 @@ interface AnimatedCardProps {
 }
 
 const AnimatedCard = ({ children, isVisible, className }: AnimatedCardProps) => {
-  // Get current hour to determine theme
-  const hour = new Date().getHours();
-  const isMorning = hour >= 5 && hour < 17; // 5 AM to 5 PM
-  
   if (!isVisible) return null;
   
   return (
@@ -29,14 +24,13 @@ const AnimatedCard = ({ children, isVisible, className }: AnimatedCardProps) => 
       }}
       className={cn(
         'glass-card rounded-2xl p-4 sm:p-5 shadow-lg w-full max-w-md mx-auto overflow-hidden',
-        isMorning ? 'morning-theme' : 'evening-theme',
+        'aspect-[9/16] max-w-[calc(100vh * 9/16)]', // Add aspect ratio constraints
         className
       )}
       style={{ 
         boxShadow: '0 10px 40px rgba(31, 38, 135, 0.2)',
-        height: 'auto',
-        width: 'calc(100% - 16px)',
-        margin: '0 auto'
+        height: '100%',
+        width: '100%'
       }}
     >
       <motion.div

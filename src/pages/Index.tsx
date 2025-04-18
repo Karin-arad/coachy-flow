@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { FlowProvider, useFlowContext } from '@/context/FlowContext';
 import EmotionalPrompt from '@/components/EmotionalPrompt';
@@ -14,6 +13,7 @@ import { MessageCircle, Settings } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useState } from 'react';
 import APIKeyInput from '@/components/APIKeyInput';
+import { cn } from '@/lib/utils';
 
 const CoachyFlow = () => {
   const { currentScreen, celebrationType, isCelebrating } = useFlowContext();
@@ -37,7 +37,10 @@ const CoachyFlow = () => {
   };
   
   return (
-    <div className="h-screen w-screen flex flex-col bg-gradient-to-br from-white via-[#f8f9fa] to-white overflow-hidden">
+    <div className={cn(
+      "h-screen w-screen flex flex-col bg-gradient-to-br from-white via-[#f8f9fa] to-white",
+      "overflow-hidden aspect-[9/16] max-w-[calc(100vh * 9/16)] mx-auto"
+    )}>
       {/* Global celebration effects */}
       <CelebrationEffects 
         effectType={celebrationType} 

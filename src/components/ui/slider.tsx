@@ -1,4 +1,3 @@
-
 import * as React from "react"
 import * as SliderPrimitive from "@radix-ui/react-slider"
 import { Sparkles } from "lucide-react"
@@ -58,17 +57,17 @@ const Slider = React.forwardRef<
   }, [props.value]);
 
   const handleValueChange = (newValue: number[]) => {
-    setValue(newValue);
+    const reversedValue = [props.max || 7 + 1 - newValue[0]];
+    setValue(reversedValue);
     setHasSettled(false);
     
-    // Trigger celebration only when the value actually changes (not just when dragging)
-    if (showCelebration && !isDragging && newValue[0] !== lastValue[0]) {
+    if (showCelebration && !isDragging && reversedValue[0] !== lastValue[0]) {
       triggerCelebration('confetti');
-      setLastValue(newValue);
+      setLastValue(reversedValue);
     }
     
     if (props.onValueChange) {
-      props.onValueChange(newValue);
+      props.onValueChange(reversedValue);
     }
   };
 
@@ -77,7 +76,6 @@ const Slider = React.forwardRef<
       const timer = setTimeout(() => {
         setHasSettled(true);
         
-        // Trigger celebration when the slider settles after dragging
         if (showCelebration && lastValue[0] !== value[0]) {
           triggerCelebration('stars');
           setLastValue(value);
@@ -87,11 +85,9 @@ const Slider = React.forwardRef<
     }
   }, [isDragging, value, lastValue, showCelebration, triggerCelebration]);
 
-  // Calculate intensity for visual effects based on value
   const intensity = Math.min(((value[0] || 1) / (props.max || 7)) * 100, 100);
   const shadowIntensity = Math.min(intensity / 80, 1);
 
-  // Generate more sparkles based on value
   const getSparkles = () => {
     if (!showSparkles) return null;
     
@@ -103,14 +99,12 @@ const Slider = React.forwardRef<
       { bottom: 4, right: 0, size: 10, delay: 0.5 },
     ];
     
-    // Only show sparkles if the value is high enough
-    const threshold = (props.max || 7) * 0.4; // Lowered threshold to show more sparkles
+    const threshold = (props.max || 7) * 0.4;
     
     if (value[0] <= threshold) {
       return null;
     }
     
-    // Calculate how many sparkles to show based on value
     const sparkleCount = Math.floor(((value[0] - threshold) / (props.max || 7)) * sparklePositions.length) + 1;
     
     return sparklePositions.slice(0, sparkleCount).map((pos, index) => (
@@ -147,35 +141,32 @@ const Slider = React.forwardRef<
       {...props}
     >
       <SliderPrimitive.Track className={cn(
-        "relative h-5 w-full grow overflow-hidden rounded-full bg-gradient-to-r shadow-md", // increased height even more
+        "relative h-5 w-full grow overflow-hidden rounded-full bg-gradient-to-r shadow-md",
         getTrackColor(emotionType)
       )}>
         <SliderPrimitive.Range className={cn(
           "absolute h-full bg-gradient-to-r",
           hasSettled ? "animate-pulse-gentle" : "",
           getEmotionColor(emotionType),
-          // Apply stronger shadow based on value
-          intensity > 30 && "shadow-[0_0_20px_rgba(255,255,255,0.8)]" // enhanced glow effect
+          intensity > 30 && "shadow-[0_0_20px_rgba(255,255,255,0.8)]"
         )} 
         style={{
-          // Add extra shadow/glow effect based on value
-          filter: `brightness(${100 + intensity * 0.5}%)`, // increased brightness
-          boxShadow: `0 0 ${shadowIntensity * 25}px rgba(255,255,255,${shadowIntensity * 0.9})`, // stronger glow
+          filter: `brightness(${100 + intensity * 0.5}%)`,
+          boxShadow: `0 0 ${shadowIntensity * 25}px rgba(255,255,255,${shadowIntensity * 0.9})`,
           transition: "filter 0.3s ease, box-shadow 0.3s ease"
         }}
         />
       </SliderPrimitive.Track>
       <SliderPrimitive.Thumb className={cn(
-        "block h-10 w-10 rounded-full border-2 border-white bg-gradient-to-r shadow-lg transition-all duration-200", // increased size and shadow
-        "focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring focus-visible:ring-offset-2", // stronger focus ring
+        "block h-10 w-10 rounded-full border-2 border-white bg-gradient-to-r shadow-lg transition-all duration-200",
+        "focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring focus-visible:ring-offset-2",
         "disabled:pointer-events-none disabled:opacity-50",
-        isDragging ? "scale-120" : "hover:scale-120", // increased scale effect
+        isDragging ? "scale-120" : "hover:scale-120",
         getEmotionColor(emotionType),
         isDragging && "animate-pulse"
       )}
       style={{
-        // Add transition for the thumb shadow
-        boxShadow: intensity > 40 ? `0 0 ${intensity / 6}px ${intensity / 3}px rgba(255,255,255,0.9)` : "", // increased glow
+        boxShadow: intensity > 40 ? `0 0 ${intensity / 6}px ${intensity / 3}px rgba(255,255,255,0.9)` : "",
         transition: "box-shadow 0.3s ease, transform 0.2s ease"
       }}
       >

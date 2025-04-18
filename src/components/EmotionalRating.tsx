@@ -14,13 +14,16 @@ const EmotionalRating = () => {
     currentScreen, 
     currentSlider, 
     goToNextSlider,
-    goToPreviousSlider
+    goToPreviousSlider,
+    maxSliderValue
   } = useFlowContext();
   
   const handleRatingChange = (parameter: keyof typeof emotionRatings, value: number[]) => {
+    // Reverse the value back to original scale
+    const originalValue = maxSliderValue + 1 - value[0];
     setEmotionRatings({
       ...emotionRatings,
-      [parameter]: value[0],
+      [parameter]: originalValue,
     });
   };
 
@@ -120,11 +123,11 @@ const EmotionalRating = () => {
               </div>
               <Slider
                 emotionType={currentParam.type}
-                value={[emotionRatings[currentParam.id as keyof typeof emotionRatings]]}
+                value={[maxSliderValue + 1 - (emotionRatings[currentParam.id as keyof typeof emotionRatings])]}
                 min={1}
-                max={7}
+                max={maxSliderValue}
                 step={1}
-                onValueChange={(value) => handleRatingChange(currentParam.id as keyof typeof emotionRatings, value.reverse())}
+                onValueChange={(value) => handleRatingChange(currentParam.id as keyof typeof emotionRatings, value)}
                 className="py-1"
               />
               <div className="flex justify-between text-xs text-gray-500 font-medium">

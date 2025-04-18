@@ -22,20 +22,20 @@ const EmotionalPrompt = () => {
   const isEvening = hour >= 16 && hour < 18;
   const isMorning = hour >= 6 && hour < 12;
   
-  let greeting = "שלום קארין";
+  let greeting = "שלום";
   let TimeIcon = Sun;
   
   if (isNight) {
-    greeting = "לילה טוב קארין";
+    greeting = "לילה טוב";
     TimeIcon = Moon;
   } else if (isEvening) {
-    greeting = "ערב טוב קארין";
+    greeting = "ערב טוב";
     TimeIcon = Sun;
   } else if (isMorning) {
-    greeting = "בוקר טוב קארין";
+    greeting = "בוקר טוב";
     TimeIcon = Sun;
   } else {
-    greeting = "צהריים טובים קארין";
+    greeting = "צהריים טובים";
     TimeIcon = Sun;
   }
 
@@ -105,3 +105,4 @@ const EmotionalPrompt = () => {
 };
 
 export default EmotionalPrompt;
+

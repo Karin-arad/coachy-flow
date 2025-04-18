@@ -8,6 +8,7 @@ import { useToast } from '@/hooks/use-toast';
 import APIKeyInput from '@/components/APIKeyInput';
 import YouTubeVideo from '@/components/YouTubeVideo';
 import { fetchYouTubeData } from '@/utils/openaiService';
+import { hasYouTubeApiKey } from '@/utils/apiHelpers';
 
 interface VideoData {
   id: string;
@@ -31,6 +32,9 @@ const ChatPage = () => {
 
   useEffect(() => {
     console.log('💬 Chat page loaded - initializing welcome message');
+    const hasYTKey = hasYouTubeApiKey();
+    console.log('🔑 YouTube API key availability:', hasYTKey ? 'Available' : 'Not available');
+    
     setMessages([
       {
         id: 'welcome',
@@ -48,19 +52,45 @@ const ChatPage = () => {
   const findWorkoutVideo = async (userInput: string, aiResponse: string) => {
     try {
       console.log('🎥 Searching for workout video based on conversation');
-      const searchQuery = `${aiResponse} workout tutorial`;
+      
+      if (!hasYouTubeApiKey()) {
+        console.warn('⚠️ No YouTube API key available, skipping video search');
+        return null;
+      }
+      
+      let searchQuery = `${aiResponse.substring(0, 100)} workout tutorial`;
+      
+      const keywords = ['yoga', 'pilates', 'hiit', 'stretching', 'meditation', 'cardio', 'strength'];
+      for (const keyword of keywords) {
+        if (userInput.toLowerCase().includes(keyword) || 
+            aiResponse.toLowerCase().includes(keyword)) {
+          searchQuery = `${keyword} ${searchQuery}`;
+          break;
+        }
+      }
+      
+      console.log('🔍 Search query for YouTube:', searchQuery);
       const videoData = await fetchYouTubeData(searchQuery);
       
       if (videoData.items && videoData.items.length > 0) {
+        console.log('✅ Found YouTube videos:', videoData.items.length);
         const video = videoData.items[0];
+        console.log('📺 Selected video:', video.snippet.title);
         return {
           id: video.id.videoId,
           title: video.snippet.title
         };
       }
+      
+      console.warn('⚠️ No YouTube videos found for the search query');
       return null;
     } catch (error) {
       console.error('❌ Error fetching YouTube video:', error);
+      toast({
+        title: 'שגיאה בחיפוש וידאו',
+        description: error instanceof Error ? error.message : 'אירעה שגיאה בחיפוש וידאו התרגול',
+        variant: 'destructive',
+      });
       return null;
     }
   };

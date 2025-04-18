@@ -1,4 +1,3 @@
-
 import { getYouTubeApiKey } from './apiHelpers';
 
 export interface ChatMessage {
@@ -20,7 +19,6 @@ export interface ChatCompletionResponse {
   }[];
 }
 
-// Kept for potential future compatibility, but not actively used
 export const createChatCompletion = async (
   messages: ChatMessage[],
   model: string = 'gpt-3.5-turbo'
@@ -29,34 +27,41 @@ export const createChatCompletion = async (
   return messages[messages.length - 1].content; // Return last message content as a placeholder
 };
 
-// For future use with YouTube API
 export const fetchYouTubeData = async (query: string): Promise<any> => {
   try {
+    console.log('🔍 Fetching YouTube data for query:', query);
     const apiKey = getYouTubeApiKey();
     
     if (!apiKey) {
+      console.error('❌ YouTube API key is missing');
       throw new Error('YouTube API key is not set. Please set your YouTube API key first.');
     }
     
-    const response = await fetch(
-      `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(query)}&key=${apiKey}`,
-      {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-    );
+    console.log('📡 Making YouTube API request with key:', apiKey.substring(0, 3) + '...');
+    
+    const maxResults = 5; // Get top 5 results to have alternatives if needed
+    const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(query)}&maxResults=${maxResults}&type=video&key=${apiKey}`;
+    
+    console.log('🌐 YouTube API endpoint:', url.replace(apiKey, 'API_KEY_HIDDEN'));
+    
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
     
     if (!response.ok) {
       const errorData = await response.json();
+      console.error('⛔ YouTube API error response:', errorData);
       throw new Error(errorData.error?.message || 'שגיאה בבקשה לשירות YouTube');
     }
     
-    return await response.json();
+    const data = await response.json();
+    console.log('✅ YouTube API response received with', data.items?.length || 0, 'items');
+    return data;
   } catch (error) {
-    console.error('Error in YouTube API request:', error);
+    console.error('❌ Error in YouTube API request:', error);
     throw error;
   }
 };
-

@@ -1,9 +1,10 @@
+
 import React from 'react';
 import { useFlowContext } from '@/context/FlowContext';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
 import AnimatedCard from './AnimatedCard';
-import { ChevronRight, ChevronLeft } from 'lucide-react';
+import { ChevronRight, ChevronLeft, Feather, Zap, Eye, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import EmotionAnimation from './EmotionAnimation';
 
@@ -185,3 +186,4 @@ const EmotionalRating = () => {
 };
 
 export default EmotionalRating;
+

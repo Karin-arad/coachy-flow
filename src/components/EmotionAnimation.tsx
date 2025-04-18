@@ -2,6 +2,7 @@
 import React from 'react';
 import { Feather, Eye, Flame, Weight } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { cn } from '@/lib/utils';
 
 type EmotionAnimationType = 'bounciness' | 'energy' | 'alertness' | 'lightness';
 
@@ -34,7 +35,10 @@ const EmotionAnimation: React.FC<EmotionAnimationProps> = ({ type, value, maxVal
             }}
             className="flex justify-center items-center"
           >
-            <span className="text-5xl drop-shadow-lg" style={{ filter: `saturate(${100 + intensity * 50}%)` }}>
+            <span className="text-7xl drop-shadow-lg" style={{ 
+              filter: `saturate(${100 + intensity * 100}%) brightness(1.2)`,
+              transform: `scale(${1 + intensity * 0.3})`
+            }}>
               {intensity < 0.3 ? "🐰" : intensity < 0.6 ? "🐇" : "🦘"}
             </span>
           </motion.div>
@@ -46,22 +50,21 @@ const EmotionAnimation: React.FC<EmotionAnimationProps> = ({ type, value, maxVal
             <motion.div
               animate={{
                 scale: [1, 1.1 + intensity * 0.2, 1],
-                filter: [`brightness(${100 + intensity * 30}%)`, `brightness(${130 + intensity * 50}%)`, `brightness(${100 + intensity * 30}%)`],
               }}
               transition={{
-                duration: 0.8 - intensity * 0.3, // Faster pulsing with higher energy
+                duration: 0.8 - intensity * 0.3,
                 repeat: Infinity,
                 ease: "easeInOut",
               }}
               className="flex justify-center items-center"
             >
-              <div className="relative flex items-center justify-center">
+              <div className="relative flex items-center justify-center grayscale transition-all duration-300">
                 <Flame
-                  className="text-amber-500 drop-shadow-lg"
-                  size={36 + intensity * 36}
+                  className="text-gray-600 drop-shadow-lg"
+                  size={56 + intensity * 36}
                   style={{
                     opacity: 0.8 + intensity * 0.2,
-                    color: intensity > 0.7 ? '#ff6b00' : (intensity > 0.4 ? '#ff9500' : '#ffc107'),
+                    strokeWidth: 1.5 + intensity * 0.5
                   }}
                 />
                 {intensity > 0.6 && (
@@ -78,8 +81,8 @@ const EmotionAnimation: React.FC<EmotionAnimationProps> = ({ type, value, maxVal
                     }}
                   >
                     <Flame
-                      className="text-amber-300"
-                      size={46 + intensity * 36}
+                      className="text-gray-400"
+                      size={66 + intensity * 36}
                       style={{
                         opacity: 0.4,
                         filter: "blur(3px)",
@@ -96,7 +99,7 @@ const EmotionAnimation: React.FC<EmotionAnimationProps> = ({ type, value, maxVal
         return (
           <div className="flex justify-center items-center">
             <motion.div 
-              className="flex gap-3 bg-gradient-to-b from-transparent to-blue-50/30 p-3 rounded-full"
+              className="flex gap-5 p-3 rounded-full grayscale"
               animate={{
                 scale: [1, intensity > 0.7 ? 1.05 : 1, 1],
               }}
@@ -118,8 +121,8 @@ const EmotionAnimation: React.FC<EmotionAnimationProps> = ({ type, value, maxVal
                 }}
               >
                 <Eye
-                  className={`drop-shadow-md ${intensity > 0.7 ? 'text-blue-600' : (intensity > 0.4 ? 'text-blue-500' : 'text-blue-400')}`}
-                  size={32}
+                  className="text-gray-600 drop-shadow-md"
+                  size={42}
                   style={{
                     opacity: 0.7 + intensity * 0.3,
                     strokeWidth: 1.5 + intensity * 0.5,
@@ -140,8 +143,8 @@ const EmotionAnimation: React.FC<EmotionAnimationProps> = ({ type, value, maxVal
                 }}
               >
                 <Eye
-                  className={`drop-shadow-md ${intensity > 0.7 ? 'text-blue-600' : (intensity > 0.4 ? 'text-blue-500' : 'text-blue-400')}`}
-                  size={32}
+                  className="text-gray-600 drop-shadow-md"
+                  size={42}
                   style={{
                     opacity: 0.7 + intensity * 0.3,
                     strokeWidth: 1.5 + intensity * 0.5,
@@ -155,11 +158,11 @@ const EmotionAnimation: React.FC<EmotionAnimationProps> = ({ type, value, maxVal
       case 'lightness':
         return (
           <div className="flex justify-center items-center">
-            <div className="relative flex flex-col items-center">
+            <div className="relative flex flex-col items-center grayscale">
               <motion.div
                 animate={{
                   rotate: [0, 15, -15, 0],
-                  y: [0, -10 * intensity, 0],
+                  y: [0, -15 * intensity, 0],
                 }}
                 transition={{
                   duration: 3,
@@ -171,11 +174,11 @@ const EmotionAnimation: React.FC<EmotionAnimationProps> = ({ type, value, maxVal
                 }}
               >
                 <Feather 
-                  className={`${intensity > 0.7 ? 'text-teal-500' : (intensity > 0.4 ? 'text-teal-400' : 'text-teal-300')}`} 
-                  size={40} 
+                  className="text-gray-600" 
+                  size={50} 
                   strokeWidth={1.5}
                   style={{
-                    filter: `drop-shadow(0 ${2 + intensity * 3}px ${3 + intensity * 2}px rgba(20, 184, 166, 0.${Math.round(3 + intensity * 6)}))`,
+                    filter: `drop-shadow(0 ${2 + intensity * 3}px ${3 + intensity * 2}px rgba(0,0,0,0.3))`,
                   }}
                 />
               </motion.div>
@@ -197,10 +200,11 @@ const EmotionAnimation: React.FC<EmotionAnimationProps> = ({ type, value, maxVal
                   }}
                 >
                   <Weight 
-                    className="text-gray-500" 
-                    size={28} 
+                    className="text-gray-600" 
+                    size={38} 
                     style={{
                       opacity: 0.9 - (intensity * 0.7),
+                      strokeWidth: 1.5
                     }}
                   />
                 </motion.div>
@@ -222,7 +226,7 @@ const EmotionAnimation: React.FC<EmotionAnimationProps> = ({ type, value, maxVal
                     ease: "easeInOut",
                   }}
                 >
-                  <div className="text-xs text-teal-600 mt-14 font-semibold">
+                  <div className="text-xs text-gray-600 mt-14 font-semibold">
                     {intensity > 0.8 ? "משוחרר לגמרי!" : "קל יותר"}
                   </div>
                 </motion.div>
@@ -234,7 +238,7 @@ const EmotionAnimation: React.FC<EmotionAnimationProps> = ({ type, value, maxVal
   };
   
   return (
-    <div className="h-24 flex items-center justify-center w-full">
+    <div className="h-32 flex items-center justify-center w-full">
       {renderAnimation()}
     </div>
   );

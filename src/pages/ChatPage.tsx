@@ -1,9 +1,9 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { askCoachyAI } from '@/utils/coachyService';
+import { askCoachyAI, isCoachyServerAvailable } from '@/utils/coachyService';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Send, ArrowLeft } from 'lucide-react';
+import { Send, ArrowLeft, AlertCircle, RefreshCw } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import APIKeyInput from '@/components/APIKeyInput';
@@ -81,15 +81,34 @@ const getPersonalizedResponse = (userInput: string): string => {
   return genericResponses[Math.floor(Math.random() * genericResponses.length)];
 };
 
+// תשובות מוכנות מראש למצב בו השרת לא זמין
+const OFFLINE_RESPONSES = [
+  "יש לי תרגול יוגה נהדר להרגעה. חפשי ביוטיוב 'יוגה להרגעה 10 דקות' ותמצאי תרגולים מעולים.",
+  "אני ממליצה על מדיטציה קצרה. נשימות עמוקות למשך 5-10 דקות יכולות לעשות פלאים למצב הרוח.",
+  "מתיחות קלות יכולות לעזור עכשיו. נסי להושיט ידיים לשמיים ולהתמתח לצדדים למשך כ-5 דקות.",
+  "הליכה קצרה בחוץ, אפילו 15 דקות, יכולה לרענן את האנרגיה ולשפר את מצב הרוח.",
+  "תרגילי נשימה פשוטים: שאיפה לארבע, החזקה לארבע, ונשיפה לארבע, למשך כמה דקות יכולים לסייע מאוד."
+];
+
+// מקבל תשובה אקראית מהתשובות המוכנות מראש
+const getOfflineResponse = (): string => {
+  return OFFLINE_RESPONSES[Math.floor(Math.random() * OFFLINE_RESPONSES.length)];
+};
+
 const ChatPage = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isServerAvailable, setIsServerAvailable] = useState<boolean | null>(null);
+  const [isCheckingServer, setIsCheckingServer] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   const [workoutHistory, setWorkoutHistory] = useState<string[]>([]);
 
+  // בדיקת זמינות השרת כשהדף נטען
   useEffect(() => {
+    checkServerAvailability();
+    
     console.log('💬 Chat page loaded - initializing welcome message');
     const hasYTKey = hasYouTubeApiKey();
     console.log('🔑 YouTube API key availability:', hasYTKey ? `Available (starts with: ${getYouTubeApiKey()?.substring(0, 3)}...)` : 'Not available');
@@ -113,9 +132,25 @@ const ChatPage = () => {
     ]);
   }, []);
 
+  // גלילה אוטומטית להודעה האחרונה
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
+  
+  // פונקציה לבדיקת זמינות השרת
+  const checkServerAvailability = async () => {
+    setIsCheckingServer(true);
+    try {
+      const available = await isCoachyServerAvailable();
+      console.log('🔄 Server availability check result:', available ? 'Online' : 'Offline');
+      setIsServerAvailable(available);
+    } catch (error) {
+      console.error('❌ Error checking server availability:', error);
+      setIsServerAvailable(false);
+    } finally {
+      setIsCheckingServer(false);
+    }
+  };
 
   const findWorkoutVideo = async (userInput: string, aiResponse: string) => {
     try {
@@ -222,30 +257,50 @@ const ChatPage = () => {
     setIsLoading(true);
     
     try {
-      console.log('⏳ Waiting for AI response...');
-      const rawResponse = await askCoachyAI(input);
-      console.log('📥 AI response received:', rawResponse);
+      // בדיקה אם השרת זמין
+      const serverAvailable = isServerAvailable !== null ? isServerAvailable : await isCoachyServerAvailable();
       
-      // Process the response to make it more personalized
-      let personalizedResponse = getPersonalizedResponse(input);
-      if (personalizedResponse && rawResponse) {
-        // Combine personalized intro with the AI response
-        personalizedResponse += " " + rawResponse;
+      let aiResponse;
+      let videoData = null;
+      
+      if (serverAvailable) {
+        console.log('⏳ Waiting for AI response...');
+        aiResponse = await askCoachyAI(input);
+        console.log('📥 AI response received:', aiResponse);
+        
+        // Process the response to make it more personalized
+        let personalizedResponse = getPersonalizedResponse(input);
+        if (personalizedResponse && aiResponse) {
+          // Combine personalized intro with the AI response
+          personalizedResponse += " " + aiResponse;
+        } else {
+          personalizedResponse = aiResponse;
+        }
+        
+        videoData = await findWorkoutVideo(input, personalizedResponse);
+        aiResponse = personalizedResponse;
       } else {
-        personalizedResponse = rawResponse;
+        console.log('🔌 Server is offline, using offline response');
+        aiResponse = getOfflineResponse();
       }
-      
-      const videoData = await findWorkoutVideo(input, personalizedResponse);
       
       const assistantMessage: Message = {
         id: `assistant-${Date.now()}`,
-        content: personalizedResponse,
+        content: aiResponse,
         sender: 'assistant',
         timestamp: new Date(),
         video: videoData || undefined
       };
       
       setMessages((prev) => [...prev, assistantMessage]);
+      
+      if (!serverAvailable) {
+        toast({
+          title: "שימוש במצב לא מקוון",
+          description: "לא ניתן להתחבר לשרת הבינה המלאכותית. משתמש בתשובות מוגבלות.",
+          variant: "warning",
+        });
+      }
     } catch (error) {
       console.error('❌ Chat error:', error);
       toast({
@@ -253,6 +308,9 @@ const ChatPage = () => {
         description: error instanceof Error ? error.message : 'אירעה שגיאה בתקשורת עם השרת',
         variant: 'destructive',
       });
+      
+      // במקרה של שגיאה, בדיקה מחודשת של זמינות השרת
+      checkServerAvailability();
     } finally {
       setIsLoading(false);
     }
@@ -276,6 +334,25 @@ const ChatPage = () => {
         <div className="w-10"></div>
       </header>
       
+      {isServerAvailable === false && !isCheckingServer && (
+        <div className="bg-amber-50 border-b border-amber-200 p-3 flex justify-between items-center">
+          <div className="flex items-center gap-2 text-amber-700">
+            <AlertCircle className="h-5 w-5" />
+            <span>לא ניתן להתחבר לשרת הבינה המלאכותית. משתמש בתשובות מוגבלות.</span>
+          </div>
+          <Button 
+            variant="outline"
+            size="sm"
+            className="text-amber-700 border-amber-300"
+            onClick={checkServerAvailability}
+            disabled={isCheckingServer}
+          >
+            <RefreshCw className={`h-4 w-4 mr-1 ${isCheckingServer ? 'animate-spin' : ''}`} />
+            {isCheckingServer ? 'בודק...' : 'בדוק שוב'}
+          </Button>
+        </div>
+      )}
+      
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {messages.map((message) => (
           <div
@@ -293,7 +370,6 @@ const ChatPage = () => {
               {message.video && (
                 <div className="mt-3">
                   <YouTubeVideo videoId={message.video.id} title={message.video.title} />
-                  <p className="text-xs mt-1 text-gray-500">Video ID: {message.video.id}</p>
                 </div>
               )}
               <div

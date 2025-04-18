@@ -122,11 +122,13 @@ const EmotionalPrompt = () => {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.5 }}
-            className="bg-white/80 backdrop-blur-sm rounded-xl p-4 shadow-md"
+            className="bg-white/80 backdrop-blur-sm rounded-xl p-4 shadow-md border-2 border-coachy-blue/30"
           >
             <div className="flex items-center gap-2 text-gray-700">
               <Sparkles className="text-amber-500 h-5 w-5" />
-              <p className="text-right text-sm">{encouragingResponse}</p>
+              <p className="text-right text-sm text-coachy-blue font-medium">
+                {encouragingResponse}
+              </p>
             </div>
           </motion.div>
         )}

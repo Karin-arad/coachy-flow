@@ -62,7 +62,9 @@ const Slider = React.forwardRef<
     setHasSettled(false);
     
     if (showCelebration && !isDragging && reversedValue[0] !== lastValue[0]) {
-      triggerCelebration('confetti');
+      if (emotionType !== 'energy' || reversedValue[0] > 3) {
+        triggerCelebration('confetti');
+      }
       setLastValue(reversedValue);
     }
     
@@ -77,13 +79,15 @@ const Slider = React.forwardRef<
         setHasSettled(true);
         
         if (showCelebration && lastValue[0] !== value[0]) {
-          triggerCelebration('stars');
+          if (emotionType !== 'energy' || value[0] > 3) {
+            triggerCelebration('stars');
+          }
           setLastValue(value);
         }
       }, 300);
       return () => clearTimeout(timer);
     }
-  }, [isDragging, value, lastValue, showCelebration, triggerCelebration]);
+  }, [isDragging, value, lastValue, showCelebration, triggerCelebration, emotionType]);
 
   const intensity = Math.min(((value[0] || 1) / (props.max || 7)) * 100, 100);
   const shadowIntensity = Math.min(intensity / 80, 1);

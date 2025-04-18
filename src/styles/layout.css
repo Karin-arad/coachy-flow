@@ -1,20 +1,19 @@
-
 @layer utilities {
   .screen-2-container {
     font-size: 0.875rem;
-    --scale-factor: 0.95;
+    --scale-factor: 1;
     transform-origin: top center;
     transform: scale(var(--scale-factor));
-    max-height: 500px;
+    max-height: calc(100vh - 8rem);
     overflow: visible;
   }
   
   .screen-3-container {
     font-size: 0.875rem;
-    --scale-factor: 0.95;
+    --scale-factor: 1;
     transform-origin: top center;
     transform: scale(var(--scale-factor));
-    max-height: 500px;
+    max-height: calc(100vh - 8rem);
     overflow: visible;
   }
   

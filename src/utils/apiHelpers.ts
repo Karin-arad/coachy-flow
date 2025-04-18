@@ -16,14 +16,17 @@ export const getYouTubeApiKey = (): string | null => {
     return localKey;
   }
   
-  // Fall back to the config file key, but only if it's not empty
-  if (API_KEYS.YOUTUBE) {
+  // Fall back to the config file key
+  // Check if API_KEYS.YOUTUBE exists and is not an empty string
+  if (API_KEYS.YOUTUBE && API_KEYS.YOUTUBE.trim() !== "") {
     console.log('🔑 Using YouTube API key from config');
     return API_KEYS.YOUTUBE;
   }
   
-  console.warn('⚠️ No YouTube API key found in localStorage or config');
-  return null;
+  // Hard-coded API key for testing (only if no other key is available)
+  const hardcodedKey = "AIzaSyDoh8GzfYlcJseloPL4OprmlSJhg2fHLcA";
+  console.log('🔑 Using hardcoded YouTube API key');
+  return hardcodedKey;
 };
 
 /**

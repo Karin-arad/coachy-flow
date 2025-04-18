@@ -1,23 +1,137 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useFlowContext } from '@/context/FlowContext';
 import { Button } from '@/components/ui/button';
 import AnimatedCard from './AnimatedCard';
 import { Heart, Play, Sparkles } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { fetchYouTubeData } from '@/utils/openaiService';
+import { hasYouTubeApiKey } from '@/utils/apiHelpers';
+import YouTubeVideo from './YouTubeVideo';
+import { useToast } from '@/hooks/use-toast';
+
+interface VideoData {
+  id: string;
+  title: string;
+}
 
 const PracticeSummary = () => {
   const { currentScreen, freeTextEmotion, emotionRatings, timeAvailable } = useFlowContext();
   const [buttonClicked, setButtonClicked] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [videoData, setVideoData] = useState<VideoData | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const { toast } = useToast();
   
+  useEffect(() => {
+    // Only search for videos when we reach this screen
+    if (currentScreen === 4) {
+      searchForWorkoutVideo();
+    }
+  }, [currentScreen]);
+
+  const searchForWorkoutVideo = async () => {
+    console.log('🔍 Searching for workout video based on user inputs');
+    console.log('📝 User input data:', { freeTextEmotion, emotionRatings, timeAvailable });
+    
+    setIsLoading(true);
+    setError(null);
+    
+    try {
+      if (!hasYouTubeApiKey()) {
+        console.warn('⚠️ No YouTube API key available, skipping video search');
+        setError('No YouTube API key available');
+        setIsLoading(false);
+        return;
+      }
+      
+      // Generate search query based on user inputs
+      let searchQuery = generateSearchQuery(freeTextEmotion, emotionRatings, timeAvailable);
+      console.log('🔍 Generated search query:', searchQuery);
+      
+      const response = await fetchYouTubeData(searchQuery);
+      
+      if (!response) {
+        console.error('❌ YouTube API returned no data');
+        setError('Could not fetch video data');
+        setIsLoading(false);
+        return;
+      }
+      
+      if (response.items && response.items.length > 0) {
+        console.log('✅ Found YouTube videos:', response.items.length);
+        const video = response.items[0];
+        console.log('📺 Selected video:', video.snippet.title);
+        
+        setVideoData({
+          id: video.id.videoId,
+          title: video.snippet.title
+        });
+      } else {
+        console.warn('⚠️ No YouTube videos found for the search query');
+        setError('No videos found for your preferences');
+      }
+    } catch (error) {
+      console.error('❌ Error fetching YouTube video:', error);
+      setError('Error fetching video');
+      toast({
+        title: 'שגיאה בחיפוש וידאו',
+        description: error instanceof Error ? error.message : 'אירעה שגיאה בחיפוש וידאו התרגול',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
+  const generateSearchQuery = (
+    freeText: string, 
+    ratings: typeof emotionRatings, 
+    time: string
+  ): string => {
+    // Create intensity description based on ratings
+    let intensity = "moderate";
+    const averageEnergy = (ratings.energy + ratings.bounciness) / 2;
+    if (averageEnergy <= 3) intensity = "gentle";
+    else if (averageEnergy >= 5) intensity = "energetic";
+    
+    // Create focus area based on free text
+    let focusArea = "";
+    const keywords = ["yoga", "pilates", "hiit", "stretching", "meditation", "cardio", "strength"];
+    for (const keyword of keywords) {
+      if (freeText.toLowerCase().includes(keyword)) {
+        focusArea = keyword;
+        break;
+      }
+    }
+    
+    // Default to yoga if no specific focus found
+    if (!focusArea) focusArea = "yoga";
+    
+    // Extract time duration
+    let duration = "";
+    if (time.includes("10")) duration = "10 minute";
+    else if (time.includes("20")) duration = "20 minute";
+    else if (time.includes("חצי")) duration = "30 minute";
+    else if (time.includes("שעה")) duration = "60 minute";
+    
+    return `${intensity} ${focusArea} workout ${duration}`.trim();
+  };
+
   const handleStartPractice = () => {
     setButtonClicked(true);
     
     console.log('Starting practice with data:', {
       freeTextEmotion,
       emotionRatings,
-      timeAvailable
+      timeAvailable,
+      videoData
     });
+    
+    // If we have video data, let's open YouTube in a new tab
+    if (videoData) {
+      window.open(`https://www.youtube.com/watch?v=${videoData.id}`, '_blank');
+    }
     
     setTimeout(() => {
       setButtonClicked(false);
@@ -57,21 +171,50 @@ const PracticeSummary = () => {
           whileHover={{ scale: 1.02 }}
           style={{ maxHeight: "160px" }}
         >
-          <div className="absolute inset-0 backdrop-blur-[1px] bg-white/10 flex items-center justify-center">
-            <motion.div 
-              className="text-gray-500 flex flex-col items-center gap-2"
-              whileHover={{ scale: 1.05 }}
-            >
+          {isLoading ? (
+            <div className="absolute inset-0 backdrop-blur-[1px] bg-white/10 flex items-center justify-center">
+              <div className="text-gray-500 flex flex-col items-center gap-2">
+                <div className="flex space-x-2">
+                  <div className="w-3 h-3 bg-gray-400 rounded-full animate-bounce"></div>
+                  <div className="w-3 h-3 bg-gray-400 rounded-full animate-bounce delay-100"></div>
+                  <div className="w-3 h-3 bg-gray-400 rounded-full animate-bounce delay-200"></div>
+                </div>
+                <p className="text-xs">מחפש סרטון תרגול מותאם אישית...</p>
+              </div>
+            </div>
+          ) : error ? (
+            <div className="absolute inset-0 backdrop-blur-[1px] bg-white/10 flex items-center justify-center">
+              <div className="text-gray-500 flex flex-col items-center gap-2">
+                <p className="text-xs">{error}</p>
+                <div 
+                  className="w-12 h-12 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center shadow-lg hover:scale-125 transition-transform duration-500 cursor-pointer"
+                  onClick={searchForWorkoutVideo}
+                >
+                  <Play className="text-coachy-blue h-6 w-6 ml-1" />
+                </div>
+                <p className="text-xs">לחץ לנסות שוב</p>
+              </div>
+            </div>
+          ) : videoData ? (
+            <YouTubeVideo videoId={videoData.id} title={videoData.title} />
+          ) : (
+            <div className="absolute inset-0 backdrop-blur-[1px] bg-white/10 flex items-center justify-center">
               <motion.div 
-                className="w-12 h-12 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center shadow-lg group-hover:scale-125 transition-transform duration-500 hover:bg-gradient-to-r hover:from-coachy-blue hover:to-indigo-600 relative"
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
+                className="text-gray-500 flex flex-col items-center gap-2"
+                whileHover={{ scale: 1.05 }}
               >
-                <Play className="text-coachy-blue group-hover:text-white h-6 w-6 ml-1 transition-colors duration-500" />
+                <motion.div 
+                  className="w-12 h-12 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center shadow-lg group-hover:scale-125 transition-transform duration-500 hover:bg-gradient-to-r hover:from-coachy-blue hover:to-indigo-600 relative"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  onClick={searchForWorkoutVideo}
+                >
+                  <Play className="text-coachy-blue group-hover:text-white h-6 w-6 ml-1 transition-colors duration-500" />
+                </motion.div>
+                <p className="text-xs">לא נמצאו סרטונים</p>
               </motion.div>
-              <p className="text-xs">כאן יופיע סרטון YouTube עם תרגול מותאם אישית</p>
-            </motion.div>
-          </div>
+            </div>
+          )}
         </motion.div>
         
         <motion.div 
@@ -82,6 +225,7 @@ const PracticeSummary = () => {
         >
           <Button 
             onClick={handleStartPractice}
+            disabled={isLoading || !videoData}
             variant="joyful"
             className="bg-gradient-to-r from-coachy-pink to-coachy-yellow hover:brightness-105 text-white px-6 py-2 text-sm rounded-xl transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-sm hover:shadow-md group relative overflow-hidden"
           >

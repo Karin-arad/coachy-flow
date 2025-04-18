@@ -5,6 +5,7 @@ import TimeAvailability from '@/components/TimeAvailability';
 import PracticeSummary from '@/components/PracticeSummary';
 import ProgressBar from '@/components/ProgressBar';
 import CelebrationEffects from '@/components/CelebrationEffects';
+import InstallButton from '@/components/InstallButton';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -42,6 +43,8 @@ const CoachyFlow = () => {
         active={isCelebrating} 
         duration={1500}
       />
+      
+      <InstallButton />
       
       {showApiKeyModal && <APIKeyInput onClose={() => setShowApiKeyModal(false)} />}
       

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useFlowContext } from '@/context/FlowContext';
 import { Button } from '@/components/ui/button';
@@ -204,8 +203,8 @@ const PracticeSummary = () => {
   };
 
   return (
-    <AnimatedCard isVisible={currentScreen === 4} className="flex flex-col w-full max-w-2xl mx-auto">
-      <div className="space-y-4 flex flex-col h-full items-center">
+    <AnimatedCard isVisible={currentScreen === 4} className="flex flex-col w-full max-w-4xl mx-auto items-center justify-center min-h-full">
+      <div className="space-y-4 flex flex-col items-center justify-center w-full max-w-3xl">
         <motion.div 
           className="flex items-center justify-center gap-2 mb-2"
           initial={{ opacity: 0, y: -10 }}
@@ -229,7 +228,7 @@ const PracticeSummary = () => {
         </motion.p>
         
         <motion.div 
-          className="relative overflow-hidden rounded-xl bg-gradient-to-br from-coachy-gray via-gray-100 to-coachy-gray p-1 w-full aspect-video shadow-lg group hover:shadow-xl transition-shadow duration-300"
+          className="relative overflow-hidden rounded-xl bg-gradient-to-br from-coachy-gray via-gray-100 to-coachy-gray p-1 w-full max-w-2xl aspect-video shadow-lg group hover:shadow-xl transition-shadow duration-300 mx-auto"
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.6, duration: 0.5, type: "spring" }}

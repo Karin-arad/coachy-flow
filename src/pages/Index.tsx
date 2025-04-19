@@ -7,9 +7,8 @@ import ProgressBar from '@/components/ProgressBar';
 import CelebrationEffects from '@/components/CelebrationEffects';
 import InstallButton from '@/components/InstallButton';
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { MessageCircle, Settings } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useState } from 'react';
 import APIKeyInput from '@/components/APIKeyInput';
@@ -56,15 +55,6 @@ const CoachyFlow = () => {
       >
         <Settings className="h-4 w-4 mr-1" /> הגדרות
       </Button>
-      
-      <Link to="/chat" className="fixed bottom-5 right-5 z-50 rtl:right-auto rtl:left-5">
-        <Button 
-          className={`rounded-full ${isMobile ? 'w-12 h-12' : 'w-14 h-14'} p-0 flex items-center justify-center shadow-lg bg-gradient-to-r from-coachy-blue to-coachy-turquoise hover:brightness-110`}
-          size="icon"
-        >
-          <MessageCircle className={`${isMobile ? 'h-5 w-5' : 'h-6 w-6'}`} />
-        </Button>
-      </Link>
       
       <div className="flex-1 flex flex-col items-center justify-start px-2 py-3 sm:px-4 sm:py-6 w-full">
         <div className="w-full max-w-md mb-2 sm:mb-4">

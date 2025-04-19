@@ -203,8 +203,11 @@ const PracticeSummary = () => {
   };
 
   return (
-    <AnimatedCard isVisible={currentScreen === 4} className="flex flex-col w-full max-w-4xl mx-auto items-center justify-center min-h-full">
-      <div className="space-y-4 flex flex-col items-center justify-center w-full max-w-3xl">
+    <AnimatedCard 
+      isVisible={currentScreen === 4} 
+      className="flex flex-col w-full max-w-4xl mx-auto items-center justify-center min-h-full rtl:text-right"
+    >
+      <div className="space-y-4 flex flex-col items-center justify-center w-full max-w-3xl text-center">
         <motion.div 
           className="flex items-center justify-center gap-2 mb-2"
           initial={{ opacity: 0, y: -10 }}

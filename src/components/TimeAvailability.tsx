@@ -6,6 +6,7 @@ import AnimatedCard from './AnimatedCard';
 import { cn } from '@/lib/utils';
 import { Clock, Heart } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { playSound } from '@/utils/soundEffects';
 
 const TimeAvailability = () => {
   const { timeAvailable, setTimeAvailable, goToNextScreen, currentScreen, triggerCelebration } = useFlowContext();
@@ -13,6 +14,7 @@ const TimeAvailability = () => {
   const handleTimeSelection = (time: string) => {
     setTimeAvailable(time);
     triggerCelebration('colorful-fireworks');
+    playSound('click');
   };
   
   const timeOptions = [
@@ -35,7 +37,7 @@ const TimeAvailability = () => {
           className="text-lg font-medium mb-4 flex items-center gap-2"
         >
           <span>כמה זמן יש לך כרגע?</span>
-          <Clock className="text-coachy-blue animate-[spin_10s_linear_infinite]" size={16} />
+          <Clock className="text-coachy-blue animate-spin-slow" size={16} />
           <Heart className="fill-coachy-pink stroke-coachy-pink animate-pulse-gentle" size={16} />
         </motion.h2>
         
@@ -77,9 +79,13 @@ const TimeAvailability = () => {
             className="flex justify-center"
           >
             <Button 
-              onClick={goToNextScreen}
+              onClick={() => {
+                goToNextScreen();
+                playSound('success');
+              }}
               disabled={!timeAvailable}
-              className="w-full py-6 rounded-xl relative overflow-hidden group bg-gradient-to-r from-coachy-pink to-coachy-blue text-white font-medium"
+              variant="energetic"
+              className="w-full py-6 rounded-xl relative overflow-hidden group"
             >
               <span className="relative z-10">יאללה, נמשיך</span>
               <span className="absolute inset-0 bg-white/20 transform scale-x-0 group-hover:scale-x-100 group-active:scale-x-100 transition-transform origin-right duration-300"></span>

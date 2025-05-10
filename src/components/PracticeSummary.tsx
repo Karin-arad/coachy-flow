@@ -1,365 +1,151 @@
-import React, { useState, useEffect } from 'react';
+
+import React, { useState } from 'react';
 import { useFlowContext } from '@/context/FlowContext';
-import { Button } from '@/components/ui/button';
 import AnimatedCard from './AnimatedCard';
-import { Heart, Play, Sparkles } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
-import { fetchYouTubeData } from '@/utils/openaiService';
-import { hasYouTubeApiKey } from '@/utils/apiHelpers';
-import YouTubeVideo from './YouTubeVideo';
-import { useToast } from '@/hooks/use-toast';
-import { AspectRatio } from '@/components/ui/aspect-ratio';
-
-interface VideoData {
-  id: string;
-  title: string;
-}
-
-const WORKOUT_TYPES = [
-  { type: "yoga", keywords: ["yoga", "יוגה", "גמישות", "מתיחות", "רוגע", "נשימה"] },
-  { type: "pilates", keywords: ["pilates", "פילאטיס", "ליבה", "חיזוק"] },
-  { type: "hiit", keywords: ["hiit", "היט", "אינטרוול", "אינטנסיבי", "קרדיו"] },
-  { type: "meditation", keywords: ["meditation", "מדיטציה", "מיינדפולנס", "רוגע", "נשימות"] },
-  { type: "dance", keywords: ["dance", "ריקוד", "זומבה", "תנועה"] },
-  { type: "strength", keywords: ["strength", "חיזוק", "כוח", "שרירים", "משקולות"] },
-  { type: "stretching", keywords: ["stretching", "מתיחות", "גמישות"] },
-  { type: "cardio", keywords: ["cardio", "קרדיו", "אירובי", "לב", "ריצה"] },
-  { type: "walking", keywords: ["walking", "הליכה", "צעידה"] },
-  { type: "barre", keywords: ["barre", "באר", "בלט"] },
-  { type: "functional", keywords: ["functional", "פונקציונלי", "תפקודי"] }
-];
+import VideoPlayerWithControls from './VideoPlayerWithControls';
+import { PlayCircle, Sparkles } from 'lucide-react';
+import { playSound } from '@/utils/soundEffects';
 
 const PracticeSummary = () => {
-  const { currentScreen, freeTextEmotion, emotionRatings, timeAvailable } = useFlowContext();
-  const [buttonClicked, setButtonClicked] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-  const [videoData, setVideoData] = useState<VideoData | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [workoutHistory, setWorkoutHistory] = useState<string[]>([]);
-  const [isFullscreen, setIsFullscreen] = useState(false);
-  const { toast } = useToast();
+  const { 
+    currentScreen, 
+    freeTextEmotion, 
+    emotionRatings, 
+    timeAvailable, 
+    triggerCelebration 
+  } = useFlowContext();
   
-  useEffect(() => {
-    const history = localStorage.getItem('workout-history');
-    if (history) {
-      try {
-        setWorkoutHistory(JSON.parse(history));
-      } catch (e) {
-        console.error('Error parsing workout history:', e);
-        setWorkoutHistory([]);
-      }
-    }
-    
-    if (currentScreen === 4) {
-      searchForWorkoutVideo();
-    }
-  }, [currentScreen]);
-
-  // Check for orientation changes for fullscreen video
-  useEffect(() => {
-    const handleOrientationChange = () => {
-      const isLandscape = window.matchMedia("(orientation: landscape)").matches;
-      setIsFullscreen(isLandscape);
-    };
-
-    window.addEventListener('orientationchange', handleOrientationChange);
-    // Initial check
-    handleOrientationChange();
-
-    return () => {
-      window.removeEventListener('orientationchange', handleOrientationChange);
-    };
-  }, []);
-
-  const searchForWorkoutVideo = async () => {
-    console.log('🔍 Searching for workout video based on user inputs');
-    console.log('📝 User input data:', { freeTextEmotion, emotionRatings, timeAvailable });
-    
-    setIsLoading(true);
-    setError(null);
-    
-    try {
-      if (!hasYouTubeApiKey()) {
-        console.warn('⚠️ No YouTube API key available, skipping video search');
-        setError('No YouTube API key available');
-        setIsLoading(false);
-        return;
-      }
-      
-      let searchQuery = generateSearchQuery(freeTextEmotion, emotionRatings, timeAvailable, workoutHistory);
-      console.log('🔍 Generated search query:', searchQuery);
-      
-      const response = await fetchYouTubeData(searchQuery);
-      
-      if (!response) {
-        console.error('❌ YouTube API returned no data');
-        setError('Could not fetch video data');
-        setIsLoading(false);
-        return;
-      }
-      
-      if (response.items && response.items.length > 0) {
-        console.log('✅ Found YouTube videos:', response.items.length);
-        const video = response.items[0];
-        console.log('📺 Selected video:', video.snippet.title);
-        
-        setVideoData({
-          id: video.id.videoId,
-          title: video.snippet.title
-        });
-        
-        updateWorkoutHistory(searchQuery);
-      } else {
-        console.warn('⚠️ No YouTube videos found for the search query');
-        setError('No videos found for your preferences');
-      }
-    } catch (error) {
-      console.error('❌ Error fetching YouTube video:', error);
-      setError('Error fetching video');
-      toast({
-        title: 'שגיאה בחיפוש וידאו',
-        description: error instanceof Error ? error.message : 'אירעה שגיאה בחיפוש וידאו התרגול',
-        variant: 'destructive',
-      });
-    } finally {
-      setIsLoading(false);
-    }
+  const [showVideo, setShowVideo] = useState(false);
+  const [videoStarted, setVideoStarted] = useState(false);
+  
+  // This would be replaced by actual API data in a production app
+  const videoRecommendation = {
+    id: 'Kmiw4FYTq2I',
+    title: videoTitle(),
+    thumbnail: `https://img.youtube.com/vi/Kmiw4FYTq2I/hqdefault.jpg`,
+    duration: timeAvailable
   };
   
-  const updateWorkoutHistory = (searchQuery: string) => {
-    const workoutType = WORKOUT_TYPES.find(workout => 
-      searchQuery.toLowerCase().includes(workout.type)
-    )?.type || "unknown";
+  function videoTitle() {
+    const emotion = getMainEmotion();
+    const time = timeAvailable.split(' ')[0]; // Get only the number part
     
-    const updatedHistory = [...workoutHistory, workoutType].slice(-5);
-    setWorkoutHistory(updatedHistory);
-    
-    try {
-      localStorage.setItem('workout-history', JSON.stringify(updatedHistory));
-    } catch (e) {
-      console.error('Error saving workout history:', e);
-    }
-    
-    console.log('🔄 Updated workout history:', updatedHistory);
-  };
-  
-  const generateSearchQuery = (
-    freeText: string, 
-    ratings: typeof emotionRatings, 
-    time: string,
-    history: string[]
-  ): string => {
-    let intensity = "moderate";
-    const averageEnergy = (ratings.energy + ratings.bounciness) / 2;
-    if (averageEnergy <= 3) intensity = "gentle";
-    else if (averageEnergy >= 5) intensity = "energetic";
-    
-    const suggestedWorkouts = findMatchingWorkouts(freeText.toLowerCase());
-    
-    let filteredWorkouts = suggestedWorkouts.filter(workout => !history.includes(workout.type));
-    
-    if (filteredWorkouts.length === 0) {
-      filteredWorkouts = suggestedWorkouts.length > 0 ? suggestedWorkouts : WORKOUT_TYPES;
-    }
-    
-    let selectedWorkout;
-    
-    if (filteredWorkouts.length > 0) {
-      const randomIndex = Math.floor(Math.random() * filteredWorkouts.length);
-      selectedWorkout = filteredWorkouts[randomIndex];
+    if (emotion === 'high-energy') {
+      return `אימון ${time} דקות אנרגטי וקופצני`;
+    } else if (emotion === 'focused') {
+      return `אימון ${time} דקות ממוקד ורגוע`;
+    } else if (emotion === 'relaxed') {
+      return `אימון ${time} דקות מדיטטיבי ומרגיע`;
     } else {
-      if (averageEnergy <= 3) {
-        const gentleWorkouts = WORKOUT_TYPES.filter(w => 
-          ["yoga", "stretching", "meditation", "walking"].includes(w.type)
-        );
-        selectedWorkout = gentleWorkouts[Math.floor(Math.random() * gentleWorkouts.length)];
-      } else if (averageEnergy >= 5) {
-        const intenseWorkouts = WORKOUT_TYPES.filter(w => 
-          ["hiit", "cardio", "dance", "strength"].includes(w.type)
-        );
-        selectedWorkout = intenseWorkouts[Math.floor(Math.random() * intenseWorkouts.length)];
-      } else {
-        const balancedWorkouts = WORKOUT_TYPES.filter(w => 
-          ["pilates", "barre", "functional", "strength"].includes(w.type)
-        );
-        selectedWorkout = balancedWorkouts[Math.floor(Math.random() * balancedWorkouts.length)];
-      }
+      return `אימון ${time} דקות מאוזן ומותאם אישית`;
     }
+  }
+  
+  function getMainEmotion() {
+    const { energy, alertness, lightness, bounciness } = emotionRatings;
     
-    let duration = "";
-    if (time.includes("10")) duration = "10 minute";
-    else if (time.includes("20")) duration = "20 minute";
-    else if (time.includes("חצי")) duration = "30 minute";
-    else if (time.includes("שעה")) duration = "60 minute";
-    
-    return `${intensity} ${selectedWorkout.type} workout ${duration}`.trim();
+    if (energy > 7 && bounciness > 6) {
+      return 'high-energy';
+    } else if (alertness > 7 && energy < 5) {
+      return 'focused';
+    } else if (lightness > 7 && alertness < 5) {
+      return 'relaxed';
+    } else {
+      return 'balanced';
+    }
+  }
+  
+  const handleStartWorkout = () => {
+    setVideoStarted(true);
+    setShowVideo(true);
+    triggerCelebration('confetti');
+    playSound('success');
   };
   
-  const findMatchingWorkouts = (text: string): typeof WORKOUT_TYPES => {
-    return WORKOUT_TYPES.filter(workout => 
-      workout.keywords.some(keyword => text.includes(keyword))
-    );
-  };
-
-  const handleStartPractice = () => {
-    setButtonClicked(true);
-    
-    console.log('Starting practice with data:', {
-      freeTextEmotion,
-      emotionRatings,
-      timeAvailable,
-      videoData
-    });
-    
-    if (videoData) {
-      // Use in-app video player for better experience
-      setIsFullscreen(true);
-    }
-    
-    setTimeout(() => {
-      setButtonClicked(false);
-    }, 1000);
-  };
-
-  const toggleFullscreen = () => {
-    setIsFullscreen(!isFullscreen);
-  };
-
-  if (isFullscreen && videoData) {
+  if (!videoRecommendation) {
     return (
-      <div className="fixed inset-0 bg-black z-50 flex items-center justify-center" onClick={toggleFullscreen}>
-        <div className="w-full h-full">
-          <iframe
-            className="w-full h-full"
-            src={`https://www.youtube.com/embed/${videoData.id}?autoplay=1`}
-            title={videoData.title || 'YouTube video player'}
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          />
+      <AnimatedCard isVisible={currentScreen === 4}>
+        <div className="flex flex-col items-center justify-center h-full">
+          <div className="animate-pulse text-2xl">טוען המלצה...</div>
         </div>
-        <Button
-          variant="outline" 
-          className="fixed top-4 left-4 bg-black/50 text-white border-white/20"
-          onClick={(e) => {
-            e.stopPropagation();
-            setIsFullscreen(false);
-          }}
-        >
-          צאי ממסך מלא
-        </Button>
-      </div>
+      </AnimatedCard>
     );
   }
 
   return (
-    <AnimatedCard 
-      isVisible={currentScreen === 4} 
-      className="flex flex-col w-full mx-auto items-center justify-center min-h-full rtl:text-right"
-    >
-      <div className="space-y-4 flex flex-col items-center justify-center w-full text-center">
-        <motion.div 
-          className="flex items-center justify-center gap-2 mb-2"
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.5 }}
-        >
-          <Sparkles className="text-amber-500 animate-float" size={24} />
-          <h2 className="text-lg font-medium text-gray-700 animate-heartbeat">
-            נהדר!
-          </h2>
-          <Heart className="fill-coachy-pink stroke-coachy-pink animate-heartbeat" size={24} />
-        </motion.div>
-
-        <motion.p 
-          className="text-sm text-gray-500 text-center mb-4"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.4, duration: 0.5 }}
-        >
-          הנה תרגול שיסגור לך פינה
-        </motion.p>
-        
-        <motion.div 
-          className="w-full"
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.6, duration: 0.5, type: "spring" }}
-        >
-          <AspectRatio ratio={16/9} className="bg-gray-100 rounded-xl overflow-hidden shadow-lg">
-            {isLoading ? (
-              <div className="absolute inset-0 backdrop-blur-[1px] bg-white/10 flex items-center justify-center">
-                <div className="text-gray-500 flex flex-col items-center gap-3">
-                  <div className="flex space-x-2">
-                    <div className="w-4 h-4 bg-gray-400 rounded-full animate-bounce"></div>
-                    <div className="w-4 h-4 bg-gray-400 rounded-full animate-bounce delay-100"></div>
-                    <div className="w-4 h-4 bg-gray-400 rounded-full animate-bounce delay-200"></div>
-                  </div>
-                  <p className="text-sm">מחפש סרטון תרגול מותאם אישית...</p>
-                </div>
-              </div>
-            ) : error ? (
-              <div className="absolute inset-0 backdrop-blur-[1px] bg-white/10 flex items-center justify-center">
-                <div className="text-gray-500 flex flex-col items-center gap-3">
-                  <p className="text-sm">{error}</p>
-                  <div 
-                    className="w-14 h-14 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center shadow-lg hover:scale-125 transition-transform duration-500 cursor-pointer"
-                    onClick={searchForWorkoutVideo}
-                  >
-                    <Play className="text-coachy-blue h-7 w-7 ml-1" />
-                  </div>
-                  <p className="text-sm">לחץ לנסות שוב</p>
-                </div>
-              </div>
-            ) : videoData ? (
-              <YouTubeVideo videoId={videoData.id} title={videoData.title} />
-            ) : (
-              <div className="absolute inset-0 backdrop-blur-[1px] bg-white/10 flex items-center justify-center">
-                <motion.div 
-                  className="text-gray-500 flex flex-col items-center gap-3"
-                  whileHover={{ scale: 1.05 }}
-                >
-                  <motion.div 
-                    className="w-14 h-14 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center shadow-lg group-hover:scale-125 transition-transform duration-500 hover:bg-gradient-to-r hover:from-coachy-pink hover:to-coachy-blue relative"
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
-                    onClick={searchForWorkoutVideo}
-                  >
-                    <Play className="text-coachy-blue group-hover:text-white h-7 w-7 ml-1 transition-colors duration-500" />
-                  </motion.div>
-                  <p className="text-sm">לא נמצאו סרטונים</p>
-                </motion.div>
-              </div>
-            )}
-          </AspectRatio>
-        </motion.div>
-        
-        <motion.div 
-          className="flex justify-center mt-8"
+    <AnimatedCard isVisible={currentScreen === 4}>
+      <div className="flex flex-col h-full">
+        <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.8, duration: 0.5 }}
+          transition={{ duration: 0.5 }}
+          className="mb-4"
         >
-          <Button 
-            onClick={handleStartPractice}
-            disabled={isLoading || !videoData}
-            className="bg-gradient-to-r from-coachy-pink to-coachy-blue hover:brightness-105 text-white px-8 py-3 text-base rounded-xl transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-sm hover:shadow-md group relative overflow-hidden w-full"
-          >
-            <span className="relative z-10 flex items-center gap-2">
-              <span>התחילי תרגול</span>
-              <Play className="h-5 w-5 ml-1" />
-            </span>
-            <span className="absolute inset-0 bg-white/20 transform scale-x-0 group-hover:scale-x-100 group-active:scale-x-100 transition-transform origin-right duration-300 rounded-xl"></span>
-            
-            {buttonClicked && (
-              <motion.span 
-                className="absolute inset-0 bg-white/30 rounded-xl"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: [0, 0.3, 0] }}
-                transition={{ duration: 0.8 }}
-              />
-            )}
-          </Button>
+          <h2 className="text-xl font-medium flex items-center gap-2">
+            <span>מצאנו עבורך את האימון המושלם!</span>
+            <Sparkles className="text-coachy-yellow animate-pulse-gentle" size={16} />
+          </h2>
+          <p className="text-gray-500 text-sm mt-1">
+            בהתבסס על התחושות והזמן שלך, הנה האימון המתאים ביותר:
+          </p>
         </motion.div>
+        
+        {!videoStarted ? (
+          <motion.div 
+            className="flex-1 flex flex-col"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.2, duration: 0.5 }}
+          >
+            <div className="relative rounded-xl overflow-hidden aspect-video mb-3 shadow-md">
+              <img 
+                src={videoRecommendation.thumbnail} 
+                alt={videoRecommendation.title}
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
+                <PlayCircle className="text-white w-16 h-16" />
+              </div>
+            </div>
+            
+            <div className="mt-2">
+              <h3 className="font-medium text-lg mb-1">{videoRecommendation.title}</h3>
+              <div className="flex items-center gap-2 text-sm text-gray-500">
+                <span>{videoRecommendation.duration} אימון</span>
+              </div>
+            </div>
+            
+            <motion.div 
+              className="mt-auto pt-6"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4, duration: 0.5 }}
+            >
+              <Button 
+                onClick={handleStartWorkout}
+                variant="energetic"
+                className="w-full text-white font-medium py-6 relative overflow-hidden group"
+                size="lg"
+              >
+                <span className="relative z-10 flex items-center gap-2">
+                  התחל אימון
+                  <PlayCircle size={16} />
+                </span>
+                <span className="absolute inset-0 bg-white/20 transform scale-x-0 group-hover:scale-x-100 group-active:scale-x-100 transition-transform origin-right duration-300"></span>
+              </Button>
+            </motion.div>
+          </motion.div>
+        ) : (
+          <div className="flex-1">
+            <VideoPlayerWithControls 
+              videoId={videoRecommendation.id} 
+              title={videoRecommendation.title}
+              onClose={() => setShowVideo(false)}
+            />
+          </div>
+        )}
       </div>
     </AnimatedCard>
   );

@@ -11,14 +11,20 @@ import { motion } from 'framer-motion';
 import { Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import APIKeyInput from '@/components/APIKeyInput';
 import { cn } from '@/lib/utils';
+import { preloadSounds } from '@/utils/soundEffects';
 
 const CoachyFlow = () => {
   const { currentScreen, celebrationType, isCelebrating } = useFlowContext();
   const isMobile = useIsMobile();
   const [showApiKeyModal, setShowApiKeyModal] = useState(false);
+  
+  useEffect(() => {
+    // Preload sounds on component mount
+    preloadSounds();
+  }, []);
   
   const renderCurrentScreen = () => {
     switch(currentScreen) {
@@ -69,7 +75,7 @@ const CoachyFlow = () => {
             animate={{ opacity: 1, filter: "blur(0px)" }}
             exit={{ opacity: 0, filter: "blur(5px)" }}
             transition={{ duration: 0.4 }}
-            className="w-full flex items-center justify-center"
+            className="w-full flex items-center justify-center h-full"
           >
             {renderCurrentScreen()}
           </motion.div>

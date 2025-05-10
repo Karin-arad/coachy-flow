@@ -25,6 +25,11 @@ interface FlowContextType {
   celebrationType: CelebrationType;
   isCelebrating: boolean;
   triggerCelebration: (type: CelebrationType) => void;
+  // Add the missing properties
+  currentSlider: number;
+  goToNextSlider: () => void;
+  goToPreviousSlider: () => void;
+  maxSliderValue: number;
 }
 
 export const FlowContext = createContext<FlowContextType>({
@@ -40,7 +45,12 @@ export const FlowContext = createContext<FlowContextType>({
   setTimeAvailable: () => {},
   celebrationType: '',
   isCelebrating: false,
-  triggerCelebration: () => {}
+  triggerCelebration: () => {},
+  // Initialize new properties
+  currentSlider: 0,
+  goToNextSlider: () => {},
+  goToPreviousSlider: () => {},
+  maxSliderValue: 10
 });
 
 export const useFlowContext = () => useContext(FlowContext);
@@ -59,6 +69,10 @@ export const FlowProvider: React.FC<{children: React.ReactNode}> = ({ children }
   const [celebrationType, setCelebrationType] = useState<CelebrationType>('');
   const [isCelebrating, setIsCelebrating] = useState<boolean>(false);
   
+  // Add new state variables for slider functionality
+  const [currentSlider, setCurrentSlider] = useState<number>(0);
+  const maxSliderValue = 10;
+  
   const goToNextScreen = () => {
     if (currentScreen < 4) {
       setCurrentScreen(currentScreen + 1);
@@ -67,6 +81,19 @@ export const FlowProvider: React.FC<{children: React.ReactNode}> = ({ children }
         title: 'מעבר לשלב הבא',
         description: 'נתוני התחושה שלך נשמרו בהצלחה',
       });
+    }
+  };
+  
+  // Add new functions for slider navigation
+  const goToNextSlider = () => {
+    if (currentSlider < 3) {
+      setCurrentSlider(currentSlider + 1);
+    }
+  };
+  
+  const goToPreviousSlider = () => {
+    if (currentSlider > 0) {
+      setCurrentSlider(currentSlider - 1);
     }
   };
   
@@ -97,7 +124,12 @@ export const FlowProvider: React.FC<{children: React.ReactNode}> = ({ children }
         setTimeAvailable,
         celebrationType,
         isCelebrating,
-        triggerCelebration
+        triggerCelebration,
+        // Add new values to the context
+        currentSlider,
+        goToNextSlider,
+        goToPreviousSlider,
+        maxSliderValue
       }}
     >
       {children}

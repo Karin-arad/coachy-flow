@@ -1,6 +1,7 @@
+
 import React from 'react';
 import { FlowProvider, useFlowContext } from '@/context/FlowContext';
-import EmotionalRating from '@/components/EmotionalRating';
+import EmotionalRatingNew from '@/components/EmotionalRatingNew';
 import TimeAvailability from '@/components/TimeAvailability';
 import PracticeSummary from '@/components/PracticeSummary';
 import ProgressBar from '@/components/ProgressBar';
@@ -22,20 +23,20 @@ const CoachyFlow = () => {
   const renderCurrentScreen = () => {
     switch(currentScreen) {
       case 2:
-        return <EmotionalRating />;
+        return <EmotionalRatingNew />;
       case 3:
         return <TimeAvailability />;
       case 4:
         return <PracticeSummary />;
       default:
-        return <EmotionalRating />;
+        return <EmotionalRatingNew />;
     }
   };
   
   return (
     <div className={cn(
-      "h-screen w-screen flex flex-col bg-gradient-to-br from-white via-[#f8f9fa] to-white",
-      "overflow-hidden aspect-[9/16] max-w-[calc(100vh * 9/16)] mx-auto"
+      "h-screen w-screen flex flex-col bg-white",
+      "overflow-hidden aspect-[9/16] max-w-[430px] min-w-[320px] mx-auto"
     )}>
       <CelebrationEffects 
         effectType={celebrationType} 
@@ -56,9 +57,9 @@ const CoachyFlow = () => {
         <Settings className="h-4 w-4 mr-1" /> הגדרות
       </Button>
       
-      <div className="flex-1 flex flex-col items-center justify-start px-2 py-3 sm:px-4 sm:py-6 w-full">
-        <div className="w-full max-w-md mb-2 sm:mb-4">
-          <ProgressBar currentStep={currentScreen} totalSteps={3} />
+      <div className="flex-1 flex flex-col items-center justify-start px-side-padding py-vertical-gap w-full">
+        <div className="w-full">
+          <ProgressBar currentStep={currentScreen - 1} totalSteps={3} />
         </div>
         
         <div className="w-full flex-1 flex justify-center items-center">

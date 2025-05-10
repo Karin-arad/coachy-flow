@@ -1,20 +1,21 @@
 
-import React, { createContext, useContext, useState, ReactNode } from 'react';
-
-type EmotionRatings = {
-  bounciness: number;
-  energy: number;
-  alertness: number;
-  lightness: number;
-};
+import React, { createContext, useContext, useState } from 'react';
+import { toast } from '@/hooks/use-toast';
 
 type CelebrationType = 'confetti' | 'fireworks' | 'stars' | 'emoji' | 'colorful-fireworks' | '';
 
-type FlowContextType = {
+interface EmotionRatings {
+  energy: number;
+  bounciness: number;
+  alertness: number;
+  lightness: number;
+}
+
+interface FlowContextType {
   currentScreen: number;
-  setCurrentScreen: (screen: number) => void;
-  currentSlider: number;
-  setCurrentSlider: (slider: number) => void;
+  currentEmotionQuestion: number;
+  setCurrentEmotionQuestion: (step: number) => void;
+  goToNextScreen: () => void;
   freeTextEmotion: string;
   setFreeTextEmotion: (text: string) => void;
   emotionRatings: EmotionRatings;
@@ -22,92 +23,72 @@ type FlowContextType = {
   timeAvailable: string;
   setTimeAvailable: (time: string) => void;
   celebrationType: CelebrationType;
-  setCelebrationType: (type: CelebrationType) => void;
   isCelebrating: boolean;
-  setIsCelebrating: (isActive: boolean) => void;
-  goToNextScreen: () => void;
-  goToPreviousScreen: () => void;
-  goToNextSlider: () => void;
-  goToPreviousSlider: () => void;
-  triggerCelebration: (type?: CelebrationType) => void;
-  maxSliderValue: number;
-};
+  triggerCelebration: (type: CelebrationType) => void;
+}
 
-const defaultEmotionRatings: EmotionRatings = {
-  bounciness: 4,
-  energy: 4,
-  alertness: 4,
-  lightness: 4,
-};
+export const FlowContext = createContext<FlowContextType>({
+  currentScreen: 2,
+  currentEmotionQuestion: 1,
+  setCurrentEmotionQuestion: () => {},
+  goToNextScreen: () => {},
+  freeTextEmotion: '',
+  setFreeTextEmotion: () => {},
+  emotionRatings: { energy: 5, bounciness: 5, alertness: 5, lightness: 5 },
+  setEmotionRatings: () => {},
+  timeAvailable: '',
+  setTimeAvailable: () => {},
+  celebrationType: '',
+  isCelebrating: false,
+  triggerCelebration: () => {}
+});
 
-const FlowContext = createContext<FlowContextType | undefined>(undefined);
+export const useFlowContext = () => useContext(FlowContext);
 
-export const FlowProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [currentScreen, setCurrentScreen] = useState(2);
-  const [currentSlider, setCurrentSlider] = useState(0);
-  const [freeTextEmotion, setFreeTextEmotion] = useState('');
-  const [emotionRatings, setEmotionRatings] = useState<EmotionRatings>(defaultEmotionRatings);
-  const [timeAvailable, setTimeAvailable] = useState('');
+export const FlowProvider: React.FC<{children: React.ReactNode}> = ({ children }) => {
+  const [currentScreen, setCurrentScreen] = useState<number>(2); // Starts at emotional rating
+  const [currentEmotionQuestion, setCurrentEmotionQuestion] = useState<number>(1);
+  const [freeTextEmotion, setFreeTextEmotion] = useState<string>('');
+  const [emotionRatings, setEmotionRatings] = useState<EmotionRatings>({
+    energy: 5,
+    bounciness: 5,
+    alertness: 5,
+    lightness: 5
+  });
+  const [timeAvailable, setTimeAvailable] = useState<string>('');
   const [celebrationType, setCelebrationType] = useState<CelebrationType>('');
-  const [isCelebrating, setIsCelebrating] = useState(false);
-  const maxSliderValue = 7;
-
-  const getRandomCelebration = (): CelebrationType => {
-    const celebrations: CelebrationType[] = [
-      'confetti', 'stars'
-    ];
-    return celebrations[Math.floor(Math.random() * celebrations.length)];
-  };
-
+  const [isCelebrating, setIsCelebrating] = useState<boolean>(false);
+  
   const goToNextScreen = () => {
-    const nextScreen = Math.min(currentScreen + 1, 4);
-    
-    if (nextScreen > currentScreen) {
-      triggerCelebration(getRandomCelebration());
-    }
-    
-    setCurrentScreen(nextScreen);
-    setCurrentSlider(0);
-  };
-
-  const goToPreviousScreen = () => {
-    setCurrentScreen((prev) => Math.max(prev - 1, 2));
-    setCurrentSlider(0);
-  };
-  
-  const goToNextSlider = () => {
-    if (currentScreen === 2) {
-      setCurrentSlider(prev => Math.min(prev + 1, 3));
+    if (currentScreen < 4) {
+      setCurrentScreen(currentScreen + 1);
+      
+      toast({
+        title: 'מעבר לשלב הבא',
+        description: 'נתוני התחושה שלך נשמרו בהצלחה',
+      });
     }
   };
   
-  const goToPreviousSlider = () => {
-    if (currentScreen === 2) {
-      setCurrentSlider(prev => Math.max(prev - 1, 0));
-    }
-  };
-  
-  const triggerCelebration = (type?: CelebrationType) => {
-    if (Math.random() > 0.5) {
-      return;
-    }
+  const triggerCelebration = (type: CelebrationType) => {
+    if (isCelebrating) return; // Prevent overlapping celebrations
     
-    const celebrationType = type || getRandomCelebration();
-    setCelebrationType(celebrationType);
+    setCelebrationType(type);
     setIsCelebrating(true);
     
     setTimeout(() => {
       setIsCelebrating(false);
-    }, 1500);
+      setCelebrationType('');
+    }, 3000);
   };
-
+  
   return (
-    <FlowContext.Provider
+    <FlowContext.Provider 
       value={{
         currentScreen,
-        setCurrentScreen,
-        currentSlider,
-        setCurrentSlider,
+        currentEmotionQuestion,
+        setCurrentEmotionQuestion,
+        goToNextScreen,
         freeTextEmotion,
         setFreeTextEmotion,
         emotionRatings,
@@ -115,26 +96,11 @@ export const FlowProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         timeAvailable,
         setTimeAvailable,
         celebrationType,
-        setCelebrationType,
         isCelebrating,
-        setIsCelebrating,
-        goToNextScreen,
-        goToPreviousScreen,
-        goToNextSlider,
-        goToPreviousSlider,
-        triggerCelebration,
-        maxSliderValue,
+        triggerCelebration
       }}
     >
       {children}
     </FlowContext.Provider>
   );
-};
-
-export const useFlowContext = (): FlowContextType => {
-  const context = useContext(FlowContext);
-  if (context === undefined) {
-    throw new Error('useFlowContext must be used within a FlowProvider');
-  }
-  return context;
 };

@@ -8,6 +8,7 @@ import { fetchYouTubeData } from '@/utils/openaiService';
 import { hasYouTubeApiKey } from '@/utils/apiHelpers';
 import YouTubeVideo from './YouTubeVideo';
 import { useToast } from '@/hooks/use-toast';
+import { AspectRatio } from '@/components/ui/aspect-ratio';
 
 interface VideoData {
   id: string;
@@ -35,6 +36,7 @@ const PracticeSummary = () => {
   const [videoData, setVideoData] = useState<VideoData | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [workoutHistory, setWorkoutHistory] = useState<string[]>([]);
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const { toast } = useToast();
   
   useEffect(() => {
@@ -52,6 +54,22 @@ const PracticeSummary = () => {
       searchForWorkoutVideo();
     }
   }, [currentScreen]);
+
+  // Check for orientation changes for fullscreen video
+  useEffect(() => {
+    const handleOrientationChange = () => {
+      const isLandscape = window.matchMedia("(orientation: landscape)").matches;
+      setIsFullscreen(isLandscape);
+    };
+
+    window.addEventListener('orientationchange', handleOrientationChange);
+    // Initial check
+    handleOrientationChange();
+
+    return () => {
+      window.removeEventListener('orientationchange', handleOrientationChange);
+    };
+  }, []);
 
   const searchForWorkoutVideo = async () => {
     console.log('🔍 Searching for workout video based on user inputs');
@@ -194,7 +212,8 @@ const PracticeSummary = () => {
     });
     
     if (videoData) {
-      window.open(`https://www.youtube.com/watch?v=${videoData.id}`, '_blank');
+      // Use in-app video player for better experience
+      setIsFullscreen(true);
     }
     
     setTimeout(() => {
@@ -202,12 +221,42 @@ const PracticeSummary = () => {
     }, 1000);
   };
 
+  const toggleFullscreen = () => {
+    setIsFullscreen(!isFullscreen);
+  };
+
+  if (isFullscreen && videoData) {
+    return (
+      <div className="fixed inset-0 bg-black z-50 flex items-center justify-center" onClick={toggleFullscreen}>
+        <div className="w-full h-full">
+          <iframe
+            className="w-full h-full"
+            src={`https://www.youtube.com/embed/${videoData.id}?autoplay=1`}
+            title={videoData.title || 'YouTube video player'}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          />
+        </div>
+        <Button
+          variant="outline" 
+          className="fixed top-4 left-4 bg-black/50 text-white border-white/20"
+          onClick={(e) => {
+            e.stopPropagation();
+            setIsFullscreen(false);
+          }}
+        >
+          צאי ממסך מלא
+        </Button>
+      </div>
+    );
+  }
+
   return (
     <AnimatedCard 
       isVisible={currentScreen === 4} 
-      className="flex flex-col w-full max-w-4xl mx-auto items-center justify-center min-h-full rtl:text-right"
+      className="flex flex-col w-full mx-auto items-center justify-center min-h-full rtl:text-right"
     >
-      <div className="space-y-4 flex flex-col items-center justify-center w-full max-w-3xl text-center">
+      <div className="space-y-4 flex flex-col items-center justify-center w-full text-center">
         <motion.div 
           className="flex items-center justify-center gap-2 mb-2"
           initial={{ opacity: 0, y: -10 }}
@@ -215,14 +264,14 @@ const PracticeSummary = () => {
           transition={{ delay: 0.2, duration: 0.5 }}
         >
           <Sparkles className="text-amber-500 animate-float" size={24} />
-          <h2 className="text-2xl font-medium text-gray-500">
+          <h2 className="text-lg font-medium text-gray-700 animate-heartbeat">
             נהדר!
           </h2>
-          <Heart className="fill-coachy-red stroke-coachy-red animate-heartbeat" size={24} />
+          <Heart className="fill-coachy-pink stroke-coachy-pink animate-heartbeat" size={24} />
         </motion.div>
 
         <motion.p 
-          className="text-lg text-gray-500 text-center mb-4"
+          className="text-sm text-gray-500 text-center mb-4"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.4, duration: 0.5 }}
@@ -231,56 +280,57 @@ const PracticeSummary = () => {
         </motion.p>
         
         <motion.div 
-          className="relative overflow-hidden rounded-xl bg-gradient-to-br from-coachy-gray via-gray-100 to-coachy-gray p-1 w-full max-w-4xl aspect-video shadow-lg group hover:shadow-xl transition-shadow duration-300 mx-auto"
+          className="w-full"
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.6, duration: 0.5, type: "spring" }}
-          whileHover={{ scale: 1.05 }}
         >
-          {isLoading ? (
-            <div className="absolute inset-0 backdrop-blur-[1px] bg-white/10 flex items-center justify-center">
-              <div className="text-gray-500 flex flex-col items-center gap-3">
-                <div className="flex space-x-2">
-                  <div className="w-4 h-4 bg-gray-400 rounded-full animate-bounce"></div>
-                  <div className="w-4 h-4 bg-gray-400 rounded-full animate-bounce delay-100"></div>
-                  <div className="w-4 h-4 bg-gray-400 rounded-full animate-bounce delay-200"></div>
+          <AspectRatio ratio={16/9} className="bg-gray-100 rounded-xl overflow-hidden shadow-lg">
+            {isLoading ? (
+              <div className="absolute inset-0 backdrop-blur-[1px] bg-white/10 flex items-center justify-center">
+                <div className="text-gray-500 flex flex-col items-center gap-3">
+                  <div className="flex space-x-2">
+                    <div className="w-4 h-4 bg-gray-400 rounded-full animate-bounce"></div>
+                    <div className="w-4 h-4 bg-gray-400 rounded-full animate-bounce delay-100"></div>
+                    <div className="w-4 h-4 bg-gray-400 rounded-full animate-bounce delay-200"></div>
+                  </div>
+                  <p className="text-sm">מחפש סרטון תרגול מותאם אישית...</p>
                 </div>
-                <p className="text-sm">מחפש סרטון תרגול מותאם אישית...</p>
               </div>
-            </div>
-          ) : error ? (
-            <div className="absolute inset-0 backdrop-blur-[1px] bg-white/10 flex items-center justify-center">
-              <div className="text-gray-500 flex flex-col items-center gap-3">
-                <p className="text-sm">{error}</p>
-                <div 
-                  className="w-14 h-14 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center shadow-lg hover:scale-125 transition-transform duration-500 cursor-pointer"
-                  onClick={searchForWorkoutVideo}
-                >
-                  <Play className="text-coachy-blue h-7 w-7 ml-1" />
+            ) : error ? (
+              <div className="absolute inset-0 backdrop-blur-[1px] bg-white/10 flex items-center justify-center">
+                <div className="text-gray-500 flex flex-col items-center gap-3">
+                  <p className="text-sm">{error}</p>
+                  <div 
+                    className="w-14 h-14 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center shadow-lg hover:scale-125 transition-transform duration-500 cursor-pointer"
+                    onClick={searchForWorkoutVideo}
+                  >
+                    <Play className="text-coachy-blue h-7 w-7 ml-1" />
+                  </div>
+                  <p className="text-sm">לחץ לנסות שוב</p>
                 </div>
-                <p className="text-sm">לחץ לנסות שוב</p>
               </div>
-            </div>
-          ) : videoData ? (
-            <YouTubeVideo videoId={videoData.id} title={videoData.title} />
-          ) : (
-            <div className="absolute inset-0 backdrop-blur-[1px] bg-white/10 flex items-center justify-center">
-              <motion.div 
-                className="text-gray-500 flex flex-col items-center gap-3"
-                whileHover={{ scale: 1.05 }}
-              >
+            ) : videoData ? (
+              <YouTubeVideo videoId={videoData.id} title={videoData.title} />
+            ) : (
+              <div className="absolute inset-0 backdrop-blur-[1px] bg-white/10 flex items-center justify-center">
                 <motion.div 
-                  className="w-14 h-14 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center shadow-lg group-hover:scale-125 transition-transform duration-500 hover:bg-gradient-to-r hover:from-coachy-blue hover:to-indigo-600 relative"
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
-                  onClick={searchForWorkoutVideo}
+                  className="text-gray-500 flex flex-col items-center gap-3"
+                  whileHover={{ scale: 1.05 }}
                 >
-                  <Play className="text-coachy-blue group-hover:text-white h-7 w-7 ml-1 transition-colors duration-500" />
+                  <motion.div 
+                    className="w-14 h-14 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center shadow-lg group-hover:scale-125 transition-transform duration-500 hover:bg-gradient-to-r hover:from-coachy-pink hover:to-coachy-blue relative"
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    onClick={searchForWorkoutVideo}
+                  >
+                    <Play className="text-coachy-blue group-hover:text-white h-7 w-7 ml-1 transition-colors duration-500" />
+                  </motion.div>
+                  <p className="text-sm">לא נמצאו סרטונים</p>
                 </motion.div>
-                <p className="text-sm">לא נמצאו סרטונים</p>
-              </motion.div>
-            </div>
-          )}
+              </div>
+            )}
+          </AspectRatio>
         </motion.div>
         
         <motion.div 
@@ -292,8 +342,7 @@ const PracticeSummary = () => {
           <Button 
             onClick={handleStartPractice}
             disabled={isLoading || !videoData}
-            variant="joyful"
-            className="bg-gradient-to-r from-coachy-pink to-coachy-yellow hover:brightness-105 text-white px-8 py-3 text-base rounded-xl transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-sm hover:shadow-md group relative overflow-hidden"
+            className="bg-gradient-to-r from-coachy-pink to-coachy-blue hover:brightness-105 text-white px-8 py-3 text-base rounded-xl transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-sm hover:shadow-md group relative overflow-hidden w-full"
           >
             <span className="relative z-10 flex items-center gap-2">
               <span>התחילי תרגול</span>

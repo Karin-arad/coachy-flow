@@ -53,14 +53,15 @@ export default {
 					foreground: 'hsl(var(--card-foreground))'
 				},
 				coachy: {
-					blue: '#3A78D4', // balanced blue for better contrast
-					lightBlue: '#C4DCFF', // adjusted light blue
-					gray: '#F1F0FB', // kept the same soft gray
-					yellow: '#F1A10C', // vibrant but accessible yellow
-					turquoise: '#27A193', // darker turquoise for better contrast
-					pink: '#DE4A8F', // adjusted for better contrast with white text
-					text: '#FFFFFF', // white text as requested
-					red: '#E34848', // adjusted heart red for better contrast
+					pink: '#FF6483',
+					yellow: '#FFD36E',
+					green: '#49E2AD',
+					blue: '#5680FF',
+					lightBlue: '#C4DCFF',
+					gray: '#F1F0FB',
+					turquoise: '#27A193',
+					text: '#FFFFFF',
+					red: '#E34848',
 				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
@@ -77,6 +78,7 @@ export default {
 				'rubik': ['Rubik', 'sans-serif'],
 				'heebo': ['Heebo', 'sans-serif'],
 				'hebrew': ['Rubik', 'Heebo', 'sans-serif'],
+				'sans': ['Inter', 'system-ui', 'sans-serif'],
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -201,7 +203,12 @@ export default {
 				'sunrise-gradient': 'linear-gradient(135deg, #DE4A8F 0%, #F1A10C 100%)',
 				'ocean-calm': 'linear-gradient(135deg, #3A78D4 0%, #27A193 100%)',
 				'full-spectrum': 'linear-gradient(to right, #DE4A8F, #3A78D4, #27A193, #F1A10C)',
-			}
+			},
+			spacing: {
+				'base': '8px',
+				'side-padding': '16px',
+				'vertical-gap': '24px',
+			},
 		}
 	},
 	plugins: [require("tailwindcss-animate")],

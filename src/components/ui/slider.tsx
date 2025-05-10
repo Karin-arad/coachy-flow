@@ -4,6 +4,7 @@ import * as SliderPrimitive from "@radix-ui/react-slider"
 import { Sparkles } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useFlowContext } from "@/context/FlowContext"
+import { playSound } from "@/utils/soundEffects"
 
 export interface ColoredSliderProps extends React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root> {
   emotionType?: "energy" | "bounciness" | "alertness" | "lightness";
@@ -11,34 +12,24 @@ export interface ColoredSliderProps extends React.ComponentPropsWithoutRef<typeo
   showCelebration?: boolean;
 }
 
+// Modified color getters to use the new color scheme
 const getEmotionColor = (type?: ColoredSliderProps["emotionType"]) => {
   switch (type) {
     case "energy":
-      return "from-amber-300 via-coachy-yellow to-orange-400";
+      return "from-coachy-yellow to-coachy-pink";
     case "bounciness":
-      return "from-pink-300 via-coachy-pink to-rose-400";
+      return "from-coachy-pink to-coachy-blue";
     case "alertness":
-      return "from-blue-300 via-coachy-blue to-indigo-500";
+      return "from-coachy-blue to-coachy-green";
     case "lightness":
-      return "from-teal-300 via-coachy-turquoise to-emerald-400";
+      return "from-coachy-green to-coachy-yellow";
     default:
-      return "from-coachy-blue to-indigo-600";
+      return "from-coachy-blue to-coachy-green";
   }
 };
 
 const getTrackColor = (type?: ColoredSliderProps["emotionType"]) => {
-  switch (type) {
-    case "energy":
-      return "from-yellow-100 to-amber-200";
-    case "bounciness":
-      return "from-pink-100 to-rose-200";
-    case "alertness":
-      return "from-blue-100 to-indigo-200";
-    case "lightness":
-      return "from-teal-100 to-emerald-200";
-    default:
-      return "from-coachy-lightBlue to-blue-200";
-  }
+  return "bg-gray-100";
 };
 
 const Slider = React.forwardRef<
@@ -58,20 +49,20 @@ const Slider = React.forwardRef<
   }, [props.value]);
 
   const handleValueChange = (newValue: number[]) => {
-    const reversedValue = [props.max || 7 + 1 - newValue[0]];
-    setValue(reversedValue);
+    setValue(newValue);
     setHasSettled(false);
     
-    if (showCelebration && !isDragging && reversedValue[0] !== lastValue[0]) {
-      // Only trigger confetti if value is above 3
-      if (reversedValue[0] > 3) {
-        triggerCelebration('confetti');
-      }
-      setLastValue(reversedValue);
-    }
-    
     if (props.onValueChange) {
-      props.onValueChange(reversedValue);
+      props.onValueChange(newValue);
+    }
+  };
+  
+  const handleDragEnd = () => {
+    setIsDragging(false);
+    playSound('ding'); // Play the ding sound when slider is released
+    
+    if (showCelebration && value && value[0] > 7) {
+      triggerCelebration('stars');
     }
   };
 
@@ -81,10 +72,6 @@ const Slider = React.forwardRef<
         setHasSettled(true);
         
         if (showCelebration && lastValue[0] !== value[0]) {
-          // Only trigger star celebration if value is above 3
-          if (value[0] > 3) {
-            triggerCelebration('stars');
-          }
           setLastValue(value);
         }
       }, 300);
@@ -93,89 +80,49 @@ const Slider = React.forwardRef<
   }, [isDragging, value, lastValue, showCelebration, triggerCelebration]);
 
   const intensity = Math.min(((value[0] || 1) / (props.max || 7)) * 100, 100);
-  const shadowIntensity = Math.min(intensity / 80, 1);
 
+  // Simplified sparkles effect
   const getSparkles = () => {
-    if (!showSparkles) return null;
+    if (!showSparkles || value[0] <= 5) return null;
     
-    const sparklePositions = [
-      { top: -1, right: -1, size: 16, delay: 0 },
-      { top: -3, right: 4, size: 14, delay: 0.2 },
-      { top: 4, right: -3, size: 12, delay: 0.4 },
-      { bottom: -1, left: -1, size: 15, delay: 0.3 },
-      { bottom: 4, right: 0, size: 10, delay: 0.5 },
-    ];
-    
-    const threshold = (props.max || 7) * 0.4;
-    
-    if (value[0] <= threshold) {
-      return null;
-    }
-    
-    const sparkleCount = Math.floor(((value[0] - threshold) / (props.max || 7)) * sparklePositions.length) + 1;
-    
-    return sparklePositions.slice(0, sparkleCount).map((pos, index) => (
-      <div 
-        key={index}
-        className="absolute" 
-        style={{
-          top: pos.top !== undefined ? `${pos.top}px` : undefined,
-          right: pos.right !== undefined ? `${pos.right}px` : undefined,
-          bottom: pos.bottom !== undefined ? `${pos.bottom}px` : undefined,
-          left: pos.left !== undefined ? `${pos.left}px` : undefined,
-          animation: `sparkle ${1.5 + pos.delay}s infinite ease-in-out`,
-          animationDelay: `${pos.delay}s`
-        }}
-      >
-        <Sparkles 
-          className="text-white drop-shadow-lg" 
-          size={pos.size} 
-        />
+    return (
+      <div className="absolute -right-1 -top-1 pointer-events-none">
+        <Sparkles className="text-yellow-400 drop-shadow-lg animate-pulse" size={12} />
       </div>
-    ));
+    );
   };
 
   return (
     <SliderPrimitive.Root
+      dir="rtl" // Ensure RTL layout for the slider
       ref={ref}
       className={cn(
         "relative flex w-full touch-none select-none items-center",
         className
       )}
       onPointerDown={() => setIsDragging(true)}
-      onPointerUp={() => setIsDragging(false)}
+      onPointerUp={handleDragEnd}
       onValueChange={handleValueChange}
       {...props}
     >
       <SliderPrimitive.Track className={cn(
-        "relative h-5 w-full grow overflow-hidden rounded-full bg-gradient-to-r shadow-md",
+        "relative h-2 w-full grow overflow-hidden rounded-full",
         getTrackColor(emotionType)
       )}>
         <SliderPrimitive.Range className={cn(
           "absolute h-full bg-gradient-to-r",
           hasSettled ? "animate-pulse-gentle" : "",
-          getEmotionColor(emotionType),
-          intensity > 30 && "shadow-[0_0_20px_rgba(255,255,255,0.8)]"
-        )} 
-        style={{
-          filter: `brightness(${100 + intensity * 0.5}%)`,
-          boxShadow: `0 0 ${shadowIntensity * 25}px rgba(255,255,255,${shadowIntensity * 0.9})`,
-          transition: "filter 0.3s ease, box-shadow 0.3s ease"
-        }}
-        />
+          getEmotionColor(emotionType)
+        )} />
       </SliderPrimitive.Track>
       <SliderPrimitive.Thumb className={cn(
-        "block h-10 w-10 rounded-full border-2 border-white bg-gradient-to-r shadow-lg transition-all duration-200",
-        "focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring focus-visible:ring-offset-2",
+        "block h-6 w-6 rounded-full border-2 border-white bg-gradient-to-r shadow-md transition-all duration-200",
+        "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
         "disabled:pointer-events-none disabled:opacity-50",
-        isDragging ? "scale-120" : "hover:scale-120",
+        isDragging ? "scale-110" : "hover:scale-110",
         getEmotionColor(emotionType),
         isDragging && "animate-pulse"
       )}
-      style={{
-        boxShadow: intensity > 40 ? `0 0 ${intensity / 6}px ${intensity / 3}px rgba(255,255,255,0.9)` : "",
-        transition: "box-shadow 0.3s ease, transform 0.2s ease"
-      }}
       >
         {getSparkles()}
       </SliderPrimitive.Thumb>

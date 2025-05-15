@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { toast } from '@/hooks/use-toast';
 
@@ -62,7 +61,8 @@ export const FlowContext = createContext<FlowContextType>({
 export const useFlowContext = () => useContext(FlowContext);
 
 export const FlowProvider: React.FC<{children: React.ReactNode}> = ({ children }) => {
-  const [currentScreen, setCurrentScreen] = useState<number>(2); // Starts at emotional rating
+  // Make sure currentScreen starts at 2 (EmotionalRating)
+  const [currentScreen, setCurrentScreen] = useState<number>(2);
   const [currentEmotionQuestion, setCurrentEmotionQuestion] = useState<number>(1);
   const [freeTextEmotion, setFreeTextEmotion] = useState<string>('');
   const [emotionRatings, setEmotionRatings] = useState<EmotionRatings>({

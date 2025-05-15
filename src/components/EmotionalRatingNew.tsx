@@ -46,9 +46,9 @@ const EmotionalRatingNew = () => {
       triggerCelebration('stars');
       playSound('success');
       
-      console.log('EmotionalRatingNew: All questions completed, current screen before navigation:', currentScreen);
-      goToNextScreen(); // This should set currentScreen to 3
-      console.log('EmotionalRatingNew: Navigation triggered, next render should show screen 3');
+      console.log('EmotionalRatingNew: All questions completed, navigating to WorkoutPreferences (screen 3)', currentScreen);
+      // Explicitly navigate to screen 3 (WorkoutPreferences)
+      goToNextScreen(); 
     }
   };
 
@@ -104,8 +104,11 @@ const EmotionalRatingNew = () => {
   
   // Don't render if we're not on screen 2
   if (currentScreen !== 2) {
+    console.log('EmotionalRatingNew not rendering because currentScreen is', currentScreen);
     return null;
   }
+
+  console.log('EmotionalRatingNew rendering with currentScreen:', currentScreen);
 
   return (
     <AnimatedCard 

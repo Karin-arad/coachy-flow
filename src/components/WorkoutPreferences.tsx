@@ -14,7 +14,7 @@ const WorkoutPreferences = () => {
   
   useEffect(() => {
     console.log('WorkoutPreferences mounted, currentScreen:', currentScreen);
-  }, []);
+  }, [currentScreen]);
 
   const handleContinue = () => {
     console.log('WorkoutPreferences: Continue button clicked, moving from screen 3 to 4');
@@ -22,12 +22,15 @@ const WorkoutPreferences = () => {
     playSound('success');
   };
   
-  console.log('WorkoutPreferences rendering, currentScreen:', currentScreen);
+  console.log('WorkoutPreferences rendering, currentScreen:', currentScreen, 'should render:', currentScreen === 3);
 
-  // If not on the correct screen, don't render anything
+  // If not on the correct screen, return null (don't render)
   if (currentScreen !== 3) {
+    console.log('WorkoutPreferences not rendering because currentScreen is not 3');
     return null;
   }
+  
+  console.log('WorkoutPreferences ACTUALLY RENDERING on screen 3!');
   
   return (
     <AnimatedCard 

@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useFlowContext } from '@/context/FlowContext';
 import { Button } from '@/components/ui/button';
 import AnimatedCard from './AnimatedCard';
@@ -10,6 +10,10 @@ import { playSound } from '@/utils/soundEffects';
 
 const TimeAvailability = () => {
   const { timeAvailable, setTimeAvailable, goToNextScreen, currentScreen, triggerCelebration } = useFlowContext();
+  
+  useEffect(() => {
+    console.log('TimeAvailability loaded, currentScreen:', currentScreen);
+  }, [currentScreen]);
   
   const handleTimeSelection = (time: string) => {
     setTimeAvailable(time);
@@ -80,6 +84,7 @@ const TimeAvailability = () => {
           >
             <Button 
               onClick={() => {
+                console.log('TimeAvailability: Continue button clicked');
                 goToNextScreen();
                 playSound('success');
               }}

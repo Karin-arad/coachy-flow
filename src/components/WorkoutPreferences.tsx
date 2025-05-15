@@ -1,4 +1,5 @@
-import React from 'react';
+
+import React, { useEffect } from 'react';
 import { useFlowContext } from '@/context/FlowContext';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -11,7 +12,12 @@ import { playSound } from '@/utils/soundEffects';
 const WorkoutPreferences = () => {
   const { workoutPreferences, setWorkoutPreferences, goToNextScreen, currentScreen } = useFlowContext();
   
+  useEffect(() => {
+    console.log('WorkoutPreferences loaded, currentScreen:', currentScreen);
+  }, [currentScreen]);
+
   const handleContinue = () => {
+    console.log('WorkoutPreferences: Continue button clicked');
     goToNextScreen();
     playSound('success');
   };

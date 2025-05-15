@@ -25,7 +25,10 @@ const CoachyFlow = () => {
   useEffect(() => {
     // Preload sounds on component mount
     preloadSounds();
-  }, []);
+    
+    // Debug the current screen
+    console.log('Current screen in CoachyFlow:', currentScreen);
+  }, [currentScreen]);
 
   // Calculate current step based on screen number
   const getCurrentStepForProgressBar = () => {
@@ -39,6 +42,7 @@ const CoachyFlow = () => {
   };
   
   const renderCurrentScreen = () => {
+    console.log('Rendering screen:', currentScreen);
     switch(currentScreen) {
       case 2:
         return <EmotionalRatingNew />;

@@ -1,5 +1,5 @@
 
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import { toast } from '@/hooks/use-toast';
 
 type CelebrationType = 'confetti' | 'fireworks' | 'stars' | 'emoji' | 'colorful-fireworks' | '';
@@ -82,7 +82,12 @@ export const FlowProvider: React.FC<{children: React.ReactNode}> = ({ children }
   // Add new workout preferences state
   const [workoutPreferences, setWorkoutPreferences] = useState<string>('');
   
+  useEffect(() => {
+    console.log('Flow context: currentScreen updated to', currentScreen);
+  }, [currentScreen]);
+  
   const goToNextScreen = () => {
+    console.log('Going to next screen from', currentScreen);
     if (currentScreen < 5) {
       setCurrentScreen(currentScreen + 1);
       

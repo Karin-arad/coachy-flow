@@ -4,6 +4,7 @@ import { FlowProvider, useFlowContext } from '@/context/FlowContext';
 import EmotionalRatingNew from '@/components/EmotionalRatingNew';
 import TimeAvailability from '@/components/TimeAvailability';
 import PracticeSummary from '@/components/PracticeSummary';
+import WorkoutPreferences from '@/components/WorkoutPreferences';
 import ProgressBar from '@/components/ProgressBar';
 import CelebrationEffects from '@/components/CelebrationEffects';
 import InstallButton from '@/components/InstallButton';
@@ -31,8 +32,10 @@ const CoachyFlow = () => {
       case 2:
         return <EmotionalRatingNew />;
       case 3:
-        return <TimeAvailability />;
+        return <WorkoutPreferences />;
       case 4:
+        return <TimeAvailability />;
+      case 5:
         return <PracticeSummary />;
       default:
         return <EmotionalRatingNew />;
@@ -65,7 +68,7 @@ const CoachyFlow = () => {
       
       <div className="flex-1 flex flex-col items-center justify-start px-side-padding py-vertical-gap w-full">
         <div className="w-full">
-          <ProgressBar currentStep={currentScreen - 1} totalSteps={3} />
+          <ProgressBar currentStep={currentScreen - 1} totalSteps={4} />
         </div>
         
         <div className="w-full flex-1 flex justify-center items-center">

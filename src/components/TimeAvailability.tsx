@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useFlowContext } from '@/context/FlowContext';
 import { Button } from '@/components/ui/button';
@@ -26,7 +25,7 @@ const TimeAvailability = () => {
 
   return (
     <AnimatedCard 
-      isVisible={currentScreen === 3} 
+      isVisible={currentScreen === 4} 
       className="screen-3-container"
     >
       <div className="space-y-4 flex flex-col text-sm h-full">

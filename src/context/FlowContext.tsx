@@ -30,6 +30,9 @@ interface FlowContextType {
   goToNextSlider: () => void;
   goToPreviousSlider: () => void;
   maxSliderValue: number;
+  // New workout preferences field
+  workoutPreferences: string;
+  setWorkoutPreferences: (preferences: string) => void;
 }
 
 export const FlowContext = createContext<FlowContextType>({
@@ -50,7 +53,10 @@ export const FlowContext = createContext<FlowContextType>({
   currentSlider: 0,
   goToNextSlider: () => {},
   goToPreviousSlider: () => {},
-  maxSliderValue: 10
+  maxSliderValue: 10,
+  // New workout preferences field initialization
+  workoutPreferences: '',
+  setWorkoutPreferences: () => {},
 });
 
 export const useFlowContext = () => useContext(FlowContext);
@@ -73,8 +79,11 @@ export const FlowProvider: React.FC<{children: React.ReactNode}> = ({ children }
   const [currentSlider, setCurrentSlider] = useState<number>(0);
   const maxSliderValue = 10;
   
+  // Add new workout preferences state
+  const [workoutPreferences, setWorkoutPreferences] = useState<string>('');
+  
   const goToNextScreen = () => {
-    if (currentScreen < 4) {
+    if (currentScreen < 5) {
       setCurrentScreen(currentScreen + 1);
       
       toast({
@@ -129,7 +138,10 @@ export const FlowProvider: React.FC<{children: React.ReactNode}> = ({ children }
         currentSlider,
         goToNextSlider,
         goToPreviousSlider,
-        maxSliderValue
+        maxSliderValue,
+        // Add workout preferences to context
+        workoutPreferences,
+        setWorkoutPreferences,
       }}
     >
       {children}

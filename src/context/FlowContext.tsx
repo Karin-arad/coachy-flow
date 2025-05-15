@@ -90,10 +90,20 @@ export const FlowProvider: React.FC<{children: React.ReactNode}> = ({ children }
   const goToNextScreen = () => {
     console.log('Going to next screen from', currentScreen);
     if (currentScreen < 5) {
-      // Explicitly log before and after the screen change
-      console.log(`Changing screen from ${currentScreen} to ${currentScreen + 1}`);
-      setCurrentScreen(currentScreen + 1);
-      console.log(`Screen has been updated to ${currentScreen + 1}`);
+      // Store the old screen for verification
+      const oldScreen = currentScreen;
+      const newScreen = currentScreen + 1;
+      
+      console.log(`Changing screen from ${oldScreen} to ${newScreen}`);
+      
+      // Force a synchronous state update for the next screen
+      setCurrentScreen(prevScreen => {
+        console.log(`Setting screen from ${prevScreen} to ${newScreen}`);
+        return newScreen;
+      });
+      
+      // Log after the state update
+      console.log(`Screen has been queued to update to ${newScreen}`);
       
       toast({
         title: 'מעבר לשלב הבא',

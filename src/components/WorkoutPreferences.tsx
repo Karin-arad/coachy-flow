@@ -22,9 +22,16 @@ const WorkoutPreferences = () => {
     playSound('success');
   };
   
+  console.log('WorkoutPreferences rendering, currentScreen:', currentScreen, 'isVisible:', currentScreen === 3);
+
+  if (currentScreen !== 3) {
+    console.log('WorkoutPreferences not visible because currentScreen is', currentScreen);
+    return null;
+  }
+  
   return (
     <AnimatedCard 
-      isVisible={currentScreen === 3} 
+      isVisible={true} 
       className="h-full flex flex-col"
     >
       <div className="space-y-4 flex flex-col h-full text-sm">

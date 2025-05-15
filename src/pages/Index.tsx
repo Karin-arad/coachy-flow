@@ -47,6 +47,7 @@ const CoachyFlow = () => {
       case 2:
         return <EmotionalRatingNew />;
       case 3:
+        console.log('Rendering WorkoutPreferences screen');
         return <WorkoutPreferences />;
       case 4:
         return <TimeAvailability />;

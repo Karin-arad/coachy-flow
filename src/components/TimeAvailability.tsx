@@ -21,6 +21,13 @@ const TimeAvailability = () => {
     playSound('click');
   };
   
+  console.log('TimeAvailability rendering, currentScreen:', currentScreen, 'isVisible:', currentScreen === 4);
+
+  if (currentScreen !== 4) {
+    console.log('TimeAvailability not visible because currentScreen is', currentScreen);
+    return null;
+  }
+  
   const timeOptions = [
     { value: '10 דקות', icon: '⏱️', description: 'אימון קצר' },
     { value: '20 דקות', icon: '⏱️', description: 'אימון בינוני' },
@@ -30,7 +37,7 @@ const TimeAvailability = () => {
 
   return (
     <AnimatedCard 
-      isVisible={currentScreen === 4} 
+      isVisible={true} 
       className="h-full w-full"
     >
       <div className="space-y-4 flex flex-col text-sm h-full">

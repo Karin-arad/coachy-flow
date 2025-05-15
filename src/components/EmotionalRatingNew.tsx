@@ -46,7 +46,9 @@ const EmotionalRatingNew = () => {
       // Show celebration effect when completing all questions
       triggerCelebration('stars');
       playSound('success');
-      goToNextScreen();
+      console.log('EmotionalRatingNew: Completed all questions, moving from screen 2 to 3');
+      goToNextScreen(); // This should set currentScreen to 3
+      console.log('EmotionalRatingNew: Screen should now be 3');
     }
   };
 

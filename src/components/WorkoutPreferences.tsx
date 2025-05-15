@@ -17,7 +17,7 @@ const WorkoutPreferences = () => {
   }, [currentScreen]);
 
   const handleContinue = () => {
-    console.log('WorkoutPreferences: Continue button clicked');
+    console.log('WorkoutPreferences: Continue button clicked, moving from screen 3 to 4');
     goToNextScreen();
     playSound('success');
   };

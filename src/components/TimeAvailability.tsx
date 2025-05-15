@@ -84,7 +84,7 @@ const TimeAvailability = () => {
           >
             <Button 
               onClick={() => {
-                console.log('TimeAvailability: Continue button clicked');
+                console.log('TimeAvailability: Continue button clicked, moving from screen 4 to 5');
                 goToNextScreen();
                 playSound('success');
               }}

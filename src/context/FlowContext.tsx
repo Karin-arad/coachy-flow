@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { toast } from '@/hooks/use-toast';
 
@@ -89,7 +90,10 @@ export const FlowProvider: React.FC<{children: React.ReactNode}> = ({ children }
   const goToNextScreen = () => {
     console.log('Going to next screen from', currentScreen);
     if (currentScreen < 5) {
+      // Explicitly log before and after the screen change
+      console.log(`Changing screen from ${currentScreen} to ${currentScreen + 1}`);
       setCurrentScreen(currentScreen + 1);
+      console.log(`Screen has been updated to ${currentScreen + 1}`);
       
       toast({
         title: 'מעבר לשלב הבא',

@@ -14,8 +14,10 @@ const PracticeSummary = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    console.log('PracticeSummary loaded, currentScreen:', currentScreen);
     // Only run this when the component becomes visible
     if (currentScreen === 5 && !workoutDescription && !isLoading) {
+      console.log('Generating workout recommendation for screen 5');
       generateWorkoutRecommendation();
     }
   }, [currentScreen]);

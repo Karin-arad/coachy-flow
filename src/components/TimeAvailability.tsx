@@ -26,7 +26,7 @@ const TimeAvailability = () => {
   return (
     <AnimatedCard 
       isVisible={currentScreen === 4} 
-      className="screen-3-container"
+      className="h-full w-full"
     >
       <div className="space-y-4 flex flex-col text-sm h-full">
         <motion.h2 
@@ -86,7 +86,7 @@ const TimeAvailability = () => {
               variant="energetic"
               className="w-full py-6 rounded-xl relative overflow-hidden group"
             >
-              <span className="relative z-10">יאללה, נמשיך</span>
+              <span className="relative z-10">יאללה, נמש��ך</span>
               <span className="absolute inset-0 bg-white/20 transform scale-x-0 group-hover:scale-x-100 group-active:scale-x-100 transition-transform origin-right duration-300"></span>
             </Button>
           </motion.div>

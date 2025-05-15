@@ -13,8 +13,8 @@ const WorkoutPreferences = () => {
   const { workoutPreferences, setWorkoutPreferences, goToNextScreen, currentScreen } = useFlowContext();
   
   useEffect(() => {
-    console.log('WorkoutPreferences loaded, currentScreen:', currentScreen);
-  }, [currentScreen]);
+    console.log('WorkoutPreferences mounted, currentScreen:', currentScreen);
+  }, []);
 
   const handleContinue = () => {
     console.log('WorkoutPreferences: Continue button clicked, moving from screen 3 to 4');
@@ -22,10 +22,10 @@ const WorkoutPreferences = () => {
     playSound('success');
   };
   
-  console.log('WorkoutPreferences rendering, currentScreen:', currentScreen, 'isVisible:', currentScreen === 3);
+  console.log('WorkoutPreferences rendering, currentScreen:', currentScreen);
 
+  // If not on the correct screen, don't render anything
   if (currentScreen !== 3) {
-    console.log('WorkoutPreferences not visible because currentScreen is', currentScreen);
     return null;
   }
   

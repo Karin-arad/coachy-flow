@@ -1,43 +1,39 @@
-
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useFlowContext } from '@/context/FlowContext';
-import { Button } from '@/components/ui/button';
 import AnimatedCard from './AnimatedCard';
-import { cn } from '@/lib/utils';
-import { Clock, Heart } from 'lucide-react';
 import { motion } from 'framer-motion';
+import TimeOption from './TimeOption';
 import { playSound } from '@/utils/soundEffects';
 
 const TimeAvailability = () => {
-  const { timeAvailable, setTimeAvailable, goToNextScreen, currentScreen, triggerCelebration } = useFlowContext();
+  const { setTimeAvailable, timeAvailable, goToNextScreen, currentScreen, triggerCelebration } = useFlowContext();
   
-  useEffect(() => {
-    console.log('TimeAvailability loaded, currentScreen:', currentScreen);
-  }, [currentScreen]);
-  
-  const handleTimeSelection = (time: string) => {
+  const handleTimeSelect = (time: string) => {
     setTimeAvailable(time);
-    triggerCelebration('colorful-fireworks');
+    setTimeout(() => {
+      goToNextScreen();
+      triggerCelebration('colorful-fireworks');
+    }, 300);
     playSound('click');
   };
   
-  console.log('TimeAvailability rendering, currentScreen:', currentScreen, 'isVisible:', currentScreen === 4);
+  console.log('TimeAvailability rendering, currentScreen:', currentScreen);
 
+  // Don't render if we're not on screen 4
   if (currentScreen !== 4) {
-    console.log('TimeAvailability not visible because currentScreen is', currentScreen);
     return null;
   }
   
   const timeOptions = [
     { value: '10 דקות', icon: '⏱️', description: 'אימון קצר' },
     { value: '20 דקות', icon: '⏱️', description: 'אימון בינוני' },
-    { value: '30 דקות', icon: '🕰️', description: 'אימון ארוך' },
-    { value: '60 דקות', icon: '🕰️', description: 'אימון מלא' },
+    { value: '30 דקות', icon: '⏱️', description: 'אימון ארוך' },
+    { value: '45 דקות', icon: '⏱️', description: 'אימון מלא' },
   ];
 
   return (
     <AnimatedCard 
-      isVisible={true} 
+      isVisible={true}
       className="h-full w-full"
     >
       <div className="space-y-4 flex flex-col text-sm h-full">
@@ -66,7 +62,7 @@ const TimeAvailability = () => {
               }}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.97 }}
-              onClick={() => handleTimeSelection(option.value)}
+              onClick={() => handleTimeSelect(option.value)}
               className={cn(
                 'w-full h-32 rounded-xl transition-all duration-300 flex flex-col items-center justify-center gap-1',
                 'border-2',

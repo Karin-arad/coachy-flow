@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { toast } from '@/hooks/use-toast';
 
@@ -90,20 +89,18 @@ export const FlowProvider: React.FC<{children: React.ReactNode}> = ({ children }
   const goToNextScreen = () => {
     console.log('Going to next screen from', currentScreen);
     if (currentScreen < 5) {
-      // Store the old screen for verification
-      const oldScreen = currentScreen;
+      // Force a sync update to ensure proper rendering
       const newScreen = currentScreen + 1;
+      console.log(`Changing screen from ${currentScreen} to ${newScreen}`);
       
-      console.log(`Changing screen from ${oldScreen} to ${newScreen}`);
-      
-      // Force a synchronous state update for the next screen
-      setCurrentScreen(prevScreen => {
-        console.log(`Setting screen from ${prevScreen} to ${newScreen}`);
+      // Update state with callback form to get the most current value
+      setCurrentScreen(prev => {
+        console.log(`Actually setting screen from ${prev} to ${newScreen}`);
         return newScreen;
       });
       
-      // Log after the state update
-      console.log(`Screen has been queued to update to ${newScreen}`);
+      // Log after state update is queued
+      console.log(`Screen update queued: ${currentScreen} -> ${newScreen}`);
       
       toast({
         title: 'מעבר לשלב הבא',

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useFlowContext } from '@/context/FlowContext';
 import AnimatedCard from './AnimatedCard';
@@ -46,9 +45,10 @@ const EmotionalRatingNew = () => {
       // Show celebration effect when completing all questions
       triggerCelebration('stars');
       playSound('success');
-      console.log('EmotionalRatingNew: Completed all questions, moving from screen 2 to 3');
+      
+      console.log('EmotionalRatingNew: All questions completed, current screen before navigation:', currentScreen);
       goToNextScreen(); // This should set currentScreen to 3
-      console.log('EmotionalRatingNew: Screen should now be 3');
+      console.log('EmotionalRatingNew: Navigation triggered, next render should show screen 3');
     }
   };
 
@@ -101,10 +101,15 @@ const EmotionalRatingNew = () => {
   ];
 
   const currentQuestion = questionData[currentEmotionQuestion - 1];
+  
+  // Don't render if we're not on screen 2
+  if (currentScreen !== 2) {
+    return null;
+  }
 
   return (
     <AnimatedCard 
-      isVisible={currentScreen === 2} 
+      isVisible={true}
       className="screen-2-container"
     >
       <motion.div

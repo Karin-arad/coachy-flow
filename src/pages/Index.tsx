@@ -1,5 +1,4 @@
-
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { FlowProvider, useFlowContext } from '@/context/FlowContext';
 import EmotionalRatingNew from '@/components/EmotionalRatingNew';
 import TimeAvailability from '@/components/TimeAvailability';
@@ -12,7 +11,6 @@ import { motion } from 'framer-motion';
 import { Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { useState, useEffect } from 'react';
 import APIKeyInput from '@/components/APIKeyInput';
 import { cn } from '@/lib/utils';
 import { preloadSounds } from '@/utils/soundEffects';
@@ -41,23 +39,8 @@ const CoachyFlow = () => {
     }
   };
   
-  const renderCurrentScreen = () => {
-    console.log('Rendering screen:', currentScreen);
-    switch(currentScreen) {
-      case 2:
-        return <EmotionalRatingNew />;
-      case 3:
-        console.log('Rendering WorkoutPreferences screen');
-        return <WorkoutPreferences />;
-      case 4:
-        return <TimeAvailability />;
-      case 5:
-        return <PracticeSummary />;
-      default:
-        return <EmotionalRatingNew />;
-    }
-  };
-  
+  // All screens are rendered at once, but each component has its own visibility check
+  // This ensures that screen transitions work correctly
   return (
     <div className={cn(
       "h-screen w-screen flex flex-col bg-white",
@@ -88,16 +71,11 @@ const CoachyFlow = () => {
         </div>
         
         <div className="w-full flex-1 flex justify-center items-center">
-          <motion.div
-            key={currentScreen}
-            initial={{ opacity: 0, filter: "blur(5px)" }}
-            animate={{ opacity: 1, filter: "blur(0px)" }}
-            exit={{ opacity: 0, filter: "blur(5px)" }}
-            transition={{ duration: 0.4 }}
-            className="w-full flex items-center justify-center h-full"
-          >
-            {renderCurrentScreen()}
-          </motion.div>
+          {/* Each component handles its own visibility based on currentScreen */}
+          <EmotionalRatingNew />
+          <WorkoutPreferences />
+          <TimeAvailability />
+          <PracticeSummary />
         </div>
       </div>
     </div>

@@ -1,8 +1,11 @@
+
 import React from 'react';
 import { useFlowContext } from '@/context/FlowContext';
 import AnimatedCard from './AnimatedCard';
 import { motion } from 'framer-motion';
-import TimeOption from './TimeOption';
+import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
+import { Clock, Heart } from 'lucide-react';
 import { playSound } from '@/utils/soundEffects';
 
 const TimeAvailability = () => {

@@ -8,13 +8,15 @@ interface NavigationButtonsProps {
   onPrevious: () => void;
   isLastStep: boolean;
   isPreviousDisabled: boolean;
+  isLastSlider?: boolean; // Added this prop to the interface
 }
 
 const NavigationButtons = ({ 
   onNext, 
   onPrevious, 
   isLastStep, 
-  isPreviousDisabled 
+  isPreviousDisabled,
+  isLastSlider
 }: NavigationButtonsProps) => {
   return (
     <div className="flex justify-between mt-2">

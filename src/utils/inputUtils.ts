@@ -54,23 +54,40 @@ export const createWorkoutRequestPrompt = (
   const lightnessLevel = emotionRatings.lightness > 7 ? "feeling very light and flexible" : 
                          emotionRatings.lightness > 4 ? "moderately light" : "feeling heavy and stiff";
 
-  // Base prompt with emotional state information
-  let prompt = `Please suggest a workout for someone who is feeling with ${energyLevel}, ${bouncinessLevel}, ${alertnessLevel}, and ${lightnessLevel}.`;
+  // Construct the prompt following the new format
+  let prompt = `You are Coachy – a smart, supportive fitness assistant that recommends YouTube workouts based on the user's physical, emotional and practical needs.
+
+User's current state:
+- Mood/Bounciness: ${bouncinessLevel}
+- Energy level: ${energyLevel}
+- Focus/Alertness: ${alertnessLevel}
+- Physical feeling: ${lightnessLevel}`;
   
   // Add time available if provided
   if (timeAvailable) {
-    prompt += ` They have ${timeAvailable} minutes available for this workout.`;
+    prompt += `\n- Available time: ${timeAvailable}`;
   }
   
   // Add workout preferences if provided
   if (workoutPreferences && workoutPreferences.trim() !== '') {
     const sanitizedPreferences = sanitizeUserInput(workoutPreferences);
-    prompt += ` Additionally, they have the following preferences or limitations: ${sanitizedPreferences}.`;
+    prompt += `\n- Special request/limitation: ${sanitizedPreferences}`;
   }
   
-  // Add specific instructions for the AI
-  prompt += ` Based on this information, please provide a concise workout description that is suitable for their current state. Include what type of workout it is, what benefits it offers, and a brief overview of the activities involved.`;
+  // Add the specific response instructions
+  prompt += `
+
+💡 Very important:
+Do NOT default to yoga or stretching unless the input clearly asks for calm or softness.
+Instead, explore a wide variety of workout styles, including: strength training, mobility, dance workouts, cardio, pilates, tai chi, HIIT, low-impact routines, and energizing drills.
+
+🎯 Your response should be:
+- Short (2–3 lines max)
+- Clearly stating the recommended workout type
+- Mentioning why this style fits the user's current state
+- Including emotional tone if relevant (e.g. "This will help boost your mood without draining your energy")
+
+Return only one suggestion. Do not offer a list.`;
   
   return prompt;
 };
-

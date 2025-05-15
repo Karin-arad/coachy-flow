@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useFlowContext } from '@/context/FlowContext';
 import { Button } from '@/components/ui/button';
@@ -86,7 +87,7 @@ const TimeAvailability = () => {
               variant="energetic"
               className="w-full py-6 rounded-xl relative overflow-hidden group"
             >
-              <span className="relative z-10">יאללה, נמש��ך</span>
+              <span className="relative z-10">יאללה, נמשיך</span>
               <span className="absolute inset-0 bg-white/20 transform scale-x-0 group-hover:scale-x-100 group-active:scale-x-100 transition-transform origin-right duration-300"></span>
             </Button>
           </motion.div>

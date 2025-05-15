@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { FlowProvider, useFlowContext } from '@/context/FlowContext';
 import EmotionalRatingNew from '@/components/EmotionalRatingNew';
@@ -25,6 +26,17 @@ const CoachyFlow = () => {
     // Preload sounds on component mount
     preloadSounds();
   }, []);
+
+  // Calculate current step based on screen number
+  const getCurrentStepForProgressBar = () => {
+    switch(currentScreen) {
+      case 2: return 1; // EmotionalRating
+      case 3: return 2; // WorkoutPreferences
+      case 4: return 3; // TimeAvailability
+      case 5: return 4; // PracticeSummary
+      default: return 1;
+    }
+  };
   
   const renderCurrentScreen = () => {
     switch(currentScreen) {
@@ -67,7 +79,7 @@ const CoachyFlow = () => {
       
       <div className="flex-1 flex flex-col items-center justify-start px-side-padding py-vertical-gap w-full">
         <div className="w-full">
-          <ProgressBar currentStep={currentScreen - 1} totalSteps={4} />
+          <ProgressBar currentStep={getCurrentStepForProgressBar()} totalSteps={4} />
         </div>
         
         <div className="w-full flex-1 flex justify-center items-center">

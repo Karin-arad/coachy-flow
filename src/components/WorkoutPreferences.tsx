@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useFlowContext } from '@/context/FlowContext';
 import { Button } from '@/components/ui/button';
@@ -19,7 +18,7 @@ const WorkoutPreferences = () => {
   
   return (
     <AnimatedCard 
-      isVisible={currentScreen === 4} 
+      isVisible={currentScreen === 3} 
       className="h-full flex flex-col"
     >
       <div className="space-y-4 flex flex-col h-full text-sm">

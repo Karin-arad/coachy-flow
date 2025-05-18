@@ -1,5 +1,7 @@
+
 import React, { useState, useEffect } from 'react';
 import { FlowProvider, useFlowContext } from '@/context/FlowContext';
+import Conversation from '@/components/Conversation';
 import EmotionalRatingNew from '@/components/EmotionalRatingNew';
 import TimeAvailability from '@/components/TimeAvailability';
 import PracticeSummary from '@/components/PracticeSummary';
@@ -31,10 +33,11 @@ const CoachyFlow = () => {
   // Calculate current step based on screen number
   const getCurrentStepForProgressBar = () => {
     switch(currentScreen) {
-      case 2: return 1; // EmotionalRating
-      case 3: return 2; // WorkoutPreferences
-      case 4: return 3; // TimeAvailability
-      case 5: return 4; // PracticeSummary
+      case 1: return 1; // Conversation
+      case 2: return 2; // EmotionalRating
+      case 3: return 3; // WorkoutPreferences
+      case 4: return 4; // TimeAvailability
+      case 5: return 5; // PracticeSummary
       default: return 1;
     }
   };
@@ -67,11 +70,12 @@ const CoachyFlow = () => {
       
       <div className="flex-1 flex flex-col items-center justify-start px-side-padding py-vertical-gap w-full">
         <div className="w-full">
-          <ProgressBar currentStep={getCurrentStepForProgressBar()} totalSteps={4} />
+          <ProgressBar currentStep={getCurrentStepForProgressBar()} totalSteps={5} />
         </div>
         
         <div className="w-full flex-1 flex justify-center items-center">
           {/* Each component handles its own visibility based on currentScreen */}
+          <Conversation />
           <EmotionalRatingNew />
           <WorkoutPreferences />
           <TimeAvailability />

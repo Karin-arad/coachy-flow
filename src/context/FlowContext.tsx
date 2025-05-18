@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { toast } from '@/hooks/use-toast';
 
@@ -32,10 +33,15 @@ interface FlowContextType {
   // New workout preferences field
   workoutPreferences: string;
   setWorkoutPreferences: (preferences: string) => void;
+  // User conversation
+  userConversation: string;
+  setUserConversation: (conversation: string) => void;
+  // Navigate to specific screen
+  goToScreen: (screen: number) => void;
 }
 
 export const FlowContext = createContext<FlowContextType>({
-  currentScreen: 2,
+  currentScreen: 1, // Start with Conversation screen
   currentEmotionQuestion: 1,
   setCurrentEmotionQuestion: () => {},
   goToNextScreen: () => {},
@@ -56,13 +62,18 @@ export const FlowContext = createContext<FlowContextType>({
   // New workout preferences field initialization
   workoutPreferences: '',
   setWorkoutPreferences: () => {},
+  // Initialize user conversation
+  userConversation: '',
+  setUserConversation: () => {},
+  // Initialize goToScreen
+  goToScreen: () => {},
 });
 
 export const useFlowContext = () => useContext(FlowContext);
 
 export const FlowProvider: React.FC<{children: React.ReactNode}> = ({ children }) => {
-  // Make sure currentScreen starts at 2 (EmotionalRating)
-  const [currentScreen, setCurrentScreen] = useState<number>(2);
+  // Make sure currentScreen starts at 1 (Conversation)
+  const [currentScreen, setCurrentScreen] = useState<number>(1);
   const [currentEmotionQuestion, setCurrentEmotionQuestion] = useState<number>(1);
   const [freeTextEmotion, setFreeTextEmotion] = useState<string>('');
   const [emotionRatings, setEmotionRatings] = useState<EmotionRatings>({
@@ -82,13 +93,16 @@ export const FlowProvider: React.FC<{children: React.ReactNode}> = ({ children }
   // Add new workout preferences state
   const [workoutPreferences, setWorkoutPreferences] = useState<string>('');
   
+  // Add new user conversation state
+  const [userConversation, setUserConversation] = useState<string>('');
+  
   useEffect(() => {
     console.log('Flow context: currentScreen updated to', currentScreen);
   }, [currentScreen]);
   
   const goToNextScreen = () => {
     console.log('Going to next screen from', currentScreen);
-    if (currentScreen < 5) {
+    if (currentScreen < 6) {
       // Force a sync update to ensure proper rendering
       const newScreen = currentScreen + 1;
       console.log(`Changing screen from ${currentScreen} to ${newScreen}`);
@@ -106,6 +120,14 @@ export const FlowProvider: React.FC<{children: React.ReactNode}> = ({ children }
         title: 'מעבר לשלב הבא',
         description: 'נתוני התחושה שלך נשמרו בהצלחה',
       });
+    }
+  };
+  
+  // Add function to go to specific screen
+  const goToScreen = (screen: number) => {
+    if (screen >= 1 && screen <= 6) {
+      console.log(`Navigating directly to screen ${screen}`);
+      setCurrentScreen(screen);
     }
   };
   
@@ -158,6 +180,11 @@ export const FlowProvider: React.FC<{children: React.ReactNode}> = ({ children }
         // Add workout preferences to context
         workoutPreferences,
         setWorkoutPreferences,
+        // Add user conversation to context
+        userConversation,
+        setUserConversation,
+        // Add goToScreen function
+        goToScreen,
       }}
     >
       {children}

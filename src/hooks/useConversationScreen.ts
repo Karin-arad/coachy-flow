@@ -1,6 +1,6 @@
 
 import { useEffect, useRef, useState } from 'react';
-import { useFlowContext } from '@/context/FlowContext';
+import { useFlowContext } from '@/hooks/useFlowContext';
 import { playSound } from '@/utils/soundEffects';
 
 export const useConversationScreen = () => {

@@ -46,10 +46,7 @@ const CoachyFlow = () => {
   // All screens are rendered at once, but each component has its own visibility check
   // This ensures that screen transitions work correctly
   return (
-    <div className={cn(
-      "h-screen w-screen flex flex-col bg-white",
-      "overflow-hidden aspect-[9/16] max-w-[430px] min-w-[320px] mx-auto"
-    )}>
+    <div className="min-h-screen w-full flex flex-col bg-white overflow-auto">
       <CelebrationEffects 
         effectType={celebrationType} 
         active={isCelebrating} 
@@ -77,12 +74,12 @@ const CoachyFlow = () => {
         <Settings className="h-4 w-4 mr-1" /> הגדרות
       </Button>
       
-      <div className="flex-1 flex flex-col items-center justify-start px-side-padding py-vertical-gap w-full">
-        <div className="w-full">
+      <div className="flex-1 flex flex-col items-center justify-start px-6 py-6 w-full max-w-md mx-auto">
+        <div className="w-full mb-6">
           <ProgressBar currentStep={getCurrentStepForProgressBar()} totalSteps={5} />
         </div>
         
-        <div className="w-full flex-1 flex justify-center items-center">
+        <div className="w-full flex-1 flex justify-center items-start min-h-[500px]">
           {/* Each component handles its own visibility based on currentScreen */}
           <Conversation />
           <EmotionalRatingNew />

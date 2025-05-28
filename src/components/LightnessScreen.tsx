@@ -31,7 +31,7 @@ const LightnessScreen = () => {
 
   return (
     <QuestionCard
-      title="איך מחושה הקלילות שלך?"
+      title="מה תחושת הקלילות שלך?"
       emojiIcon="🌸"
       currentValue={emotionRatings.lightness}
       onChange={handleValueChange}

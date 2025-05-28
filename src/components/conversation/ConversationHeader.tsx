@@ -13,12 +13,12 @@ const ConversationHeader = () => {
     >
       <h2 className="text-xl font-semibold mb-1 flex items-center justify-center gap-2">
         <MessageCircle className="text-coachy-blue" size={20} />
-        נספר לי קצת על עצמך
+        ספר/י לי קצת על עצמך
       </h2>
       <p className="text-gray-600 mb-5">
         יש לך כאבים או אזורים רגישים?
         <br />
-        או אולי משהו שאתה רוצה שאדע לפני שנתחיל?
+        או אולי משהו שאת/ה רוצה שאדע לפני שנתחיל?
       </p>
     </motion.div>
   );

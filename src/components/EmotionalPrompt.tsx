@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useFlowContext } from '@/context/FlowContext';
 import { Button } from '@/components/ui/button';
@@ -108,7 +107,7 @@ const EmotionalPrompt = () => {
                 setFreeTextEmotion(e.target.value);
                 if (hasSubmitted) setHasSubmitted(false);
               }}
-              placeholder="רשמי את הרגשות שלך בחופשיות..."
+              placeholder="רשום/רשמי את הרגשות שלך בחופשיות..."
               className={`min-h-[60px] sm:min-h-[80px] max-h-[80px] sm:max-h-[100px] text-right border-coachy-lightBlue focus:border-coachy-blue resize-none bg-white/80 backdrop-blur-sm rounded-xl p-3 shadow-md transition-all duration-300 focus:ring-2 focus:ring-coachy-blue/30 focus:shadow-lg user-text ${isMobile ? 'text-xs' : 'text-sm'}`}
               dir="rtl"
               lang="he"

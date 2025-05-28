@@ -31,7 +31,7 @@ const AlertnessScreen = () => {
 
   return (
     <QuestionCard
-      title="איך רמת הערנות שלך?"
+      title="מה רמת הערנות שלך?"
       emojiIcon="👁️"
       currentValue={emotionRatings.alertness}
       onChange={handleValueChange}

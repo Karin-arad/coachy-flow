@@ -31,7 +31,7 @@ const EnergyScreen = () => {
 
   return (
     <QuestionCard
-      title="איך הרמת האנרגיה שלך?"
+      title="מה רמת האנרגיה שלך?"
       emojiIcon="⚡"
       currentValue={emotionRatings.energy}
       onChange={handleValueChange}

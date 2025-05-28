@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
 import { toast } from '@/hooks/use-toast';
 
 type CelebrationType = 'confetti' | 'fireworks' | 'stars' | 'emoji' | 'colorful-fireworks' | '';
@@ -80,34 +80,57 @@ export const FlowProvider: React.FC<{children: React.ReactNode}> = ({ children }
   const [workoutPreferences, setWorkoutPreferences] = useState<string>('');
   const [userConversation, setUserConversation] = useState<string>('');
   
-  // Enhanced iOS debugging
+  // Debounce mechanism to prevent multiple rapid navigation calls
+  const navigationTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const lastNavigationTimeRef = useRef<number>(0);
+  
+  // Enhanced debugging
   useEffect(() => {
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-    console.log('🔍 Enhanced Flow Debug:');
-    console.log('- Current Screen:', currentScreen);
-    console.log('- Is iOS:', isIOS);
-    console.log('- User Agent:', navigator.userAgent);
-    console.log('- Viewport:', window.innerWidth, 'x', window.innerHeight);
-    console.log('- Screen orientation:', screen.orientation?.type || 'unknown');
+    const timestamp = new Date().toLocaleTimeString();
     
-    // Log navigation history for debugging
-    if (window.navigationHistory) {
-      console.log('- Navigation History:', window.navigationHistory);
-    } else {
+    console.log('🔍 Enhanced Flow Debug:', {
+      currentScreen,
+      isIOS,
+      timestamp,
+      userAgent: navigator.userAgent,
+      viewport: `${window.innerWidth}x${window.innerHeight}`,
+      orientation: screen.orientation?.type || 'unknown'
+    });
+    
+    // Initialize navigation history
+    if (!window.navigationHistory) {
       window.navigationHistory = [currentScreen];
+    }
+    
+    // Log screen transitions
+    if (window.navigationHistory[window.navigationHistory.length - 1] !== currentScreen) {
+      window.navigationHistory.push(currentScreen);
+      console.log('📊 Navigation History Updated:', window.navigationHistory);
     }
   }, [currentScreen]);
   
   const goToNextScreen = () => {
-    console.log('🚀 Navigation Debug - Current screen:', currentScreen);
+    const now = Date.now();
+    const timeSinceLastNavigation = now - lastNavigationTimeRef.current;
     
-    // Track navigation history
-    if (!window.navigationHistory) {
-      window.navigationHistory = [];
+    // Debounce rapid navigation calls (prevent within 500ms)
+    if (timeSinceLastNavigation < 500) {
+      console.log('🚫 Navigation debounced - too rapid');
+      return;
     }
-    window.navigationHistory.push(currentScreen);
     
-    // Enhanced validation - ensure we don't skip screen 5
+    // Clear any existing timeout
+    if (navigationTimeoutRef.current) {
+      clearTimeout(navigationTimeoutRef.current);
+    }
+    
+    console.log('🚀 Navigation Debug - Current screen:', currentScreen);
+    console.log('📱 User Agent:', navigator.userAgent);
+    
+    lastNavigationTimeRef.current = now;
+    
+    // Enhanced validation with explicit screen 5 handling
     let nextScreen: number;
     
     switch(currentScreen) {
@@ -122,10 +145,11 @@ export const FlowProvider: React.FC<{children: React.ReactNode}> = ({ children }
         break;
       case 4: // Lightness -> Conversation (MUST go to 5)
         nextScreen = 5;
-        console.log('🔒 ENFORCING navigation from Lightness (4) to Conversation (5)');
+        console.log('🔒 ENFORCED navigation from Lightness (4) to Conversation (5)');
         break;
       case 5: // Conversation -> Time
         nextScreen = 6;
+        console.log('✅ Navigation from Conversation (5) to Time (6)');
         break;
       case 6: // Time -> Practice
         nextScreen = 7;
@@ -138,14 +162,23 @@ export const FlowProvider: React.FC<{children: React.ReactNode}> = ({ children }
     
     console.log(`✅ Navigation: ${currentScreen} -> ${nextScreen}`);
     
-    setCurrentScreen(nextScreen);
-    
-    // iOS-specific navigation logging
-    setTimeout(() => {
-      console.log('📱 Post-navigation iOS check:');
-      console.log('- Screen after navigation:', nextScreen);
-      console.log('- ConversationScreen should render:', nextScreen === 5);
-    }, 100);
+    // Delayed state update to ensure proper rendering
+    navigationTimeoutRef.current = setTimeout(() => {
+      setCurrentScreen(nextScreen);
+      
+      // Post-navigation verification
+      setTimeout(() => {
+        console.log('📱 Post-navigation verification:');
+        console.log('- Screen after navigation:', nextScreen);
+        console.log('- ConversationScreen should render:', nextScreen === 5);
+        
+        if (nextScreen === 5) {
+          console.log('🍎 Special iOS conversation screen verification');
+          const conversationElements = document.querySelectorAll('.ios-conversation-screen-container');
+          console.log('- Conversation containers found:', conversationElements.length);
+        }
+      }, 200);
+    }, 50);
     
     toast({
       title: 'מעבר לשלב הבא',
@@ -155,9 +188,12 @@ export const FlowProvider: React.FC<{children: React.ReactNode}> = ({ children }
   
   const goToScreen = (screen: number) => {
     if (screen >= 1 && screen <= 7) {
+      const now = Date.now();
+      lastNavigationTimeRef.current = now;
+      
       console.log(`🎯 Direct navigation to screen ${screen}`);
       
-      // Track navigation history
+      // Update navigation history
       if (!window.navigationHistory) {
         window.navigationHistory = [];
       }
@@ -165,15 +201,15 @@ export const FlowProvider: React.FC<{children: React.ReactNode}> = ({ children }
       
       setCurrentScreen(screen);
       
-      // Special handling for conversation screen on iOS
+      // Special handling for conversation screen
       if (screen === 5) {
         console.log('📱 Special iOS handling for conversation screen');
         setTimeout(() => {
-          const conversationElement = document.querySelector('.ios-conversation-fix');
+          const conversationElement = document.querySelector('.ios-conversation-screen-container');
           if (conversationElement) {
-            console.log('✅ Conversation element found:', conversationElement);
+            console.log('✅ Conversation element found after direct navigation');
           } else {
-            console.warn('❌ Conversation element not found after navigation');
+            console.warn('❌ Conversation element not found after direct navigation');
           }
         }, 200);
       }
@@ -203,6 +239,15 @@ export const FlowProvider: React.FC<{children: React.ReactNode}> = ({ children }
       setCelebrationType('');
     }, 3000);
   };
+  
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (navigationTimeoutRef.current) {
+        clearTimeout(navigationTimeoutRef.current);
+      }
+    };
+  }, []);
   
   return (
     <FlowContext.Provider 

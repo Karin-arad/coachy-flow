@@ -28,43 +28,49 @@ const CoachyFlow = () => {
   useEffect(() => {
     preloadSounds();
     
-    // Enhanced debugging for iOS conversation screen
-    console.log('🔍 Main Flow Debug:');
+    // Enhanced navigation debugging
+    console.log('🔍 Main Flow Navigation Debug:');
     console.log('- Current screen:', currentScreen);
     console.log('- Is mobile:', isMobile);
-    console.log('- Should show conversation:', currentScreen === 5);
+    console.log('- Navigation history:', window.navigationHistory || []);
     
     // iOS-specific debugging
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-    if (isIOS && currentScreen === 5) {
-      console.log('📱 iOS Conversation Screen Check:');
-      setTimeout(() => {
-        const conversationElements = document.querySelectorAll('.ios-conversation-screen-container');
-        console.log('- Conversation containers found:', conversationElements.length);
-        conversationElements.forEach((el, index) => {
-          const styles = getComputedStyle(el);
-          console.log(`- Container ${index}:`, {
-            display: styles.display,
-            visibility: styles.visibility,
-            opacity: styles.opacity,
-            height: styles.height,
-            transform: styles.transform
-          });
-        });
-      }, 300);
+    if (isIOS) {
+      console.log('📱 iOS Navigation Check:');
+      console.log('- User Agent:', navigator.userAgent);
+      console.log('- Viewport:', window.innerWidth, 'x', window.innerHeight);
+      console.log('- Screen orientation:', screen.orientation?.type || 'unknown');
     }
   }, [currentScreen]);
 
   const getCurrentStepForProgressBar = () => {
-    switch(currentScreen) {
-      case 1: return 1;
-      case 2: return 2;  
-      case 3: return 3;
-      case 4: return 4;
-      case 5: return 5;
-      case 6: return 6;
-      case 7: return 7;
-      default: return 1;
+    return Math.max(1, Math.min(currentScreen, 7));
+  };
+  
+  // Single screen rendering logic - only render the active screen
+  const renderCurrentScreen = () => {
+    console.log('🎯 Rendering screen:', currentScreen);
+    
+    switch (currentScreen) {
+      case 1:
+        return <BouncinessScreen />;
+      case 2:
+        return <EnergyScreen />;
+      case 3:
+        return <AlertnessScreen />;
+      case 4:
+        return <LightnessScreen />;
+      case 5:
+        console.log('📱 EXPLICITLY rendering ConversationScreen');
+        return <ConversationScreen />;
+      case 6:
+        return <TimeAvailability />;
+      case 7:
+        return <PracticeSummary />;
+      default:
+        console.warn('⚠️ Unknown screen:', currentScreen, 'defaulting to screen 1');
+        return <BouncinessScreen />;
     }
   };
   
@@ -96,13 +102,16 @@ const CoachyFlow = () => {
         </div>
         
         <div className="w-full flex-1 flex justify-center items-start min-h-[500px]">
-          <BouncinessScreen />
-          <EnergyScreen />
-          <AlertnessScreen />
-          <LightnessScreen />
-          <ConversationScreen />
-          <TimeAvailability />
-          <PracticeSummary />
+          <motion.div
+            key={currentScreen}
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ duration: 0.3 }}
+            className="w-full h-full"
+          >
+            {renderCurrentScreen()}
+          </motion.div>
         </div>
       </div>
     </div>

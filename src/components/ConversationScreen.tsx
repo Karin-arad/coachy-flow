@@ -1,5 +1,5 @@
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useFlowContext } from '@/context/FlowContext';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -13,8 +13,9 @@ const ConversationScreen = () => {
   const { userConversation, setUserConversation, goToNextScreen, goToScreen, currentScreen } = useFlowContext();
   const screenRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const [isInitialized, setIsInitialized] = useState(false);
 
-  // Enhanced iOS debugging and fixes
+  // Enhanced iOS debugging and fallback mechanisms
   useEffect(() => {
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
     const shouldBeVisible = currentScreen === 5;
@@ -25,44 +26,73 @@ const ConversationScreen = () => {
     console.log('- Is iOS:', isIOS);
     console.log('- Component mounted:', !!screenRef.current);
     console.log('- Navigation history:', window.navigationHistory || []);
+    console.log('- Timestamp:', new Date().toLocaleTimeString());
     
-    if (isIOS && shouldBeVisible) {
-      console.log('📱 iOS ConversationScreen activation');
+    if (shouldBeVisible) {
+      setIsInitialized(true);
       
-      // Force render verification
-      setTimeout(() => {
+      if (isIOS) {
+        console.log('📱 iOS ConversationScreen activation');
+        
+        // Immediate element verification
         const element = screenRef.current;
         if (element) {
-          console.log('✅ iOS: ConversationScreen element confirmed');
-          console.log('- Element visibility:', getComputedStyle(element).visibility);
-          console.log('- Element display:', getComputedStyle(element).display);
-          console.log('- Element opacity:', getComputedStyle(element).opacity);
+          console.log('✅ iOS: ConversationScreen element confirmed immediately');
           
-          // Force focus for iOS
-          if (textareaRef.current) {
-            console.log('📝 iOS: Preparing textarea');
-            textareaRef.current.style.transform = 'translateZ(0)';
-          }
+          // Force visible styles
+          element.style.display = 'block';
+          element.style.visibility = 'visible';
+          element.style.opacity = '1';
+          element.style.transform = 'translateZ(0)';
+          
         } else {
-          console.error('❌ iOS: ConversationScreen element NOT found');
+          console.warn('⚠️ iOS: ConversationScreen element not found immediately');
         }
-      }, 100);
-      
-      // iOS-specific viewport handling
-      const handleViewportChange = () => {
-        console.log('📱 iOS viewport change detected');
-        if (screenRef.current) {
-          screenRef.current.style.height = `${window.innerHeight}px`;
-        }
-      };
-      
-      window.addEventListener('resize', handleViewportChange);
-      window.addEventListener('orientationchange', handleViewportChange);
-      
-      return () => {
-        window.removeEventListener('resize', handleViewportChange);
-        window.removeEventListener('orientationchange', handleViewportChange);
-      };
+        
+        // Delayed verification with fallback
+        setTimeout(() => {
+          const elementDelayed = screenRef.current;
+          if (elementDelayed) {
+            console.log('✅ iOS: ConversationScreen element confirmed after delay');
+            const styles = getComputedStyle(elementDelayed);
+            console.log('- Element styles:', {
+              display: styles.display,
+              visibility: styles.visibility,
+              opacity: styles.opacity,
+              transform: styles.transform
+            });
+            
+            // Force focus preparation for textarea
+            if (textareaRef.current) {
+              console.log('📝 iOS: Preparing textarea');
+              textareaRef.current.style.transform = 'translateZ(0)';
+              textareaRef.current.style.fontSize = '16px';
+            }
+          } else {
+            console.error('❌ iOS: ConversationScreen element STILL not found after delay');
+            // Fallback mechanism
+            console.log('🔄 Attempting fallback rendering...');
+          }
+        }, 100);
+        
+        // iOS-specific viewport handling
+        const handleViewportChange = () => {
+          console.log('📱 iOS viewport change detected');
+          if (screenRef.current) {
+            screenRef.current.style.height = `${window.innerHeight}px`;
+          }
+        };
+        
+        window.addEventListener('resize', handleViewportChange);
+        window.addEventListener('orientationchange', handleViewportChange);
+        
+        return () => {
+          window.removeEventListener('resize', handleViewportChange);
+          window.removeEventListener('orientationchange', handleViewportChange);
+        };
+      }
+    } else {
+      setIsInitialized(false);
     }
   }, [currentScreen]);
 
@@ -92,24 +122,26 @@ const ConversationScreen = () => {
     }
   };
 
-  // Don't render if not on correct screen
+  // Enhanced visibility check
   if (currentScreen !== 5) {
     console.log('🍎 ConversationScreen - Not rendering, screen:', currentScreen);
     return null;
   }
 
-  console.log('🍎 ConversationScreen - RENDERING for screen 5');
+  console.log('🍎 ConversationScreen - RENDERING for screen 5, initialized:', isInitialized);
 
   return (
     <div 
       ref={screenRef}
       className="w-full h-full ios-conversation-screen-container"
       style={{
-        display: 'block',
-        visibility: 'visible',
-        opacity: 1,
+        display: 'block !important',
+        visibility: 'visible !important',
+        opacity: '1 !important',
         minHeight: '500px',
-        transform: 'translateZ(0)' // Force hardware acceleration on iOS
+        transform: 'translateZ(0)',
+        position: 'relative',
+        zIndex: 10
       }}
     >
       <AnimatedCard 

@@ -1,4 +1,3 @@
-
 import { fetchYouTubeData } from './openaiService';
 
 export interface VideoData {
@@ -10,35 +9,81 @@ export interface FallbackVideo {
   videoId: string;
   title: string;
   category: 'high-energy' | 'moderate' | 'gentle';
-  duration: '5-minute' | '10-minute' | '15-minute' | '20-minute';
+  duration: '5-minute' | '10-minute' | '15-minute' | '20-minute' | '30-minute' | '45-minute' | '60-minute';
 }
 
-// Curated list of reliable workout videos
+// Expanded curated list of reliable workout videos with longer durations
 const FALLBACK_VIDEOS: FallbackVideo[] = [
-  // High energy videos
+  // High energy videos - 5-20 minutes
   { videoId: 'ML4kp4lWn00', title: '10 Min Beginner Ab Workout', category: 'high-energy', duration: '10-minute' },
   { videoId: '8iOjkB2NuuE', title: '5 Minute Fat Burning Workout', category: 'high-energy', duration: '5-minute' },
   { videoId: 'IODxDxX7oi4', title: '15 Min Full Body HIIT Workout', category: 'high-energy', duration: '15-minute' },
   { videoId: 'cb6XcBBWGaM', title: '20 Min HIIT Cardio Workout', category: 'high-energy', duration: '20-minute' },
   { videoId: 'K6I24WgiiPw', title: '5 Min High Intensity Workout', category: 'high-energy', duration: '5-minute' },
   
-  // Moderate energy videos
+  // High energy videos - 30-60 minutes
+  { videoId: 'gC_L9qAHVJ8', title: '30 Min Full Body HIIT Workout', category: 'high-energy', duration: '30-minute' },
+  { videoId: 'M0uO8X3_tEA', title: '45 Min Total Body HIIT', category: 'high-energy', duration: '45-minute' },
+  { videoId: 'ml6cT4AZdqI', title: '60 Min Full Body HIIT Challenge', category: 'high-energy', duration: '60-minute' },
+  { videoId: 'UBMk30rjy0o', title: '30 Min Cardio HIIT Workout', category: 'high-energy', duration: '30-minute' },
+  { videoId: 'dP1Hx8dRnWU', title: '45 Min High Energy Cardio', category: 'high-energy', duration: '45-minute' },
+  
+  // Moderate energy videos - 5-20 minutes
   { videoId: 'VaoV1PrYft4', title: '10 Min Morning Yoga Flow', category: 'moderate', duration: '10-minute' },
   { videoId: 'v7AYKMP6rOE', title: '15 Min Full Body Stretch', category: 'moderate', duration: '15-minute' },
   { videoId: 'UEEsdXn8oG8', title: '20 Min Pilates Workout', category: 'moderate', duration: '20-minute' },
   { videoId: 'j7rKKpwdXNE', title: '5 Min Morning Stretch', category: 'moderate', duration: '5-minute' },
   { videoId: 'X3-gKPNyrTA', title: '10 Min Pilates Core', category: 'moderate', duration: '10-minute' },
   
-  // Gentle videos
+  // Moderate energy videos - 30-60 minutes
+  { videoId: 'b1H3xO3x_Js', title: '30 Min Vinyasa Yoga Flow', category: 'moderate', duration: '30-minute' },
+  { videoId: 'R6gZoF-ITEc', title: '45 Min Power Yoga Class', category: 'moderate', duration: '45-minute' },
+  { videoId: 'GLZbUWdGGlE', title: '60 Min Complete Yoga Practice', category: 'moderate', duration: '60-minute' },
+  { videoId: 'yx5FKtGSch8', title: '30 Min Full Body Pilates', category: 'moderate', duration: '30-minute' },
+  { videoId: 'hqzOxZxtgqY', title: '45 Min Yoga Flow for Strength', category: 'moderate', duration: '45-minute' },
+  
+  // Gentle videos - 5-20 minutes
   { videoId: 'sTANio_2E0Q', title: '10 Min Gentle Morning Yoga', category: 'gentle', duration: '10-minute' },
   { videoId: 'GLy2rYHwUqY', title: '15 Min Relaxing Stretch', category: 'gentle', duration: '15-minute' },
   { videoId: 'g_tea8ZNk5A', title: '5 Min Chair Exercises', category: 'gentle', duration: '5-minute' },
   { videoId: 'COp7BR_Dvps', title: '20 Min Gentle Yoga', category: 'gentle', duration: '20-minute' },
   { videoId: 'qX9FSZJu448', title: '10 Min Relaxation Flow', category: 'gentle', duration: '10-minute' },
+  
+  // Gentle videos - 30-60 minutes
+  { videoId: 'XeXz8fIZDCE', title: '30 Min Gentle Hatha Yoga', category: 'gentle', duration: '30-minute' },
+  { videoId: '0o0kNeOyBws', title: '45 Min Restorative Yoga', category: 'gentle', duration: '45-minute' },
+  { videoId: 'j9q6q-wJ4sU', title: '60 Min Deep Relaxation Yoga', category: 'gentle', duration: '60-minute' },
+  { videoId: 'CrEPRNUuJkM', title: '30 Min Yin Yoga Practice', category: 'gentle', duration: '30-minute' },
+  { videoId: 'aHrBg1UQbys', title: '45 Min Gentle Flow Yoga', category: 'gentle', duration: '45-minute' },
 ];
 
 // Store last selected videos to avoid repetition
 let lastSelectedVideos: string[] = [];
+
+// Map time strings to duration categories for better matching
+const mapTimeToDuration = (timeAvailable: string): string[] => {
+  const lowerTime = timeAvailable.toLowerCase();
+  
+  // Return array of durations in order of preference
+  if (lowerTime.includes('5') || lowerTime.includes('חמש')) {
+    return ['5-minute', '10-minute', '15-minute'];
+  } else if (lowerTime.includes('10') || lowerTime.includes('עשר')) {
+    return ['10-minute', '5-minute', '15-minute'];
+  } else if (lowerTime.includes('15') || lowerTime.includes('חמש עשרה')) {
+    return ['15-minute', '10-minute', '20-minute'];
+  } else if (lowerTime.includes('20') || lowerTime.includes('עשרים')) {
+    return ['20-minute', '15-minute', '30-minute'];
+  } else if (lowerTime.includes('30') || lowerTime.includes('שלושים')) {
+    return ['30-minute', '20-minute', '45-minute'];
+  } else if (lowerTime.includes('45') || lowerTime.includes('ארבעים וחמש')) {
+    return ['45-minute', '30-minute', '60-minute'];
+  } else if (lowerTime.includes('60') || lowerTime.includes('שישים') || lowerTime.includes('שעה')) {
+    return ['60-minute', '45-minute', '30-minute'];
+  }
+  
+  // Default fallback for unrecognized time formats
+  return ['15-minute', '10-minute', '20-minute', '30-minute'];
+};
 
 export const createSearchQueries = (
   workoutText: string,
@@ -213,34 +258,46 @@ export const getFallbackVideo = (
     category = 'gentle';
   }
   
+  // Get preferred durations based on user's time selection
+  const preferredDurations = mapTimeToDuration(timeAvailable);
+  console.log('🕐 Preferred durations for time "' + timeAvailable + '":', preferredDurations);
+  
   // Filter videos by category and exclude recently selected ones
-  const categoryVideos = FALLBACK_VIDEOS.filter(video => 
+  let availableVideos = FALLBACK_VIDEOS.filter(video => 
     video.category === category && !lastSelectedVideos.includes(video.videoId)
   );
   
   // If no unselected videos in category, use all category videos
-  const availableVideos = categoryVideos.length > 0 ? categoryVideos : 
-    FALLBACK_VIDEOS.filter(video => video.category === category);
+  if (availableVideos.length === 0) {
+    availableVideos = FALLBACK_VIDEOS.filter(video => video.category === category);
+    console.log('🔄 No unselected videos in category, using all category videos');
+  }
   
-  // Try to match duration first
-  const matchingDuration = availableVideos.filter(video => 
-    video.duration === timeAvailable as any
-  );
+  let selectedVideo: FallbackVideo | null = null;
   
-  let selectedVideo: FallbackVideo;
+  // Try to find video matching preferred durations in order
+  for (const duration of preferredDurations) {
+    const matchingVideos = availableVideos.filter(video => video.duration === duration);
+    if (matchingVideos.length > 0) {
+      const randomIndex = Math.floor(Math.random() * matchingVideos.length);
+      selectedVideo = matchingVideos[randomIndex];
+      console.log(`✅ Found video with duration ${duration}:`, selectedVideo.title);
+      break;
+    }
+  }
   
-  if (matchingDuration.length > 0) {
-    // Random selection from matching duration
-    const randomIndex = Math.floor(Math.random() * matchingDuration.length);
-    selectedVideo = matchingDuration[randomIndex];
-  } else if (availableVideos.length > 0) {
-    // Random selection from category
+  // If no duration match found, select randomly from available videos in category
+  if (!selectedVideo && availableVideos.length > 0) {
     const randomIndex = Math.floor(Math.random() * availableVideos.length);
     selectedVideo = availableVideos[randomIndex];
-  } else {
-    // Ultimate fallback - random from all videos
+    console.log('🎲 No duration match, selected random video from category:', selectedVideo.title);
+  }
+  
+  // Ultimate fallback - random from all videos
+  if (!selectedVideo) {
     const randomIndex = Math.floor(Math.random() * FALLBACK_VIDEOS.length);
     selectedVideo = FALLBACK_VIDEOS[randomIndex];
+    console.log('🆘 Ultimate fallback, selected random video:', selectedVideo.title);
   }
   
   // Update last selected videos list
@@ -249,7 +306,7 @@ export const getFallbackVideo = (
     lastSelectedVideos = lastSelectedVideos.slice(-5);
   }
   
-  console.log('🎯 Selected fallback video:', selectedVideo.title, 'category:', category);
+  console.log('🎯 Selected fallback video:', selectedVideo.title, 'category:', category, 'duration:', selectedVideo.duration);
   console.log('📝 Updated last selected videos:', lastSelectedVideos);
   
   return selectedVideo;

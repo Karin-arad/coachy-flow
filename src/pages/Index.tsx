@@ -18,7 +18,6 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import APIKeyInput from '@/components/APIKeyInput';
 import { cn } from '@/lib/utils';
 import { preloadSounds } from '@/utils/soundEffects';
-import { Link } from 'react-router-dom';
 
 const CoachyFlow = () => {
   const { currentScreen, celebrationType, isCelebrating } = useFlowContext();
@@ -58,14 +57,6 @@ const CoachyFlow = () => {
       <InstallButton />
       
       {showApiKeyModal && <APIKeyInput onClose={() => setShowApiKeyModal(false)} />}
-      
-      <div className="fixed top-5 right-5 z-50">
-        <Link to="/conversation">
-          <Button size="sm" variant="outline" className="text-xs px-3 py-1 h-8 bg-white/80 border border-gray-200 shadow-sm hover:bg-white">
-            New Conversation
-          </Button>
-        </Link>
-      </div>
       
       <Button 
         variant="outline"

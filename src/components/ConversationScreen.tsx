@@ -135,9 +135,9 @@ const ConversationScreen = () => {
       ref={screenRef}
       className="w-full h-full ios-conversation-screen-container"
       style={{
-        display: 'block !important',
-        visibility: 'visible !important',
-        opacity: '1 !important',
+        display: 'block',
+        visibility: 'visible',
+        opacity: 1,
         minHeight: '500px',
         transform: 'translateZ(0)',
         position: 'relative',

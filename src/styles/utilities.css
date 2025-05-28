@@ -52,4 +52,38 @@
   .hover-scale:active {
     @apply transform scale-95;
   }
+
+  /* iOS-specific textarea utilities */
+  .ios-textarea-native-fix {
+    /* Prevent iOS Safari from adding its own styling */
+    -webkit-appearance: none;
+    appearance: none;
+    /* Prevent zoom on focus for iOS */
+    font-size: 16px !important;
+    /* Better text selection on iOS */
+    -webkit-user-select: text;
+    user-select: text;
+    /* Smooth scrolling on iOS */
+    -webkit-overflow-scrolling: touch;
+    /* Prevent iOS from changing the font */
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    /* Better focus outline for iOS */
+    outline-offset: 2px;
+  }
+
+  /* iOS-specific debugging utility */
+  .ios-debug-info {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    z-index: 9999;
+    pointer-events: none;
+    font-family: monospace;
+  }
 }

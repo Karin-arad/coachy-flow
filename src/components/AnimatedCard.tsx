@@ -1,3 +1,4 @@
+
 import React, { ReactNode } from 'react';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
@@ -24,7 +25,7 @@ const AnimatedCard = ({ children, isVisible, className }: AnimatedCardProps) => 
       }}
       className={cn(
         'glass-card rounded-2xl p-4 sm:p-5 shadow-lg w-full max-w-md mx-auto overflow-hidden',
-        'aspect-[9/16] max-w-[calc(100vh * 9/16)]', // Add aspect ratio constraints
+        'ios-card-fix', // Remove problematic aspect ratio for iOS
         className
       )}
       style={{ 
@@ -42,7 +43,7 @@ const AnimatedCard = ({ children, isVisible, className }: AnimatedCardProps) => 
         {children}
       </motion.div>
       
-      {/* Decorative elements */}
+      {/* Simplified decorative elements for iOS */}
       <motion.div 
         className="absolute -top-2 -right-2 w-10 h-10 rounded-full bg-gradient-to-br from-white/40 to-white/10 blur-sm z-0"
         initial={{ scale: 0 }}

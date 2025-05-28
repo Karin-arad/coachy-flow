@@ -1,10 +1,9 @@
-
 import React, { useEffect, useState } from 'react';
 import { useFlowContext } from '@/context/FlowContext';
 import AnimatedCard from './AnimatedCard';
 import YouTubeVideo from './YouTubeVideo';
 import { createWorkoutRequestPrompt } from '@/utils/inputUtils';
-import { askCoachyAI } from '@/utils/coachyService';
+import { askCoachyAI, fetchYouTubeData } from '@/utils/coachyService';
 import { Loader2, RefreshCw, AlertCircle } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
@@ -53,9 +52,8 @@ const PracticeSummary = () => {
       setWorkoutDescription(response);
       setRetryCount(0); // Reset retry count on success
       
-      // For demo purposes, set a sample video
-      setVideoId('dQw4w9WgXcQ'); // Sample YouTube video ID
-      setVideoTitle('Sample Workout Video');
+      // Now search for relevant YouTube video
+      await searchForWorkoutVideo(response);
       
     } catch (error) {
       console.error('❌ Error generating workout recommendation:', error);
@@ -66,9 +64,8 @@ const PracticeSummary = () => {
         const fallbackRecommendation = generateFallbackRecommendation();
         setWorkoutDescription(fallbackRecommendation);
         setError(null);
-        // Set fallback video
-        setVideoId('dQw4w9WgXcQ');
-        setVideoTitle('Fallback Workout Video');
+        // Search for video even with fallback recommendation
+        await searchForWorkoutVideo(fallbackRecommendation);
         toast({
           title: "Using offline recommendation",
           description: "We've created a practice based on your preferences without AI assistance.",
@@ -84,6 +81,76 @@ const PracticeSummary = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const searchForWorkoutVideo = async (workoutText: string) => {
+    try {
+      console.log('🔍 Searching for YouTube video based on workout:', workoutText);
+      
+      // Create search keywords based on workout description and user preferences
+      const searchKeywords = createVideoSearchKeywords(workoutText);
+      console.log('🔍 Generated search keywords:', searchKeywords);
+      
+      const videoData = await fetchYouTubeData(searchKeywords);
+      
+      if (videoData && videoData.length > 0) {
+        const firstVideo = videoData[0];
+        setVideoId(firstVideo.id.videoId);
+        setVideoTitle(firstVideo.snippet.title);
+        console.log('✅ Found YouTube video:', firstVideo.snippet.title, firstVideo.id.videoId);
+      } else {
+        console.log('⚠️ No YouTube videos found, using fallback');
+        setFallbackVideo();
+      }
+    } catch (error) {
+      console.error('❌ Error searching YouTube:', error);
+      setFallbackVideo();
+    }
+  };
+
+  const createVideoSearchKeywords = (workoutText: string): string => {
+    const { energy, bounciness, alertness, lightness } = emotionRatings;
+    const avgEnergy = (energy + bounciness + alertness + lightness) / 4;
+    
+    let keywords = '';
+    
+    // Add energy level based keywords
+    if (avgEnergy >= 7) {
+      keywords += 'high energy workout HIIT ';
+    } else if (avgEnergy >= 4) {
+      keywords += 'moderate workout fitness ';
+    } else {
+      keywords += 'gentle yoga stretching ';
+    }
+    
+    // Add time-based keywords
+    keywords += `${timeAvailable} `;
+    
+    // Extract key workout types from the description
+    if (workoutText.toLowerCase().includes('yoga')) {
+      keywords += 'yoga flow ';
+    }
+    if (workoutText.toLowerCase().includes('stretch')) {
+      keywords += 'stretching routine ';
+    }
+    if (workoutText.toLowerCase().includes('cardio') || workoutText.toLowerCase().includes('jumping')) {
+      keywords += 'cardio workout ';
+    }
+    if (workoutText.toLowerCase().includes('strength') || workoutText.toLowerCase().includes('muscle')) {
+      keywords += 'strength training ';
+    }
+    
+    // Add general fitness keywords
+    keywords += 'exercise routine fitness';
+    
+    return keywords.trim();
+  };
+
+  const setFallbackVideo = () => {
+    // Use a general fitness video as fallback
+    setVideoId('ML4kp4lWn00'); // A popular general workout video
+    setVideoTitle('Beginner Friendly Workout');
+    console.log('🎬 Using fallback video');
   };
 
   const generateFallbackRecommendation = () => {

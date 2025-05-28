@@ -1,9 +1,11 @@
+
 import React, { useEffect, useState } from 'react';
 import { useFlowContext } from '@/context/FlowContext';
 import AnimatedCard from './AnimatedCard';
 import YouTubeVideo from './YouTubeVideo';
 import { createWorkoutRequestPrompt } from '@/utils/inputUtils';
-import { askCoachyAI, fetchYouTubeData } from '@/utils/coachyService';
+import { askCoachyAI } from '@/utils/coachyService';
+import { fetchYouTubeData } from '@/utils/openaiService';
 import { Loader2, RefreshCw, AlertCircle } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';

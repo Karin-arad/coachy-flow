@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useFlowContext } from '@/context/FlowContext';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -11,107 +11,192 @@ import { playSound } from '@/utils/soundEffects';
 
 const ConversationScreen = () => {
   const { userConversation, setUserConversation, goToNextScreen, goToScreen, currentScreen } = useFlowContext();
+  const screenRef = useRef<HTMLDivElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  // iOS-specific debugging
-  React.useEffect(() => {
-    console.log('🍎 ConversationScreen - iOS Debug Info:');
+  // Enhanced iOS debugging and fixes
+  useEffect(() => {
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    const shouldBeVisible = currentScreen === 5;
+    
+    console.log('🍎 ConversationScreen - Enhanced Debug:');
     console.log('- Current screen:', currentScreen);
-    console.log('- Should be visible:', currentScreen === 5);
-    console.log('- User agent:', navigator.userAgent);
-    console.log('- Is iOS:', /iPad|iPhone|iPod/.test(navigator.userAgent));
-    console.log('- Window dimensions:', window.innerWidth, 'x', window.innerHeight);
-    console.log('- Screen dimensions:', screen.width, 'x', screen.height);
-    console.log('- Device pixel ratio:', window.devicePixelRatio);
+    console.log('- Should be visible:', shouldBeVisible);
+    console.log('- Is iOS:', isIOS);
+    console.log('- Component mounted:', !!screenRef.current);
+    console.log('- Navigation history:', window.navigationHistory || []);
+    
+    if (isIOS && shouldBeVisible) {
+      console.log('📱 iOS ConversationScreen activation');
+      
+      // Force render verification
+      setTimeout(() => {
+        const element = screenRef.current;
+        if (element) {
+          console.log('✅ iOS: ConversationScreen element confirmed');
+          console.log('- Element visibility:', getComputedStyle(element).visibility);
+          console.log('- Element display:', getComputedStyle(element).display);
+          console.log('- Element opacity:', getComputedStyle(element).opacity);
+          
+          // Force focus for iOS
+          if (textareaRef.current) {
+            console.log('📝 iOS: Preparing textarea');
+            textareaRef.current.style.transform = 'translateZ(0)';
+          }
+        } else {
+          console.error('❌ iOS: ConversationScreen element NOT found');
+        }
+      }, 100);
+      
+      // iOS-specific viewport handling
+      const handleViewportChange = () => {
+        console.log('📱 iOS viewport change detected');
+        if (screenRef.current) {
+          screenRef.current.style.height = `${window.innerHeight}px`;
+        }
+      };
+      
+      window.addEventListener('resize', handleViewportChange);
+      window.addEventListener('orientationchange', handleViewportChange);
+      
+      return () => {
+        window.removeEventListener('resize', handleViewportChange);
+        window.removeEventListener('orientationchange', handleViewportChange);
+      };
+    }
   }, [currentScreen]);
 
   const handleContinue = () => {
-    console.log('🍎 ConversationScreen - Continue button clicked');
+    console.log('🍎 ConversationScreen - Continue clicked');
+    console.log('- User conversation length:', userConversation.length);
     goToNextScreen();
     playSound('success');
   };
 
   const handlePrevious = () => {
-    console.log('🍎 ConversationScreen - Previous button clicked');
-    goToScreen(4); // Go back to LightnessScreen
+    console.log('🍎 ConversationScreen - Previous clicked');
+    goToScreen(4);
     playSound('click');
   };
 
-  // Only render if we're on the correct screen
+  // Enhanced iOS textarea focus handling
+  const handleTextareaFocus = () => {
+    console.log('📝 iOS: Textarea focused');
+    if (textareaRef.current && /iPad|iPhone|iPod/.test(navigator.userAgent)) {
+      // Prevent iOS zoom on focus
+      textareaRef.current.setAttribute('readonly', 'readonly');
+      textareaRef.current.setAttribute('style', 'font-size: 16px !important;');
+      setTimeout(() => {
+        textareaRef.current?.removeAttribute('readonly');
+      }, 100);
+    }
+  };
+
+  // Don't render if not on correct screen
   if (currentScreen !== 5) {
-    console.log('🍎 ConversationScreen - Not rendering, currentScreen:', currentScreen);
+    console.log('🍎 ConversationScreen - Not rendering, screen:', currentScreen);
     return null;
   }
 
-  console.log('🍎 ConversationScreen - Rendering for screen 5');
+  console.log('🍎 ConversationScreen - RENDERING for screen 5');
 
   return (
-    <AnimatedCard 
-      isVisible={true} 
-      className="h-full flex flex-col ios-conversation-fix"
+    <div 
+      ref={screenRef}
+      className="w-full h-full ios-conversation-screen-container"
+      style={{
+        display: 'block',
+        visibility: 'visible',
+        opacity: 1,
+        minHeight: '500px',
+        transform: 'translateZ(0)' // Force hardware acceleration on iOS
+      }}
     >
-      <div className="space-y-4 flex flex-col h-full text-sm">
-        <motion.div 
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.5 }}
-          className="text-center"
-        >
-          <h2 className="text-xl font-semibold mb-1 flex items-center justify-center gap-2">
-            <MessageCircle className="text-coachy-blue" size={20} />
-            נספר לי קצת על עצמך
-          </h2>
-          <p className="text-gray-600 mb-5">
-            יש לך כאבים או אזורים רגישים?
-            <br />
-            או אולי משהו שאתה רוצה שאדע לפני שנתחיל?
-          </p>
-        </motion.div>
-        
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.4, duration: 0.5 }}
-          className="flex-1 relative"
-        >
-          <Textarea
-            value={userConversation}
-            onChange={(e) => setUserConversation(e.target.value)}
-            placeholder="למשל: כאבי גב תחתון, בעיות ברכיים, רק פלג עליון, בלי פלאנקים..."
-            className={cn(
-              "resize-none w-full h-full min-h-[120px] p-4 text-sm rounded-xl",
-              "border-2 border-gray-200 focus:border-coachy-blue",
-              "focus:ring-1 focus:ring-coachy-blue focus:outline-none",
-              "transition-all duration-300 bg-white/80",
-              "ios-textarea-fix"
-            )}
-          />
-        </motion.div>
-        
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6, duration: 0.5 }}
-          className="mt-auto pt-6 space-y-3"
-        >
-          <Button 
-            onClick={handleContinue}
-            variant="energetic"
-            className="w-full py-6 rounded-xl relative overflow-hidden group"
+      <AnimatedCard 
+        isVisible={true} 
+        className="h-full flex flex-col ios-conversation-fix"
+      >
+        <div className="space-y-4 flex flex-col h-full text-sm">
+          <motion.div 
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, duration: 0.5 }}
+            className="text-center"
           >
-            <span className="relative z-10">יאללה, נמשיך</span>
-            <span className="absolute inset-0 bg-white/20 transform scale-x-0 group-hover:scale-x-100 group-active:scale-x-100 transition-transform origin-right duration-300"></span>
-          </Button>
+            <h2 className="text-xl font-semibold mb-1 flex items-center justify-center gap-2">
+              <MessageCircle className="text-coachy-blue" size={20} />
+              נספר לי קצת על עצמך
+            </h2>
+            <p className="text-gray-600 mb-5">
+              יש לך כאבים או אזורים רגישים?
+              <br />
+              או אולי משהו שאתה רוצה שאדע לפני שנתחיל?
+            </p>
+          </motion.div>
           
-          <Button 
-            onClick={handlePrevious}
-            variant="outline"
-            className="w-full py-3 rounded-xl"
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.4, duration: 0.5 }}
+            className="flex-1 relative"
           >
-            חזרה
-          </Button>
-        </motion.div>
-      </div>
-    </AnimatedCard>
+            <Textarea
+              ref={textareaRef}
+              value={userConversation}
+              onChange={(e) => setUserConversation(e.target.value)}
+              onFocus={handleTextareaFocus}
+              placeholder="למשל: כאבי גב תחתון, בעיות ברכיים, רק פלג עליון, בלי פלאנקים..."
+              className={cn(
+                "resize-none w-full h-full min-h-[120px] p-4 text-sm rounded-xl",
+                "border-2 border-gray-200 focus:border-coachy-blue",
+                "focus:ring-1 focus:ring-coachy-blue focus:outline-none",
+                "transition-all duration-300 bg-white/80",
+                "ios-textarea-fix ios-textarea-enhanced"
+              )}
+              style={{
+                fontSize: '16px', // Prevent iOS zoom
+                WebkitAppearance: 'none',
+                touchAction: 'manipulation'
+              }}
+            />
+          </motion.div>
+          
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6, duration: 0.5 }}
+            className="mt-auto pt-6 space-y-3"
+          >
+            <Button 
+              onClick={handleContinue}
+              variant="energetic"
+              className="w-full py-6 rounded-xl relative overflow-hidden group ios-button-fix"
+              style={{
+                touchAction: 'manipulation',
+                WebkitTouchCallout: 'none',
+                WebkitUserSelect: 'none'
+              }}
+            >
+              <span className="relative z-10">יאללה, נמשיך</span>
+              <span className="absolute inset-0 bg-white/20 transform scale-x-0 group-hover:scale-x-100 group-active:scale-x-100 transition-transform origin-right duration-300"></span>
+            </Button>
+            
+            <Button 
+              onClick={handlePrevious}
+              variant="outline"
+              className="w-full py-3 rounded-xl ios-button-fix"
+              style={{
+                touchAction: 'manipulation',
+                WebkitTouchCallout: 'none',
+                WebkitUserSelect: 'none'
+              }}
+            >
+              חזרה
+            </Button>
+          </motion.div>
+        </div>
+      </AnimatedCard>
+    </div>
   );
 };
 

@@ -11,6 +11,7 @@ import PracticeSummary from '@/components/PracticeSummary';
 import ProgressBar from '@/components/ProgressBar';
 import CelebrationEffects from '@/components/CelebrationEffects';
 import InstallButton from '@/components/InstallButton';
+import IOSDebugInfo from '@/components/IOSDebugInfo';
 import { motion } from 'framer-motion';
 import { Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -25,23 +26,44 @@ const CoachyFlow = () => {
   const [showApiKeyModal, setShowApiKeyModal] = useState(false);
   
   useEffect(() => {
-    // Preload sounds on component mount
     preloadSounds();
     
-    // Debug the current screen
-    console.log('Current screen in CoachyFlow:', currentScreen);
+    // Enhanced debugging for iOS conversation screen
+    console.log('🔍 Main Flow Debug:');
+    console.log('- Current screen:', currentScreen);
+    console.log('- Is mobile:', isMobile);
+    console.log('- Should show conversation:', currentScreen === 5);
+    
+    // iOS-specific debugging
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    if (isIOS && currentScreen === 5) {
+      console.log('📱 iOS Conversation Screen Check:');
+      setTimeout(() => {
+        const conversationElements = document.querySelectorAll('.ios-conversation-screen-container');
+        console.log('- Conversation containers found:', conversationElements.length);
+        conversationElements.forEach((el, index) => {
+          const styles = getComputedStyle(el);
+          console.log(`- Container ${index}:`, {
+            display: styles.display,
+            visibility: styles.visibility,
+            opacity: styles.opacity,
+            height: styles.height,
+            transform: styles.transform
+          });
+        });
+      }, 300);
+    }
   }, [currentScreen]);
 
-  // Calculate current step based on screen number
   const getCurrentStepForProgressBar = () => {
     switch(currentScreen) {
-      case 1: return 1; // BouncinessScreen
-      case 2: return 2; // EnergyScreen  
-      case 3: return 3; // AlertnessScreen
-      case 4: return 4; // LightnessScreen
-      case 5: return 5; // ConversationScreen
-      case 6: return 6; // TimeAvailability
-      case 7: return 7; // PracticeSummary
+      case 1: return 1;
+      case 2: return 2;  
+      case 3: return 3;
+      case 4: return 4;
+      case 5: return 5;
+      case 6: return 6;
+      case 7: return 7;
       default: return 1;
     }
   };
@@ -55,6 +77,7 @@ const CoachyFlow = () => {
       />
       
       <InstallButton />
+      <IOSDebugInfo />
       
       {showApiKeyModal && <APIKeyInput onClose={() => setShowApiKeyModal(false)} />}
       

@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { toast } from '@/hooks/use-toast';
 
@@ -102,18 +101,16 @@ export const FlowProvider: React.FC<{children: React.ReactNode}> = ({ children }
   
   const goToNextScreen = () => {
     console.log('Going to next screen from', currentScreen);
-    if (currentScreen < 6) {
-      // Force a sync update to ensure proper rendering
+    // Updated bounds: now goes from screen 2 to 5 (removed screen 1)
+    if (currentScreen >= 2 && currentScreen < 5) {
       const newScreen = currentScreen + 1;
       console.log(`Changing screen from ${currentScreen} to ${newScreen}`);
       
-      // Update state with callback form to get the most current value
       setCurrentScreen(prev => {
         console.log(`Actually setting screen from ${prev} to ${newScreen}`);
         return newScreen;
       });
       
-      // Log after state update is queued
       console.log(`Screen update queued: ${currentScreen} -> ${newScreen}`);
       
       toast({
@@ -125,7 +122,8 @@ export const FlowProvider: React.FC<{children: React.ReactNode}> = ({ children }
   
   // Add function to go to specific screen
   const goToScreen = (screen: number) => {
-    if (screen >= 1 && screen <= 6) {
+    // Updated bounds: screens 2-5 are valid (removed screen 1)
+    if (screen >= 2 && screen <= 5) {
       console.log(`Navigating directly to screen ${screen}`);
       setCurrentScreen(screen);
     }

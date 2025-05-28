@@ -41,7 +41,7 @@ interface FlowContextType {
 }
 
 export const FlowContext = createContext<FlowContextType>({
-  currentScreen: 1, // Start with Conversation screen
+  currentScreen: 2, // Start with EmotionalRatingNew screen instead of Conversation
   currentEmotionQuestion: 1,
   setCurrentEmotionQuestion: () => {},
   goToNextScreen: () => {},
@@ -72,8 +72,8 @@ export const FlowContext = createContext<FlowContextType>({
 export const useFlowContext = () => useContext(FlowContext);
 
 export const FlowProvider: React.FC<{children: React.ReactNode}> = ({ children }) => {
-  // Make sure currentScreen starts at 1 (Conversation)
-  const [currentScreen, setCurrentScreen] = useState<number>(1);
+  // Start at screen 2 (EmotionalRatingNew) instead of screen 1 (Conversation)
+  const [currentScreen, setCurrentScreen] = useState<number>(2);
   const [currentEmotionQuestion, setCurrentEmotionQuestion] = useState<number>(1);
   const [freeTextEmotion, setFreeTextEmotion] = useState<string>('');
   const [emotionRatings, setEmotionRatings] = useState<EmotionRatings>({

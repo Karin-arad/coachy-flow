@@ -1,7 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
 import { FlowProvider, useFlowContext } from '@/context/FlowContext';
-import Conversation from '@/components/Conversation';
 import EmotionalRatingNew from '@/components/EmotionalRatingNew';
 import TimeAvailability from '@/components/TimeAvailability';
 import PracticeSummary from '@/components/PracticeSummary';
@@ -31,20 +30,18 @@ const CoachyFlow = () => {
     console.log('Current screen in CoachyFlow:', currentScreen);
   }, [currentScreen]);
 
-  // Calculate current step based on screen number
+  // Calculate current step based on screen number (adjusted for removed Conversation screen)
   const getCurrentStepForProgressBar = () => {
     switch(currentScreen) {
-      case 1: return 1; // Conversation
-      case 2: return 2; // EmotionalRating
-      case 3: return 3; // WorkoutPreferences
-      case 4: return 4; // TimeAvailability
-      case 5: return 5; // PracticeSummary
+      case 2: return 1; // EmotionalRating (now first step)
+      case 3: return 2; // WorkoutPreferences
+      case 4: return 3; // TimeAvailability
+      case 5: return 4; // PracticeSummary
       default: return 1;
     }
   };
   
-  // All screens are rendered at once, but each component has its own visibility check
-  // This ensures that screen transitions work correctly
+  // Removed Conversation component from the rendering
   return (
     <div className="min-h-screen w-full flex flex-col bg-white overflow-auto">
       <CelebrationEffects 
@@ -76,12 +73,11 @@ const CoachyFlow = () => {
       
       <div className="flex-1 flex flex-col items-center justify-start px-6 py-6 w-full max-w-md mx-auto">
         <div className="w-full mb-6">
-          <ProgressBar currentStep={getCurrentStepForProgressBar()} totalSteps={5} />
+          <ProgressBar currentStep={getCurrentStepForProgressBar()} totalSteps={4} />
         </div>
         
         <div className="w-full flex-1 flex justify-center items-start min-h-[500px]">
-          {/* Each component handles its own visibility based on currentScreen */}
-          <Conversation />
+          {/* Removed Conversation component - now starting directly with EmotionalRatingNew */}
           <EmotionalRatingNew />
           <WorkoutPreferences />
           <TimeAvailability />

@@ -1,11 +1,10 @@
-
 import React, { useEffect, useState } from 'react';
 import { useFlowContext } from '@/context/FlowContext';
 import AnimatedCard from './AnimatedCard';
 import YouTubeVideo from './YouTubeVideo';
 import { createWorkoutRequestPrompt } from '@/utils/inputUtils';
 import { askCoachyAI } from '@/utils/coachyService';
-import { fetchYouTubeData } from '@/utils/openaiService';
+import { createSearchQueries, searchWithMultipleQueries, getFallbackVideo, validateVideo } from '@/utils/videoService';
 import { Loader2, RefreshCw, AlertCircle } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
@@ -18,6 +17,7 @@ const PracticeSummary = () => {
   const [videoTitle, setVideoTitle] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
   const [retryCount, setRetryCount] = useState(0);
+  const [videoSearchAttempts, setVideoSearchAttempts] = useState(0);
 
   useEffect(() => {
     console.log('PracticeSummary loaded, currentScreen:', currentScreen);
@@ -55,7 +55,7 @@ const PracticeSummary = () => {
       setRetryCount(0); // Reset retry count on success
       
       // Now search for relevant YouTube video
-      await searchForWorkoutVideo(response);
+      await searchForWorkoutVideoEnhanced(response);
       
     } catch (error) {
       console.error('❌ Error generating workout recommendation:', error);
@@ -67,7 +67,7 @@ const PracticeSummary = () => {
         setWorkoutDescription(fallbackRecommendation);
         setError(null);
         // Search for video even with fallback recommendation
-        await searchForWorkoutVideo(fallbackRecommendation);
+        await searchForWorkoutVideoEnhanced(fallbackRecommendation);
         toast({
           title: "Using offline recommendation",
           description: "We've created a practice based on your preferences without AI assistance.",
@@ -85,74 +85,66 @@ const PracticeSummary = () => {
     }
   };
 
-  const searchForWorkoutVideo = async (workoutText: string) => {
+  const searchForWorkoutVideoEnhanced = async (workoutText: string) => {
     try {
-      console.log('🔍 Searching for YouTube video based on workout:', workoutText);
+      console.log('🔍 Starting enhanced video search for workout:', workoutText);
+      setVideoSearchAttempts(prev => prev + 1);
       
-      // Create search keywords based on workout description and user preferences
-      const searchKeywords = createVideoSearchKeywords(workoutText);
-      console.log('🔍 Generated search keywords:', searchKeywords);
+      // Create multiple search queries with different specificity levels
+      const searchQueries = createSearchQueries(workoutText, emotionRatings, timeAvailable, userConversation);
       
-      const videoData = await fetchYouTubeData(searchKeywords);
+      // Try searching with multiple queries
+      const foundVideo = await searchWithMultipleQueries(searchQueries);
       
-      if (videoData && videoData.length > 0) {
-        const firstVideo = videoData[0];
-        setVideoId(firstVideo.id.videoId);
-        setVideoTitle(firstVideo.snippet.title);
-        console.log('✅ Found YouTube video:', firstVideo.snippet.title, firstVideo.id.videoId);
+      if (foundVideo) {
+        setVideoId(foundVideo.id.videoId);
+        setVideoTitle(foundVideo.snippet.title);
+        console.log('✅ Found and validated YouTube video:', foundVideo.snippet.title, foundVideo.id.videoId);
+        toast({
+          title: "Video found!",
+          description: "Found a perfect workout video for your practice.",
+        });
       } else {
-        console.log('⚠️ No YouTube videos found, using fallback');
-        setFallbackVideo();
+        console.log('⚠️ No videos found through search, using smart fallback');
+        await useSmartFallback();
       }
     } catch (error) {
-      console.error('❌ Error searching YouTube:', error);
-      setFallbackVideo();
+      console.error('❌ Error in enhanced video search:', error);
+      await useSmartFallback();
     }
   };
 
-  const createVideoSearchKeywords = (workoutText: string): string => {
-    const { energy, bounciness, alertness, lightness } = emotionRatings;
-    const avgEnergy = (energy + bounciness + alertness + lightness) / 4;
-    
-    let keywords = '';
-    
-    // Add energy level based keywords
-    if (avgEnergy >= 7) {
-      keywords += 'high energy workout HIIT ';
-    } else if (avgEnergy >= 4) {
-      keywords += 'moderate workout fitness ';
-    } else {
-      keywords += 'gentle yoga stretching ';
+  const useSmartFallback = async () => {
+    try {
+      console.log('🎯 Using smart fallback video selection');
+      const fallbackVideo = getFallbackVideo(emotionRatings, timeAvailable);
+      
+      // Validate the fallback video
+      const isValid = await validateVideo(fallbackVideo.videoId);
+      
+      if (isValid) {
+        setVideoId(fallbackVideo.videoId);
+        setVideoTitle(fallbackVideo.title);
+        console.log('✅ Using validated fallback video:', fallbackVideo.title, fallbackVideo.videoId);
+        toast({
+          title: "Backup video selected",
+          description: "We've selected a curated workout that matches your preferences.",
+        });
+      } else {
+        console.error('❌ Even fallback video failed validation');
+        setVideoId(null);
+        setVideoTitle('');
+        toast({
+          variant: "destructive",
+          title: "Video unavailable",
+          description: "Unable to load a workout video right now. Please try again later.",
+        });
+      }
+    } catch (error) {
+      console.error('❌ Error in smart fallback:', error);
+      setVideoId(null);
+      setVideoTitle('');
     }
-    
-    // Add time-based keywords
-    keywords += `${timeAvailable} `;
-    
-    // Extract key workout types from the description
-    if (workoutText.toLowerCase().includes('yoga')) {
-      keywords += 'yoga flow ';
-    }
-    if (workoutText.toLowerCase().includes('stretch')) {
-      keywords += 'stretching routine ';
-    }
-    if (workoutText.toLowerCase().includes('cardio') || workoutText.toLowerCase().includes('jumping')) {
-      keywords += 'cardio workout ';
-    }
-    if (workoutText.toLowerCase().includes('strength') || workoutText.toLowerCase().includes('muscle')) {
-      keywords += 'strength training ';
-    }
-    
-    // Add general fitness keywords
-    keywords += 'exercise routine fitness';
-    
-    return keywords.trim();
-  };
-
-  const setFallbackVideo = () => {
-    // Use a general fitness video as fallback
-    setVideoId('ML4kp4lWn00'); // A popular general workout video
-    setVideoTitle('Beginner Friendly Workout');
-    console.log('🎬 Using fallback video');
   };
 
   const generateFallbackRecommendation = () => {
@@ -192,7 +184,14 @@ const PracticeSummary = () => {
 
   const handleManualRetry = () => {
     setRetryCount(0);
+    setVideoSearchAttempts(0);
     generateWorkoutRecommendation();
+  };
+
+  const handleVideoRetry = () => {
+    if (workoutDescription) {
+      searchForWorkoutVideoEnhanced(workoutDescription);
+    }
   };
 
   const handlePrevious = () => {
@@ -240,10 +239,27 @@ const PracticeSummary = () => {
               </p>
             </div>
 
-            {videoId && (
+            {videoId ? (
               <div className="mt-6">
                 <h3 className="text-lg font-medium mb-3">Your Workout Video</h3>
                 <YouTubeVideo videoId={videoId} title={videoTitle} />
+              </div>
+            ) : (
+              <div className="mt-6 space-y-3">
+                <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
+                  <p className="text-amber-800 text-sm">
+                    We're having trouble finding a video right now, but your workout plan is ready!
+                  </p>
+                </div>
+                <Button 
+                  onClick={handleVideoRetry}
+                  variant="outline"
+                  className="flex items-center gap-2"
+                  size="sm"
+                >
+                  <RefreshCw className="h-4 w-4" />
+                  Try Finding Video Again
+                </Button>
               </div>
             )}
             

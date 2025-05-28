@@ -9,7 +9,7 @@ import { Clock, Heart } from 'lucide-react';
 import { playSound } from '@/utils/soundEffects';
 
 const TimeAvailability = () => {
-  const { setTimeAvailable, timeAvailable, goToNextScreen, currentScreen, triggerCelebration } = useFlowContext();
+  const { setTimeAvailable, timeAvailable, goToNextScreen, goToScreen, currentScreen, triggerCelebration } = useFlowContext();
   
   const handleTimeSelect = (time: string) => {
     setTimeAvailable(time);
@@ -19,11 +19,16 @@ const TimeAvailability = () => {
     }, 300);
     playSound('click');
   };
+
+  const handlePrevious = () => {
+    goToScreen(5); // Go back to ConversationScreen
+    playSound('click');
+  };
   
   console.log('TimeAvailability rendering, currentScreen:', currentScreen);
 
-  // Don't render if we're not on screen 4
-  if (currentScreen !== 4) {
+  // Don't render if we're not on screen 6
+  if (currentScreen !== 6) {
     return null;
   }
   
@@ -81,7 +86,7 @@ const TimeAvailability = () => {
           ))}
         </div>
         
-        <div className="mt-auto pt-6">
+        <div className="mt-auto pt-6 space-y-3">
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -90,7 +95,7 @@ const TimeAvailability = () => {
           >
             <Button 
               onClick={() => {
-                console.log('TimeAvailability: Continue button clicked, moving from screen 4 to 5');
+                console.log('TimeAvailability: Continue button clicked, moving from screen 6 to 7');
                 goToNextScreen();
                 playSound('success');
               }}
@@ -102,6 +107,14 @@ const TimeAvailability = () => {
               <span className="absolute inset-0 bg-white/20 transform scale-x-0 group-hover:scale-x-100 group-active:scale-x-100 transition-transform origin-right duration-300"></span>
             </Button>
           </motion.div>
+          
+          <Button 
+            onClick={handlePrevious}
+            variant="outline"
+            className="w-full py-3 rounded-xl"
+          >
+            חזרה
+          </Button>
         </div>
       </div>
     </AnimatedCard>

@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { toast } from '@/hooks/use-toast';
 
@@ -40,7 +41,7 @@ interface FlowContextType {
 }
 
 export const FlowContext = createContext<FlowContextType>({
-  currentScreen: 2, // Start with EmotionalRatingNew screen instead of Conversation
+  currentScreen: 1, // Start with BouncinessScreen
   currentEmotionQuestion: 1,
   setCurrentEmotionQuestion: () => {},
   goToNextScreen: () => {},
@@ -71,8 +72,8 @@ export const FlowContext = createContext<FlowContextType>({
 export const useFlowContext = () => useContext(FlowContext);
 
 export const FlowProvider: React.FC<{children: React.ReactNode}> = ({ children }) => {
-  // Start at screen 2 (EmotionalRatingNew) instead of screen 1 (Conversation)
-  const [currentScreen, setCurrentScreen] = useState<number>(2);
+  // Start at screen 1 (BouncinessScreen)
+  const [currentScreen, setCurrentScreen] = useState<number>(1);
   const [currentEmotionQuestion, setCurrentEmotionQuestion] = useState<number>(1);
   const [freeTextEmotion, setFreeTextEmotion] = useState<string>('');
   const [emotionRatings, setEmotionRatings] = useState<EmotionRatings>({
@@ -101,8 +102,8 @@ export const FlowProvider: React.FC<{children: React.ReactNode}> = ({ children }
   
   const goToNextScreen = () => {
     console.log('Going to next screen from', currentScreen);
-    // Updated bounds: now goes from screen 2 to 5 (removed screen 1)
-    if (currentScreen >= 2 && currentScreen < 5) {
+    // New flow: screens 1-7 (Bounciness -> Energy -> Alertness -> Lightness -> Conversation -> Time -> Practice)
+    if (currentScreen >= 1 && currentScreen < 7) {
       const newScreen = currentScreen + 1;
       console.log(`Changing screen from ${currentScreen} to ${newScreen}`);
       
@@ -115,15 +116,15 @@ export const FlowProvider: React.FC<{children: React.ReactNode}> = ({ children }
       
       toast({
         title: 'מעבר לשלב הבא',
-        description: 'נתוני התחושה שלך נשמרו בהצלחה',
+        description: 'הנתונים שלך נשמרו בהצלחה',
       });
     }
   };
   
   // Add function to go to specific screen
   const goToScreen = (screen: number) => {
-    // Updated bounds: screens 2-5 are valid (removed screen 1)
-    if (screen >= 2 && screen <= 5) {
+    // New bounds: screens 1-7 are valid
+    if (screen >= 1 && screen <= 7) {
       console.log(`Navigating directly to screen ${screen}`);
       setCurrentScreen(screen);
     }

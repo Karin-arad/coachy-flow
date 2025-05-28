@@ -1,10 +1,13 @@
 
 import React, { useState, useEffect } from 'react';
 import { FlowProvider, useFlowContext } from '@/context/FlowContext';
-import EmotionalRatingNew from '@/components/EmotionalRatingNew';
+import BouncinessScreen from '@/components/BouncinessScreen';
+import EnergyScreen from '@/components/EnergyScreen';
+import AlertnessScreen from '@/components/AlertnessScreen';
+import LightnessScreen from '@/components/LightnessScreen';
+import ConversationScreen from '@/components/ConversationScreen';
 import TimeAvailability from '@/components/TimeAvailability';
 import PracticeSummary from '@/components/PracticeSummary';
-import WorkoutPreferences from '@/components/WorkoutPreferences';
 import ProgressBar from '@/components/ProgressBar';
 import CelebrationEffects from '@/components/CelebrationEffects';
 import InstallButton from '@/components/InstallButton';
@@ -30,18 +33,20 @@ const CoachyFlow = () => {
     console.log('Current screen in CoachyFlow:', currentScreen);
   }, [currentScreen]);
 
-  // Calculate current step based on screen number (adjusted for removed Conversation screen)
+  // Calculate current step based on screen number
   const getCurrentStepForProgressBar = () => {
     switch(currentScreen) {
-      case 2: return 1; // EmotionalRating (now first step)
-      case 3: return 2; // WorkoutPreferences
-      case 4: return 3; // TimeAvailability
-      case 5: return 4; // PracticeSummary
+      case 1: return 1; // BouncinessScreen
+      case 2: return 2; // EnergyScreen  
+      case 3: return 3; // AlertnessScreen
+      case 4: return 4; // LightnessScreen
+      case 5: return 5; // ConversationScreen
+      case 6: return 6; // TimeAvailability
+      case 7: return 7; // PracticeSummary
       default: return 1;
     }
   };
   
-  // Removed Conversation component from the rendering
   return (
     <div className="min-h-screen w-full flex flex-col bg-white overflow-auto">
       <CelebrationEffects 
@@ -73,13 +78,15 @@ const CoachyFlow = () => {
       
       <div className="flex-1 flex flex-col items-center justify-start px-6 py-6 w-full max-w-md mx-auto">
         <div className="w-full mb-6">
-          <ProgressBar currentStep={getCurrentStepForProgressBar()} totalSteps={4} />
+          <ProgressBar currentStep={getCurrentStepForProgressBar()} totalSteps={7} />
         </div>
         
         <div className="w-full flex-1 flex justify-center items-start min-h-[500px]">
-          {/* Removed Conversation component - now starting directly with EmotionalRatingNew */}
-          <EmotionalRatingNew />
-          <WorkoutPreferences />
+          <BouncinessScreen />
+          <EnergyScreen />
+          <AlertnessScreen />
+          <LightnessScreen />
+          <ConversationScreen />
           <TimeAvailability />
           <PracticeSummary />
         </div>

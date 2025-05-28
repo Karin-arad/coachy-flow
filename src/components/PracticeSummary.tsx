@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { useFlowContext } from '@/context/FlowContext';
 import AnimatedCard from './AnimatedCard';
+import YouTubeVideo from './YouTubeVideo';
 import { createWorkoutRequestPrompt } from '@/utils/inputUtils';
 import { askCoachyAI } from '@/utils/coachyService';
 import { Loader2, RefreshCw, AlertCircle } from 'lucide-react';
@@ -9,17 +10,19 @@ import { toast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 
 const PracticeSummary = () => {
-  const { currentScreen, emotionRatings, workoutPreferences, timeAvailable } = useFlowContext();
+  const { currentScreen, emotionRatings, userConversation, timeAvailable, goToScreen } = useFlowContext();
   const [isLoading, setIsLoading] = useState(false);
   const [workoutDescription, setWorkoutDescription] = useState<string | null>(null);
+  const [videoId, setVideoId] = useState<string | null>(null);
+  const [videoTitle, setVideoTitle] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
   const [retryCount, setRetryCount] = useState(0);
 
   useEffect(() => {
     console.log('PracticeSummary loaded, currentScreen:', currentScreen);
     // Only run this when the component becomes visible and we haven't tried too many times
-    if (currentScreen === 5 && !workoutDescription && !isLoading && retryCount < 3) {
-      console.log('Generating workout recommendation for screen 5');
+    if (currentScreen === 7 && !workoutDescription && !isLoading && retryCount < 3) {
+      console.log('Generating workout recommendation for screen 7');
       generateWorkoutRecommendation();
     }
   }, [currentScreen, retryCount]);
@@ -29,10 +32,10 @@ const PracticeSummary = () => {
       setIsLoading(true);
       setError(null);
       
-      // Create the prompt using our utility function
+      // Create the prompt using our utility function, now including user conversation
       const workoutRequestPrompt = createWorkoutRequestPrompt(
         emotionRatings,
-        workoutPreferences,
+        userConversation, // Use conversation instead of workoutPreferences
         timeAvailable
       );
       
@@ -49,6 +52,11 @@ const PracticeSummary = () => {
       console.log('✅ Received workout recommendation:', response);
       setWorkoutDescription(response);
       setRetryCount(0); // Reset retry count on success
+      
+      // For demo purposes, set a sample video
+      setVideoId('dQw4w9WgXcQ'); // Sample YouTube video ID
+      setVideoTitle('Sample Workout Video');
+      
     } catch (error) {
       console.error('❌ Error generating workout recommendation:', error);
       setRetryCount(prev => prev + 1);
@@ -58,6 +66,9 @@ const PracticeSummary = () => {
         const fallbackRecommendation = generateFallbackRecommendation();
         setWorkoutDescription(fallbackRecommendation);
         setError(null);
+        // Set fallback video
+        setVideoId('dQw4w9WgXcQ');
+        setVideoTitle('Fallback Workout Video');
         toast({
           title: "Using offline recommendation",
           description: "We've created a practice based on your preferences without AI assistance.",
@@ -101,8 +112,8 @@ const PracticeSummary = () => {
       recommendation += "• Emphasize relaxation and stress relief\n";
     }
     
-    if (workoutPreferences.trim()) {
-      recommendation += `\n💡 Personalized Notes:\nI've considered your preferences: "${workoutPreferences}"`;
+    if (userConversation.trim()) {
+      recommendation += `\n💡 Personalized Notes:\nI've considered your input: "${userConversation}"`;
     }
     
     recommendation += "\n\nRemember to listen to your body and modify as needed. You've got this! 💪";
@@ -115,8 +126,12 @@ const PracticeSummary = () => {
     generateWorkoutRecommendation();
   };
 
+  const handlePrevious = () => {
+    goToScreen(6); // Go back to TimeAvailability
+  };
+
   // Don't render if not on the correct screen
-  if (currentScreen !== 5) {
+  if (currentScreen !== 7) {
     return null;
   }
 
@@ -125,7 +140,7 @@ const PracticeSummary = () => {
       isVisible={true} 
       className="h-full w-full"
     >
-      <div className="h-full flex flex-col justify-center items-center p-4 text-center">
+      <div className="h-full flex flex-col justify-start items-center p-4 text-center overflow-y-auto">
         <h2 className="text-2xl font-semibold mb-4">Your Practice Summary</h2>
         
         {isLoading ? (
@@ -149,18 +164,28 @@ const PracticeSummary = () => {
             </Button>
           </div>
         ) : workoutDescription ? (
-          <div className="space-y-4 w-full">
+          <div className="space-y-4 w-full flex-1 overflow-y-auto">
             <div className="bg-white/80 rounded-xl p-5 shadow-sm border border-gray-100">
-              <p className="text-gray-700 text-left whitespace-pre-line">
+              <p className="text-gray-700 text-left whitespace-pre-line text-sm">
                 {workoutDescription}
               </p>
             </div>
 
-            <div className="mt-8">
-              <h3 className="text-lg font-medium mb-2">Recommended Video</h3>
-              <div className="w-full h-64 bg-gray-100 rounded-lg flex items-center justify-center">
-                <p className="text-gray-500">Video recommendation will appear here</p>
+            {videoId && (
+              <div className="mt-6">
+                <h3 className="text-lg font-medium mb-3">Your Workout Video</h3>
+                <YouTubeVideo videoId={videoId} title={videoTitle} />
               </div>
+            )}
+            
+            <div className="mt-6">
+              <Button 
+                onClick={handlePrevious}
+                variant="outline"
+                className="w-full py-3 rounded-xl"
+              >
+                חזרה
+              </Button>
             </div>
           </div>
         ) : (

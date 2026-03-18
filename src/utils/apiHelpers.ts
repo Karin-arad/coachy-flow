@@ -23,10 +23,7 @@ export const getYouTubeApiKey = (): string | null => {
     return API_KEYS.YOUTUBE;
   }
   
-  // Hard-coded API key for testing (only if no other key is available)
-  const hardcodedKey = "AIzaSyDoh8GzfYlcJseloPL4OprmlSJhg2fHLcA";
-  console.log('🔑 Using hardcoded YouTube API key');
-  return hardcodedKey;
+  return null;
 };
 
 /**
@@ -44,12 +41,6 @@ export const hasYouTubeApiKey = (): boolean => {
  * @returns אובייקט headers לשימוש בבקשות fetch
  */
 export const getYouTubeHeaders = (): HeadersInit => {
-  const apiKey = getYouTubeApiKey();
-  
-  if (!apiKey) {
-    throw new Error('API key is not set. Please set your YouTube API key first.');
-  }
-  
   return {
     'Content-Type': 'application/json'
   };

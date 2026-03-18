@@ -23,7 +23,10 @@ export const getYouTubeApiKey = (): string | null => {
     return API_KEYS.YOUTUBE;
   }
   
-  return null;
+  // Hard-coded API key for testing (only if no other key is available)
+  const hardcodedKey = "AIzaSyDoh8GzfYlcJseloPL4OprmlSJhg2fHLcA";
+  console.log('🔑 Using hardcoded YouTube API key');
+  return hardcodedKey;
 };
 
 /**

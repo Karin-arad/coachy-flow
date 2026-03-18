@@ -41,6 +41,12 @@ export const hasYouTubeApiKey = (): boolean => {
  * @returns אובייקט headers לשימוש בבקשות fetch
  */
 export const getYouTubeHeaders = (): HeadersInit => {
+  const apiKey = getYouTubeApiKey();
+  
+  if (!apiKey) {
+    throw new Error('API key is not set. Please set your YouTube API key first.');
+  }
+  
   return {
     'Content-Type': 'application/json'
   };

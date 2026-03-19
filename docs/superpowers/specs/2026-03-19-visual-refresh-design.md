@@ -12,21 +12,45 @@ People who want to work out but don't know what to do today. The app matches the
 
 **Warm & Friendly** - soft warm colors, rounded shapes, conversational tone. Approachable and fun, not intimidating. Think Duolingo meets wellness.
 
+## Screen-to-Component Mapping
+
+The app has **7 separate screens**, each rendered as its own component in `Index.tsx`:
+
+| Screen | Component | Description |
+|--------|-----------|-------------|
+| 1 | `BouncinessScreen.tsx` | Joy/positivity slider |
+| 2 | `EnergyScreen.tsx` | Energy level slider |
+| 3 | `AlertnessScreen.tsx` | Alertness slider |
+| 4 | `LightnessScreen.tsx` | Lightness/mood slider |
+| 5 | `ConversationScreen.tsx` | Free-text about practice intentions |
+| 6 | `TimeAvailability.tsx` | Duration selection |
+| 7 | `PracticeSummary.tsx` | Generated workout + video |
+
+Each emotion screen (1-4) is a separate screen with its own dot in the progress bar. They are NOT grouped into a single screen with sub-steps.
+
 ## Color Palette
 
-| Token | Hex | Usage |
-|-------|-----|-------|
-| `primary` | `#FF8C42` | CTAs, active states, slider fills, accent |
-| `primary-light` | `#FFD6A5` | Highlights, hover states, borders |
-| `background` | `#FFF5E9` | Main page background (cream) |
-| `surface` | `#FFFFFF` | Cards, modals, input backgrounds |
-| `text-primary` | `#2D2D2D` | Headlines, important text |
-| `text-secondary` | `#6B7280` | Body text, descriptions |
-| `border` | `#E5DDD5` | Inactive borders, dividers |
-| `success` | `#4CAF50` | Completion, positive states |
-| `energy` | `#FF6B6B` | High intensity indicator |
+**Integration approach:** The current project uses shadcn/ui's HSL CSS variable system (e.g., `--primary: 210 70% 58%` in `src/styles/base.css`, consumed as `hsl(var(--primary))` in `tailwind.config.ts`). We keep this architecture intact and convert all new hex values to HSL, updating the CSS variables in `base.css`. The shadcn/ui component system continues to work unchanged.
+
+| Token | Hex | HSL | Usage |
+|-------|-----|-----|-------|
+| `--primary` | `#FF8C42` | `24 100% 63%` | CTAs, active states, slider fills, accent. **Never used as text on white** (contrast 3.0:1 — passes for large text/UI components but not body text) |
+| `--primary-light` | `#FFD6A5` | `30 100% 83%` | Highlights, hover states, borders |
+| `--background` | `#FFF5E9` | `30 100% 95%` | Main page background (cream) |
+| `--surface` | `#FFFFFF` | `0 0% 100%` | Cards, modals, input backgrounds |
+| `--text-primary` | `#2D2D2D` | `0 0% 18%` | Headlines, important text |
+| `--text-secondary` | `#6B7280` | `220 9% 46%` | Body text, descriptions |
+| `--border` | `#E5DDD5` | `30 24% 87%` | Inactive borders, dividers. Note: overrides shadcn's default `--border` — this is intentional and will cascade to all shadcn components |
+| `--success` | `#4CAF50` | `122 39% 49%` | Completion, positive states |
+| `--energy` | `#FF6B6B` | `0 100% 71%` | High intensity indicator |
 
 Replaces the current blue (#3A78D4) / pink (#DE4A8F) / light-blue background (#D6E6F5) scheme.
+
+**Migration:** Remove the existing `coachy` color namespace (`coachy-pink`, `coachy-yellow`, `coachy-green`, `coachy-blue`, `coachy-lightBlue`, `coachy-gray`, `coachy-turquoise`, `coachy-text`, `coachy-red`) from `tailwind.config.ts`. Replace all `coachy-*` class usages in components with the new tokens above. Also remove the `backgroundImage` gradients (`sunrise-gradient`, `ocean-calm`, `full-spectrum`) and replace with warm equivalents where needed.
+
+**Accessibility:** `primary` (#FF8C42) on white has a 3.0:1 contrast ratio — sufficient for large text (18px+) and UI components per WCAG AA, but NOT for body text. All body text uses `text-primary` (#2D2D2D, 14.5:1) or `text-secondary` (#6B7280, 4.6:1 — passes AA). Orange is only used for buttons (white text on orange = 3.1:1, acceptable for large bold text), tags, and decorative elements.
+
+**Dark mode:** The current `base.css` has a `.dark` theme. Remove it entirely — dark mode is out of scope for this refresh. Can be re-added later with warm dark tones if desired.
 
 ## Typography
 
@@ -49,15 +73,18 @@ Replace the current rainbow gradient bar with **dot indicators**:
 - Upcoming: filled `border` color (#E5DDD5)
 - Centered horizontally at top of screen
 
-### Emotion Slider Screens (Bounciness, Energy, Alertness, Lightness)
+### Emotion Slider Screens (4 separate screens: Bounciness, Energy, Alertness, Lightness)
+
+Each of the 4 emotion screens (`BouncinessScreen`, `EnergyScreen`, `AlertnessScreen`, `LightnessScreen`) wraps a shared `QuestionCard` component. The visual changes apply to `QuestionCard` and propagate to all 4 screens:
 
 - White card on cream background, `border-radius: 20px`, subtle shadow (`0 4px 20px rgba(0,0,0,0.06)`)
 - Large emoji (56px) at top of card
 - Hebrew question as headline (24px bold)
 - Subtitle in secondary text
-- Custom styled slider: orange gradient track (`primary-light` to `primary`), white thumb with orange border and shadow
+- **Custom styled slider:** Orange gradient track (`primary-light` to `primary`), white thumb (24px) with orange border (3px) and shadow. Built with touch events for consistent cross-browser behavior. Drag sensitivity: 1:1 with finger movement. No snap points — continuous value. Emoji at top of card scales subtly (1.0→1.1) based on slider value.
 - Labels at slider ends with emojis
 - Card centered with 20px horizontal padding
+- Related components to update: `EmotionParameterCard.tsx`, `EmotionQuestionCard.tsx`, `EmotionalRating.tsx`, `EmotionalRatingNew.tsx`, `EmotionAnimation.tsx`, `EmotionalPrompt.tsx`
 
 ### Navigation Buttons
 
@@ -127,7 +154,7 @@ Keep confetti but change color palette to warm tones: orange, peach, gold, coral
 
 ## iOS / Safari Fixes
 
-1. **Replace `100vh` with `100dvh`** everywhere - fixes iOS address bar viewport issues
+1. **Replace `100vh` with `100dvh`** everywhere - fixes iOS address bar viewport issues. Use fallback pattern: `min-height: 100vh; min-height: 100dvh;` for older browser support
 2. **Remove all iOS-specific CSS hacks** (ios-card-fix, ios-conversation-fix, ios-textarea-fix classes) - clean slate
 3. **Add `touch-action: manipulation`** on interactive elements - prevents 300ms tap delay
 4. **Custom slider component** - replace native `<input type="range">` with touch-event-based slider for consistent cross-browser appearance
@@ -152,28 +179,64 @@ All animations keep the existing Framer Motion setup but refine the values:
 ## Files to Modify
 
 ### Styling
-- `tailwind.config.ts` - Replace color tokens with new palette
-- `harmonized-theme.json` - Update to new warm palette
+- `tailwind.config.ts` - Convert color tokens to new palette HSL values, remove `coachy` namespace, replace `backgroundImage` gradients
+- `harmonized-theme.json` - Update all color values to match new warm palette. This file stores design tokens used as reference — update primary, complementary, neutral, and gradient definitions.
 - `src/App.css` - Simplify, remove iOS hacks
-- `src/styles/*.css` - Rewrite with mobile-first approach, remove iOS workarounds
+- `src/styles/base.css` - Update CSS variables (`--primary`, `--border`, etc.) to new HSL values, remove `.dark` theme block
+- `src/styles/animations.css` - Keep, update any color references to new palette
+- `src/styles/layout.css` - Rewrite with mobile-first approach, remove iOS workarounds
+- `src/styles/index.css` - Update imports, clean up
+- `src/styles/timeOptions.css` - Remove (replaced by Tailwind classes in redesigned grid component)
+- `src/styles/utilities.css` - Keep, update color references
 
-### Components
+### Screen Components (rendered in Index.tsx)
+- `src/components/BouncinessScreen.tsx` - Update to new warm styling
+- `src/components/EnergyScreen.tsx` - Update to new warm styling
+- `src/components/AlertnessScreen.tsx` - Update to new warm styling
+- `src/components/LightnessScreen.tsx` - Update to new warm styling
+- `src/components/ConversationScreen.tsx` - Chat-like redesign
+- `src/components/TimeAvailability.tsx` - Grid layout redesign
+- `src/components/PracticeSummary.tsx` - New workout result card
+
+### Shared Components
 - `src/components/ProgressBar.tsx` - Dot indicators
 - `src/components/QuestionCard.tsx` - New card design with warm styling
 - `src/components/NavigationButtons.tsx` - New button styles
-- `src/components/ConversationScreen.tsx` - Chat-like redesign
-- `src/components/conversation/*.tsx` - Header, textarea, actions redesign
-- `src/components/TimeAvailability.tsx` (or `TimeOption.tsx`) - Grid layout
-- `src/components/PracticeSummary.tsx` - New workout result card
-- `src/components/practice/*.tsx` - Loading, error, workout display, video section
 - `src/components/AnimatedCard.tsx` - Updated animation values
 - `src/components/CelebrationEffects.tsx` - Warm color confetti
 - `src/components/YouTubeVideo.tsx` - Thumbnail preview before play
-- `src/components/EmotionalRating.tsx` / `EmotionalRatingNew.tsx` - Custom slider
+- `src/components/VideoPlayerWithControls.tsx` - Update styling to match new design
+- `src/components/InstallButton.tsx` - Update visual styling
+- `src/components/StepIndicator.tsx` - May be removed or merged into new dot progress bar
+- `src/components/TimeOption.tsx` - Redesign as grid card
+
+### Emotion-related Components
+- `src/components/EmotionalRating.tsx` - Custom slider with touch events
+- `src/components/EmotionalRatingNew.tsx` - Custom slider with touch events
+- `src/components/EmotionParameterCard.tsx` - Update card styling
+- `src/components/EmotionQuestionCard.tsx` - Update card styling
+- `src/components/EmotionAnimation.tsx` - Update colors/animations
+- `src/components/EmotionalPrompt.tsx` - Update styling
+
+### Conversation Sub-components
+- `src/components/conversation/ConversationHeader.tsx` - Redesign
+- `src/components/conversation/ConversationTextarea.tsx` - Chat-like input with quick-pick tags
+- `src/components/conversation/ConversationActions.tsx` - Redesign actions
+
+### Practice Sub-components
+- `src/components/practice/LoadingState.tsx` - Pulsing orange dots
+- `src/components/practice/ErrorState.tsx` - Warm error styling
+- `src/components/practice/WorkoutDisplay.tsx` - Rich workout card with tags
+- `src/components/practice/VideoSection.tsx` - Thumbnail preview
+
+### Components to Consider Removing
+- `src/components/IOSDebugInfo.tsx` - Debug overlay, remove from production
+- `src/components/WorkoutPreferences.tsx` - Evaluate if still used, update or remove
 
 ### Layout
+- `src/pages/Index.tsx` - Responsive container wrapper
 - `src/App.tsx` - Responsive container wrapper
-- `index.html` - Update theme-color meta tag to warm palette
+- `index.html` - Update theme-color meta tag to `#FFF5E9`
 
 ## Out of Scope
 

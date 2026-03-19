@@ -11,6 +11,8 @@ interface CelebrationEffectsProps {
   duration?: number;
 }
 
+const warmColors = ['#FF8C42', '#FFD6A5', '#FF6B6B', '#FFD700'];
+
 const CelebrationEffects: React.FC<CelebrationEffectsProps> = ({ effectType, active, duration = 1500 }) => {
   const [showEffect, setShowEffect] = useState(false);
   
@@ -33,13 +35,13 @@ const CelebrationEffects: React.FC<CelebrationEffectsProps> = ({ effectType, act
     switch (effectType) {
       case 'confetti':
         setShowEffect(true);
-        
+
         // Simplified confetti burst
         confetti({
           particleCount: 80, // Reduced from 150
           spread: 60, // Reduced from 100
           origin: { y: 0.5, x: 0.5 },
-          colors: ['#FF8DC7', '#5B9BD5', '#4ECDC4', '#FFD166']
+          colors: warmColors
         });
         break;
         
@@ -49,7 +51,7 @@ const CelebrationEffects: React.FC<CelebrationEffectsProps> = ({ effectType, act
           particleCount: 100, // Reduced from 200
           spread: 70, // Reduced from 100
           origin: { y: 0.6, x: 0.5 },
-          colors: ['#FF8DC7', '#5B9BD5', '#4ECDC4', '#FFD166']
+          colors: warmColors
         });
         break;
         
@@ -59,7 +61,7 @@ const CelebrationEffects: React.FC<CelebrationEffectsProps> = ({ effectType, act
           particleCount: 40, // Reduced from 80
           spread: 180, // Reduced from 360
           shapes: ['star'],
-          colors: ['#FFE400', '#FFBD00', '#E89400'],
+          colors: warmColors,
           origin: { y: 0.5, x: 0.5 }
         });
         break;
@@ -118,10 +120,10 @@ const CelebrationEffects: React.FC<CelebrationEffectsProps> = ({ effectType, act
       const particleCount = 40 * (timeLeft / duration); // Reduced from 80
       
       // Shoot fireworks from random positions
-      confetti(Object.assign({}, defaults, { 
-        particleCount, 
+      confetti(Object.assign({}, defaults, {
+        particleCount,
         origin: { x: Math.random(), y: Math.random() - 0.2 },
-        colors: ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff']
+        colors: warmColors
       }));
     }, 250); // Reduced frequency
   };
@@ -135,7 +137,7 @@ const CelebrationEffects: React.FC<CelebrationEffectsProps> = ({ effectType, act
           gravity={0.3} // Increased for faster falling
           width={window.innerWidth}
           height={window.innerHeight}
-          colors={['#FF8DC7', '#5B9BD5', '#4ECDC4', '#FFD166', '#FC9E4F']} // Fewer colors
+          colors={warmColors}
           confettiSource={{
             x: 0,
             y: 0,

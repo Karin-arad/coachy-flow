@@ -38,13 +38,7 @@ const EmotionQuestionCard: React.FC<EmotionQuestionCardProps> = ({
   maxValue
 }) => {
   const getGradientColor = () => {
-    switch (emotionType) {
-      case 'energy': return 'from-coachy-yellow to-coachy-pink';
-      case 'bounciness': return 'from-coachy-pink to-coachy-blue';
-      case 'alertness': return 'from-coachy-blue to-coachy-green';
-      case 'lightness': return 'from-coachy-green to-coachy-yellow';
-      default: return 'from-coachy-blue to-coachy-green';
-    }
+    return 'from-[hsl(var(--primary))] to-[hsl(var(--primary-light))]';
   };
 
   return (
@@ -59,8 +53,8 @@ const EmotionQuestionCard: React.FC<EmotionQuestionCardProps> = ({
           </div>
         </div>
         
-        <motion.div 
-          className="w-full bg-gray-100 h-1 rounded-full overflow-hidden"
+        <motion.div
+          className="w-full bg-[hsl(var(--muted))] h-1 rounded-full overflow-hidden"
           initial={{ width: '0%' }}
           animate={{ width: '100%' }}
           transition={{ duration: 0.5 }}
@@ -105,7 +99,7 @@ const EmotionQuestionCard: React.FC<EmotionQuestionCardProps> = ({
             emotionType={emotionType}
           />
           
-          <div className="flex justify-between text-xs text-gray-500">
+          <div className="flex justify-between text-xs text-[hsl(var(--muted-foreground))]">
             <span>גבוה</span>
             <span>נמוך</span>
           </div>
@@ -120,7 +114,7 @@ const EmotionQuestionCard: React.FC<EmotionQuestionCardProps> = ({
         </div>
       </div>
 
-      <div className="mt-auto pt-3 border-t border-gray-100">
+      <div className="mt-auto pt-3 border-t border-[hsl(var(--border))]">
         <div className="flex justify-between items-center">
           {showPrevious ? (
             <Button
@@ -147,7 +141,7 @@ const EmotionQuestionCard: React.FC<EmotionQuestionCardProps> = ({
                   "h-1.5 transition-all duration-300",
                   i === step - 1 ? 
                     cn("w-4 rounded-full bg-gradient-to-r", getGradientColor()) : 
-                    "w-1.5 rounded-full bg-gray-200"
+                    "w-1.5 rounded-full bg-[hsl(var(--muted))]"
                 )}
               />
             ))}

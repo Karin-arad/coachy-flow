@@ -32,7 +32,7 @@ const EmotionalRating = () => {
       id: 'bounciness', 
       label: 'קופצנות', 
       question: 'כמה קופצנית את מרגישה?', 
-      icon: <Feather className="text-coachy-pink animate-float" size={16} />,
+      icon: <Feather className="text-[hsl(var(--primary))] animate-float" size={16} />,
       type: 'bounciness' as const,
       scaleLabels: {
         min: 'כלל לא קופצנית',
@@ -43,7 +43,7 @@ const EmotionalRating = () => {
       id: 'energy', 
       label: 'אנרגיה', 
       question: 'מה רמת האנרגיה שלך?', 
-      icon: <Zap className="text-coachy-yellow animate-pulse-gentle" size={16} />,
+      icon: <Zap className="text-[hsl(var(--primary))] animate-pulse-gentle" size={16} />,
       type: 'energy' as const,
       scaleLabels: {
         min: 'חסר אנרגיה',
@@ -54,7 +54,7 @@ const EmotionalRating = () => {
       id: 'alertness', 
       label: 'ערנות', 
       question: 'כמה ערנית את מרגישה?', 
-      icon: <Eye className="text-coachy-blue animate-pulse-gentle" size={16} />,
+      icon: <Eye className="text-[hsl(var(--primary))] animate-pulse-gentle" size={16} />,
       type: 'alertness' as const,
       scaleLabels: {
         min: 'מאוד עייפה',
@@ -65,7 +65,7 @@ const EmotionalRating = () => {
       id: 'lightness', 
       label: 'קלילות', 
       question: 'מה תחושת הקלילות שלך?', 
-      icon: <Feather className="text-coachy-turquoise animate-float" size={16} />,
+      icon: <Feather className="text-[hsl(var(--primary-light))] animate-float" size={16} />,
       type: 'lightness' as const,
       scaleLabels: {
         min: 'לא קליל כלל',

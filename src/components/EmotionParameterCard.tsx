@@ -39,26 +39,14 @@ const EmotionParameterCard = ({
     )}>
       <div className="flex items-center gap-2">
         {icon}
-        <div className={cn(
-          "text-base font-semibold bg-gradient-to-r bg-clip-text text-transparent",
-          id === 'bounciness' && "from-coachy-pink to-pink-600",
-          id === 'energy' && "from-coachy-yellow to-amber-500",
-          id === 'alertness' && "from-coachy-blue to-indigo-600",
-          id === 'lightness' && "from-coachy-turquoise to-teal-600"
-        )}>
+        <div className="text-base font-semibold text-[hsl(var(--foreground))]">
           {question}
         </div>
       </div>
 
       <div className="flex justify-between items-center">
-        <div className="text-xs text-coachy-text font-medium">{label}</div>
-        <div className={cn(
-          "text-xl font-bold bg-gradient-to-r bg-clip-text text-transparent",
-          id === 'bounciness' && "from-coachy-pink to-pink-600",
-          id === 'energy' && "from-coachy-yellow to-amber-500",
-          id === 'alertness' && "from-coachy-blue to-indigo-600",
-          id === 'lightness' && "from-coachy-turquoise to-teal-600"
-        )}>
+        <div className="text-xs text-[hsl(var(--muted-foreground))] font-medium">{label}</div>
+        <div className="text-xl font-bold text-[hsl(var(--primary))]">
           {value}
         </div>
       </div>

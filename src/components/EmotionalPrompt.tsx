@@ -80,13 +80,13 @@ const EmotionalPrompt = () => {
             whileHover={{ scale: 1.03 }}
           >
             <span className={`${isMobile ? 'text-base' : 'text-lg'} font-black text-gray-500`}>{greeting}</span>
-            <Heart className="fill-coachy-red stroke-coachy-red animate-pulse-gentle mr-1" size={isMobile ? 16 : 18} />
+            <Heart className="fill-[hsl(var(--primary))] stroke-[hsl(var(--primary))] animate-pulse-gentle mr-1" size={isMobile ? 16 : 18} />
             <TimeIcon className="text-amber-500 ml-1 animate-[spin_30s_linear_infinite]" size={isMobile ? 12 : 14} />
           </motion.div>
         </motion.div>
         
         <motion.h2 
-          className={`${isMobile ? 'text-base' : 'text-lg'} font-black text-coachy-blue mb-2 bg-gradient-to-r from-coachy-blue to-indigo-600 bg-clip-text text-transparent heading`}
+          className={`${isMobile ? 'text-base' : 'text-lg'} font-black mb-2 bg-gradient-to-r from-[hsl(var(--primary))] to-[hsl(var(--primary-light))] bg-clip-text text-transparent heading`}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2, duration: 0.5 }}
@@ -108,7 +108,7 @@ const EmotionalPrompt = () => {
                 if (hasSubmitted) setHasSubmitted(false);
               }}
               placeholder="רשום/רשמי את הרגשות שלך בחופשיות..."
-              className={`min-h-[60px] sm:min-h-[80px] max-h-[80px] sm:max-h-[100px] text-right border-coachy-lightBlue focus:border-coachy-blue resize-none bg-white/80 backdrop-blur-sm rounded-xl p-3 shadow-md transition-all duration-300 focus:ring-2 focus:ring-coachy-blue/30 focus:shadow-lg user-text ${isMobile ? 'text-xs' : 'text-sm'}`}
+              className={`min-h-[60px] sm:min-h-[80px] max-h-[80px] sm:max-h-[100px] text-right border-[hsl(var(--border))] focus:border-[hsl(var(--primary))] resize-none bg-white/80 backdrop-blur-sm rounded-xl p-3 shadow-md transition-all duration-300 focus:ring-2 focus:ring-[hsl(var(--primary))]/30 focus:shadow-lg user-text ${isMobile ? 'text-xs' : 'text-sm'}`}
               dir="rtl"
               lang="he"
               autoFocus
@@ -131,11 +131,11 @@ const EmotionalPrompt = () => {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.5 }}
-            className="bg-white/80 backdrop-blur-sm rounded-xl p-3 shadow-md border-2 border-coachy-blue/30"
+            className="bg-white/80 backdrop-blur-sm rounded-xl p-3 shadow-md border-2 border-[hsl(var(--primary))]/30"
           >
             <div className="flex items-center gap-2 text-gray-700">
               <Sparkles className="text-amber-500" size={isMobile ? 14 : 16} />
-              <p className={`text-right ${isMobile ? 'text-xs' : 'text-sm'} text-coachy-blue font-medium`}>
+              <p className={`text-right ${isMobile ? 'text-xs' : 'text-sm'} text-[hsl(var(--foreground))] font-medium`}>
                 {encouragingResponse}
               </p>
             </div>

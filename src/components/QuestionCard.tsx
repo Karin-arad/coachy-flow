@@ -2,9 +2,7 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { Slider } from '@/components/ui/slider';
-import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface QuestionCardProps {
   title: string;
@@ -20,12 +18,12 @@ interface QuestionCardProps {
   showPrevious?: boolean;
 }
 
-const QuestionCard = ({ 
-  title, 
-  emojiIcon = "✨", 
-  currentValue, 
-  onChange, 
-  onNext, 
+const QuestionCard = ({
+  title,
+  emojiIcon = "✨",
+  currentValue,
+  onChange,
+  onNext,
   onPrevious,
   currentStep,
   totalSteps,
@@ -33,45 +31,28 @@ const QuestionCard = ({
   className,
   showPrevious = true
 }: QuestionCardProps) => {
-  
-  // Generate dots for step indicator
-  const dots = Array.from({ length: totalSteps }, (_, i) => (
-    <div 
-      key={i} 
-      className={cn(
-        'w-2 h-2 rounded-full transition-all duration-300',
-        i < currentStep ? 'bg-coachy-blue' : 'bg-gray-200'
-      )}
-    />
-  ));
-  
   return (
-    <div className={cn('coachy-card h-full flex flex-col', className)}>
-      <div className="flex flex-col items-center justify-center flex-1 gap-4">
+    <div className={cn('bg-white rounded-[20px] p-6 shadow-[0_4px_20px_rgba(0,0,0,0.06)] flex flex-col', className)}>
+      <div className="flex flex-col items-center gap-4">
         <motion.div
-          className="text-6xl mb-2"
+          className="text-[56px] text-center"
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.3 }}
         >
           {emojiIcon}
         </motion.div>
-        
+
         <motion.h3
-          className="text-lg font-medium mb-6"
+          className="text-2xl font-bold text-[hsl(var(--foreground))] text-center mb-4"
           initial={{ y: -10, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.1, duration: 0.3 }}
         >
           {title}
         </motion.h3>
-        
-        <div className="w-full px-4 relative mb-4">
-          <div className="flex justify-between mb-1 text-xs text-gray-500 px-2">
-            <span>גבוה</span>
-            <span>{currentValue}</span>
-            <span>נמוך</span>
-          </div>
+
+        <div className="w-full px-2 relative mb-2">
           <Slider
             dir="rtl"
             value={[currentValue]}
@@ -82,36 +63,10 @@ const QuestionCard = ({
             emotionType={emotionType}
             className="w-full"
           />
-        </div>
-      </div>
-      
-      <div className="mt-auto pt-4 border-t border-gray-100">
-        <div className="flex items-center justify-between">
-          {showPrevious ? (
-            <Button 
-              variant="ghost" 
-              onClick={onPrevious}
-              className="text-gray-500 hover:text-gray-700"
-            >
-              <ChevronRight className="mr-1 h-4 w-4" />
-              הקודם
-            </Button>
-          ) : (
-            <div />
-          )}
-          
-          <div className="flex gap-1">
-            {dots}
+          <div className="flex justify-between mt-2 px-1">
+            <span className="text-sm text-muted-foreground">😊</span>
+            <span className="text-sm text-muted-foreground">😔</span>
           </div>
-          
-          <Button 
-            variant="ghost" 
-            onClick={onNext}
-            className="text-coachy-blue hover:text-coachy-blue/80"
-          >
-            הבא
-            <ChevronLeft className="ml-1 h-4 w-4" />
-          </Button>
         </div>
       </div>
     </div>

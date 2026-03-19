@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Button } from '@/components/ui/button';
+import { motion } from 'framer-motion';
 import { ChevronRight, ChevronLeft } from 'lucide-react';
 
 interface NavigationButtonsProps {
@@ -8,49 +8,42 @@ interface NavigationButtonsProps {
   onPrevious: () => void;
   isLastStep: boolean;
   isPreviousDisabled: boolean;
-  isLastSlider?: boolean; // Added this prop to the interface
+  isLastSlider?: boolean;
 }
 
-const NavigationButtons = ({ 
-  onNext, 
-  onPrevious, 
-  isLastStep, 
+const NavigationButtons = ({
+  onNext,
+  onPrevious,
+  isLastStep,
   isPreviousDisabled,
   isLastSlider
 }: NavigationButtonsProps) => {
   return (
-    <div className="flex justify-between mt-2">
-      <Button
-        variant="outline"
-        size="sm"
+    <div className="flex gap-3 mt-2">
+      <motion.button
+        whileTap={{ scale: 0.97 }}
         onClick={onPrevious}
         disabled={isPreviousDisabled}
-        className="flex items-center gap-1 text-xs h-8"
+        className="flex-1 py-3.5 rounded-[14px] border-[1.5px] border-[hsl(var(--border))] bg-white text-[hsl(var(--muted-foreground))] font-medium text-[15px] flex items-center justify-center gap-1 disabled:opacity-40 disabled:cursor-not-allowed"
       >
-        <ChevronRight size={14} />
+        <ChevronRight size={16} />
         <span>הקודם</span>
-      </Button>
-      
-      {isLastStep ? (
-        <Button 
-          onClick={onNext}
-          variant="energetic"
-          className="text-white px-4 py-1 transition-all duration-300 transform hover:scale-105 active:scale-95 rounded-xl shadow-sm hover:shadow-md hover:brightness-105 relative overflow-hidden group text-xs h-8"
-        >
-          <span className="relative z-10">יאללה, נמשיך</span>
-          <span className="absolute inset-0 bg-white/20 transform scale-x-0 group-hover:scale-x-100 group-active:scale-x-100 transition-transform origin-right duration-300"></span>
-        </Button>
-      ) : (
-        <Button
-          variant="joyful"
-          size="sm"
-          onClick={onNext}
-          className="flex items-center gap-1 text-xs h-8"
-        >
-          <span>הבא</span>
-          <ChevronLeft size={14} />
-        </Button>
-      )}
+      </motion.button>
+
+      <motion.button
+        whileTap={{ scale: 0.97 }}
+        onClick={onNext}
+        className="flex-[2] py-3.5 rounded-[14px] bg-[hsl(var(--primary))] text-white font-semibold text-base shadow-[0_4px_12px_rgba(255,140,66,0.3)] flex items-center justify-center gap-1"
+      >
+        {isLastStep ? (
+          <span>יאללה, נמשיך</span>
+        ) : (
+          <>
+            <span>הבא</span>
+            <ChevronLeft size={16} />
+          </>
+        )}
+      </motion.button>
     </div>
   );
 };

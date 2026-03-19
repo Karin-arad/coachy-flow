@@ -3,6 +3,7 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 import { Slider } from '@/components/ui/slider';
 import { motion } from 'framer-motion';
+import NavigationButtons from './NavigationButtons';
 
 interface QuestionCardProps {
   title: string;
@@ -18,6 +19,13 @@ interface QuestionCardProps {
   showPrevious?: boolean;
 }
 
+const sliderLabels: Record<string, { high: string; low: string }> = {
+  bounciness: { high: '🌟 שמחה גבוהה', low: '😔 שמחה נמוכה' },
+  energy: { high: '⚡ הרבה אנרגיה', low: '🔋 מעט אנרגיה' },
+  alertness: { high: '👁️ עירני מאוד', low: '😴 עייף/ה' },
+  lightness: { high: '🍃 קל/ה', low: '🪨 כבד/ה' },
+};
+
 const QuestionCard = ({
   title,
   emojiIcon = "✨",
@@ -31,6 +39,8 @@ const QuestionCard = ({
   className,
   showPrevious = true
 }: QuestionCardProps) => {
+  const labels = emotionType ? sliderLabels[emotionType] : { high: '😊 גבוה', low: '😔 נמוך' };
+
   return (
     <div className={cn('bg-white rounded-[20px] p-6 shadow-[0_4px_20px_rgba(0,0,0,0.06)] flex flex-col', className)}>
       <div className="flex flex-col items-center gap-4">
@@ -63,12 +73,26 @@ const QuestionCard = ({
             emotionType={emotionType}
             className="w-full"
           />
-          <div className="flex justify-between mt-2 px-1">
-            <span className="text-sm text-muted-foreground">😊</span>
-            <span className="text-sm text-muted-foreground">😔</span>
+          <div className="flex justify-between mt-3 px-1">
+            <span className="text-xs text-[hsl(var(--muted-foreground))]">{labels.high}</span>
+            <span className="text-xs text-[hsl(var(--muted-foreground))]">{labels.low}</span>
           </div>
         </div>
+
+        <div className="text-center text-lg font-semibold text-[hsl(var(--primary))]">
+          {currentValue} / 10
+        </div>
       </div>
+
+      {onNext && (
+        <NavigationButtons
+          onNext={onNext}
+          onPrevious={onPrevious || (() => {})}
+          isLastStep={currentStep === totalSteps}
+          isPreviousDisabled={!showPrevious}
+          isLastSlider={currentStep === totalSteps}
+        />
+      )}
     </div>
   );
 };

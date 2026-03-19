@@ -3,14 +3,13 @@ import React from 'react';
 import { useFlowContext } from '@/context/FlowContext';
 import AnimatedCard from './AnimatedCard';
 import { motion } from 'framer-motion';
-import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { Clock, Heart } from 'lucide-react';
 import { playSound } from '@/utils/soundEffects';
+import TimeOption from './TimeOption';
 
 const TimeAvailability = () => {
   const { setTimeAvailable, timeAvailable, goToNextScreen, goToScreen, currentScreen, triggerCelebration } = useFlowContext();
-  
+
   const handleTimeSelect = (time: string) => {
     setTimeAvailable(time);
     setTimeout(() => {
@@ -21,81 +20,64 @@ const TimeAvailability = () => {
   };
 
   const handlePrevious = () => {
-    goToScreen(5); // Go back to ConversationScreen
+    goToScreen(5);
     playSound('click');
   };
-  
-  console.log('TimeAvailability rendering, currentScreen:', currentScreen);
 
   // Don't render if we're not on screen 6
   if (currentScreen !== 6) {
     return null;
   }
-  
-  const timeOptions = [
-    { value: '10 דקות', icon: '⏱️', description: 'אימון קצר' },
-    { value: '20 דקות', icon: '⏱️', description: 'אימון בינוני' },
-    { value: '30 דקות', icon: '⏱️', description: 'אימון ארוך' },
-    { value: '45 דקות', icon: '⏱️', description: 'אימון מלא' },
-  ];
+
+  const timeOptions = ['10', '20', '30', '45'];
 
   return (
-    <AnimatedCard 
+    <AnimatedCard
       isVisible={true}
       className="h-full w-full"
     >
-      <div className="space-y-4 flex flex-col text-sm h-full">
-        <motion.h2 
+      <div className="flex flex-col h-full gap-4">
+        <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2, duration: 0.5 }}
-          className="text-lg font-medium mb-4 flex items-center gap-2"
+          className="text-center"
         >
-          <span>כמה זמן יש לך כרגע?</span>
-          <Clock className="text-coachy-blue animate-spin-slow" size={16} />
-          <Heart className="fill-coachy-pink stroke-coachy-pink animate-pulse-gentle" size={16} />
-        </motion.h2>
-        
-        <div className="grid grid-cols-2 gap-3 justify-items-center flex-1">
-          {timeOptions.map((option, index) => (
-            <motion.button
-              key={option.value}
+          <div className="text-[48px] leading-none mb-3">⏰</div>
+          <h2 className="text-2xl font-bold text-[hsl(var(--foreground))]">כמה זמן יש לך?</h2>
+          <p className="text-[15px] text-[hsl(var(--muted-foreground))] mt-1">בחר את משך האימון המתאים לך</p>
+        </motion.div>
+
+        <div className="grid grid-cols-2 gap-3 flex-1">
+          {timeOptions.map((minutes, index) => (
+            <motion.div
+              key={minutes}
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ 
+              transition={{
                 delay: 0.1 * (index + 1),
-                type: "spring",
+                type: 'spring',
                 stiffness: 400,
-                damping: 17
+                damping: 17,
               }}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.97 }}
-              onClick={() => handleTimeSelect(option.value)}
-              className={cn(
-                'w-full h-32 rounded-xl transition-all duration-300 flex flex-col items-center justify-center gap-1',
-                'border-2',
-                timeAvailable === option.value 
-                  ? 'coachy-rainbow-gradient text-white shadow-md scale-105'
-                  : 'bg-white border-gray-200 text-gray-700'
-              )}
             >
-              <span className="text-2xl mb-1">{option.icon}</span>
-              <span className="font-medium">{option.value}</span>
-              <span className="text-xs opacity-80">{option.description}</span>
-            </motion.button>
+              <TimeOption
+                minutes={minutes}
+                isSelected={timeAvailable === minutes}
+                onSelect={() => handleTimeSelect(minutes)}
+              />
+            </motion.div>
           ))}
         </div>
-        
-        <div className="mt-auto pt-6 space-y-3">
+
+        <div className="mt-auto pt-2 space-y-3">
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6, duration: 0.5 }}
-            className="flex justify-center"
           >
-            <Button 
+            <Button
               onClick={() => {
-                console.log('TimeAvailability: Continue button clicked, moving from screen 6 to 7');
                 goToNextScreen();
                 playSound('success');
               }}
@@ -107,8 +89,8 @@ const TimeAvailability = () => {
               <span className="absolute inset-0 bg-white/20 transform scale-x-0 group-hover:scale-x-100 group-active:scale-x-100 transition-transform origin-right duration-300"></span>
             </Button>
           </motion.div>
-          
-          <Button 
+
+          <Button
             onClick={handlePrevious}
             variant="outline"
             className="w-full py-3 rounded-xl"

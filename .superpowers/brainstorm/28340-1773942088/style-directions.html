@@ -1,0 +1,54 @@
+<h2>Which design style feels right for Coachy?</h2>
+<p class="subtitle">Pick the direction that matches the vibe you want for the app</p>
+
+<div class="cards">
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding: 24px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; min-height: 200px; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 12px;">
+      <div style="font-size: 48px;">&#x1F3CB;&#xFE0F;</div>
+      <div style="font-size: 22px; font-weight: 700; letter-spacing: -0.5px;">Today's Workout</div>
+      <div style="background: rgba(255,255,255,0.2); border-radius: 20px; padding: 8px 20px; font-size: 14px;">How are you feeling?</div>
+      <div style="display: flex; gap: 8px; margin-top: 8px;">
+        <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.3); display: flex; align-items: center; justify-content: center;">&#x1F60A;</div>
+        <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.3); display: flex; align-items: center; justify-content: center;">&#x1F525;</div>
+        <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.3); display: flex; align-items: center; justify-content: center;">&#x26A1;</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A. Bold & Energetic</h3>
+      <p>Vibrant gradients, strong colors, big typography. Feels like a fitness app - Nike Training Club vibes. Motivational and punchy.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding: 24px; background: #FAFAF9; color: #1a1a1a; min-height: 200px; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 12px; border-bottom: 1px solid #e5e5e5;">
+      <div style="font-size: 14px; text-transform: uppercase; letter-spacing: 2px; color: #888;">How are you feeling?</div>
+      <div style="font-size: 28px; font-weight: 300; letter-spacing: -0.5px;">Find Your Workout</div>
+      <div style="width: 200px; height: 4px; background: #e5e5e5; border-radius: 2px; margin-top: 8px;">
+        <div style="width: 60%; height: 100%; background: #1a1a1a; border-radius: 2px;"></div>
+      </div>
+      <div style="display: flex; gap: 16px; margin-top: 12px; font-size: 13px; color: #666;">
+        <span>Low</span><span>Medium</span><span>High</span>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B. Minimal & Clean</h3>
+      <p>Lots of white space, subtle typography, neutral palette. Feels premium and calm - like Headspace or Apple Fitness. Elegant and modern.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding: 24px; background: linear-gradient(180deg, #FFF5E9 0%, #FFE8D6 100%); color: #2d2d2d; min-height: 200px; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 12px;">
+      <div style="font-size: 48px;">&#x2728;</div>
+      <div style="font-size: 24px; font-weight: 600;">Hey, how's your energy?</div>
+      <div style="display: flex; gap: 10px; margin-top: 8px;">
+        <div style="padding: 10px 18px; border-radius: 16px; background: white; box-shadow: 0 2px 8px rgba(0,0,0,0.08); font-size: 14px;">&#x1F34B; Chill</div>
+        <div style="padding: 10px 18px; border-radius: 16px; background: #FF8C42; color: white; box-shadow: 0 2px 8px rgba(255,140,66,0.3); font-size: 14px;">&#x1F525; Fired up</div>
+        <div style="padding: 10px 18px; border-radius: 16px; background: white; box-shadow: 0 2px 8px rgba(0,0,0,0.08); font-size: 14px;">&#x26A1; Medium</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C. Warm & Friendly</h3>
+      <p>Soft warm colors, rounded shapes, conversational tone. Feels approachable and fun - like Duolingo meets wellness. Playful but not childish.</p>
+    </div>
+  </div>
+</div>

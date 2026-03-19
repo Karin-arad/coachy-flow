@@ -15,7 +15,7 @@ const StepIndicator = ({ currentStep, totalSteps }: StepIndicatorProps) => {
           key={index}
           className={cn(
             "h-1.5 w-1.5 rounded-full transition-all duration-300",
-            index === currentStep ? "bg-coachy-blue w-4" : "bg-gray-300"
+            index === currentStep ? "bg-[hsl(var(--primary))] w-4" : "bg-gray-300"
           )}
         />
       ))}

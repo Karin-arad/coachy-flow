@@ -64,14 +64,14 @@ const WorkoutPreferences = () => {
             placeholder="For example: no pressure on knees, upper body only, gentle dance, no planks..."
             className={cn(
               "resize-none w-full h-full min-h-[120px] p-4 text-sm rounded-xl",
-              "border-2 border-gray-200 focus:border-coachy-blue",
-              "focus:ring-1 focus:ring-coachy-blue focus:outline-none",
+              "border-2 border-gray-200 focus:border-[hsl(var(--primary))]",
+              "focus:ring-1 focus:ring-[hsl(var(--primary))] focus:outline-none",
               "transition-all duration-300 bg-white/80"
             )}
           />
           
-          <motion.div 
-            className="absolute top-3 right-3 text-coachy-blue opacity-70"
+          <motion.div
+            className="absolute top-3 right-3 text-[hsl(var(--primary))] opacity-70"
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ delay: 0.6, type: "spring" }}

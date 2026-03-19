@@ -11,7 +11,6 @@ import PracticeSummary from '@/components/PracticeSummary';
 import ProgressBar from '@/components/ProgressBar';
 import CelebrationEffects from '@/components/CelebrationEffects';
 import InstallButton from '@/components/InstallButton';
-import IOSDebugInfo from '@/components/IOSDebugInfo';
 import { motion } from 'framer-motion';
 import { Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -84,7 +83,6 @@ const CoachyFlow = () => {
         />
 
         <InstallButton />
-        <IOSDebugInfo />
 
         {showApiKeyModal && <APIKeyInput onClose={() => setShowApiKeyModal(false)} />}
 

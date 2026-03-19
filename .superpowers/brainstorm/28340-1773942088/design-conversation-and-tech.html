@@ -1,0 +1,130 @@
+<h2>Section 3: Conversation Screen & Technical Strategy</h2>
+<p class="subtitle">The free-text step + how we handle responsiveness and iOS</p>
+
+<div style="display: flex; flex-direction: column; gap: 24px;">
+
+  <!-- Conversation Screen -->
+  <div>
+    <h3>Conversation Screen (redesigned)</h3>
+    <p style="font-size: 14px; color: #666; margin-bottom: 12px;">Chat-like feel instead of a plain textarea. Warmer, more inviting.</p>
+    <div class="mockup">
+      <div class="mockup-header">Conversation - Mobile 390px</div>
+      <div class="mockup-body" style="background: #FFF5E9; padding: 24px 20px; max-width: 390px; margin: 0 auto; direction: rtl; font-family: 'Rubik', sans-serif;">
+        <!-- Progress dots -->
+        <div style="display: flex; gap: 8px; justify-content: center; margin-bottom: 28px;">
+          <div style="width: 8px; height: 8px; border-radius: 50%; background: #FF8C42;"></div>
+          <div style="width: 8px; height: 8px; border-radius: 50%; background: #FF8C42;"></div>
+          <div style="width: 8px; height: 8px; border-radius: 50%; background: #FF8C42;"></div>
+          <div style="width: 8px; height: 8px; border-radius: 50%; background: #FF8C42;"></div>
+          <div style="width: 10px; height: 10px; border-radius: 50%; background: #FF8C42; box-shadow: 0 0 0 3px rgba(255,140,66,0.2);"></div>
+          <div style="width: 8px; height: 8px; border-radius: 50%; background: #E5DDD5;"></div>
+          <div style="width: 8px; height: 8px; border-radius: 50%; background: #E5DDD5;"></div>
+        </div>
+
+        <!-- Coach message bubble -->
+        <div style="background: white; border-radius: 18px 18px 4px 18px; padding: 16px 20px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); max-width: 85%;">
+          <div style="font-size: 15px; color: #2D2D2D; line-height: 1.6;">
+            &#x1F44B; היי! נשמע שיש לך אנרגיה בינונית היום. ספרי לי - מה בא לך לעשות? יש משהו שכואב? אזור שבא לך לחזק?
+          </div>
+        </div>
+
+        <!-- User input area -->
+        <div style="background: white; border-radius: 16px; padding: 16px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); border: 1.5px solid #FFD6A5;">
+          <div style="font-size: 15px; color: #999; margin-bottom: 40px; line-height: 1.5;">כתבי כאן מה שבא לך...</div>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div style="display: flex; gap: 8px;">
+              <span style="background: #FFF5E9; padding: 6px 12px; border-radius: 20px; font-size: 12px; cursor: pointer;">&#x1F4AA; חיזוק</span>
+              <span style="background: #FFF5E9; padding: 6px 12px; border-radius: 20px; font-size: 12px; cursor: pointer;">&#x1F9D8; מתיחות</span>
+              <span style="background: #FFF5E9; padding: 6px 12px; border-radius: 20px; font-size: 12px; cursor: pointer;">&#x1F525; קרדיו</span>
+            </div>
+            <div style="width: 36px; height: 36px; background: #FF8C42; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+              <span style="color: white; font-size: 18px;">&#x2191;</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Skip option -->
+        <div style="text-align: center; margin-top: 16px;">
+          <span style="font-size: 14px; color: #6B7280; cursor: pointer; text-decoration: underline; text-underline-offset: 3px;">דלגי, תפתיעו אותי &#x2728;</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Responsive Strategy -->
+  <div>
+    <h3>Responsive Strategy</h3>
+    <div style="background: white; border-radius: 16px; padding: 20px; border: 1px solid #eee;">
+      <div style="display: flex; flex-direction: column; gap: 16px;">
+
+        <div style="display: flex; gap: 12px; align-items: flex-start;">
+          <div style="min-width: 40px; height: 40px; background: #FF8C42; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700;">1</div>
+          <div>
+            <div style="font-weight: 600; color: #2D2D2D; margin-bottom: 4px;">Mobile First (320px - 430px)</div>
+            <div style="font-size: 14px; color: #6B7280;">Base styles. Full-width cards, stacked layout, large touch targets. This is the primary experience.</div>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 12px; align-items: flex-start;">
+          <div style="min-width: 40px; height: 40px; background: #FFD6A5; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #5a3e1b; font-weight: 700;">2</div>
+          <div>
+            <div style="font-weight: 600; color: #2D2D2D; margin-bottom: 4px;">Tablet (431px - 768px)</div>
+            <div style="font-size: 14px; color: #6B7280;">Centered card with max-width 430px. Cream background visible on sides. Same mobile layout inside.</div>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 12px; align-items: flex-start;">
+          <div style="min-width: 40px; height: 40px; background: #FFF5E9; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #FF8C42; font-weight: 700; border: 1.5px solid #FFD6A5;">3</div>
+          <div>
+            <div style="font-weight: 600; color: #2D2D2D; margin-bottom: 4px;">Desktop (769px+)</div>
+            <div style="font-size: 14px; color: #6B7280;">Phone-shaped container centered on screen with subtle shadow. "App in browser" feel - like a phone preview.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- iOS Fixes -->
+  <div>
+    <h3>iOS / Safari Fixes</h3>
+    <div style="background: white; border-radius: 16px; padding: 20px; border: 1px solid #eee;">
+      <ul style="font-size: 14px; color: #555; line-height: 2; padding-right: 20px; margin: 0;">
+        <li><strong>Replace <code>100vh</code></strong> with <code>100dvh</code> (dynamic viewport height) - fixes iOS address bar issues</li>
+        <li><strong>Remove all iOS-specific CSS hacks</strong> - clean slate with modern CSS that works everywhere</li>
+        <li><strong>Use <code>touch-action: manipulation</code></strong> - prevents 300ms tap delay on iOS</li>
+        <li><strong>Custom slider with touch events</strong> - replace native range input for consistent cross-browser look</li>
+        <li><strong>Keyboard-aware layout</strong> - conversation textarea adjusts when iOS keyboard opens</li>
+        <li><strong>Safe area insets</strong> - proper padding for notch/home indicator</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Animations -->
+  <div>
+    <h3>Animations & Transitions</h3>
+    <div style="background: white; border-radius: 16px; padding: 20px; border: 1px solid #eee;">
+      <ul style="font-size: 14px; color: #555; line-height: 2; padding-right: 20px; margin: 0;">
+        <li><strong>Screen transitions:</strong> Smooth slide + fade between steps (keep Framer Motion)</li>
+        <li><strong>Card entrance:</strong> Subtle scale-up (0.95 &rarr; 1.0) + fade on mount</li>
+        <li><strong>Slider interaction:</strong> Haptic-feeling snap with emoji size change based on value</li>
+        <li><strong>Button press:</strong> Slight scale-down (0.97) on tap for tactile feel</li>
+        <li><strong>Celebration:</strong> Keep confetti but add warm color palette (orange, peach, gold)</li>
+        <li><strong>Loading state:</strong> Pulsing orange dots instead of generic spinner</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+<div style="margin-top: 24px; padding: 16px; background: #f0fdf4; border-radius: 12px; border: 1px solid #bbf7d0;">
+  <h3 style="margin-bottom: 8px; color: #166534;">&#x2705; Full Design Summary</h3>
+  <p style="font-size: 14px; color: #555; line-height: 1.6;">
+    <strong>Palette:</strong> Warm orange + peach + cream &bull;
+    <strong>Typography:</strong> Rubik with clean weight hierarchy &bull;
+    <strong>Layout:</strong> Mobile-first, centered app container on larger screens &bull;
+    <strong>Components:</strong> Dot progress, warm card sliders, grid time picker, rich workout card &bull;
+    <strong>Conversation:</strong> Chat-like bubbles with quick-pick tags &bull;
+    <strong>iOS:</strong> Modern CSS fixes, no hacks &bull;
+    <strong>Animations:</strong> Refined Framer Motion transitions
+  </p>
+</div>

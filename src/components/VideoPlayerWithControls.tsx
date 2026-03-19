@@ -16,11 +16,11 @@ const VideoPlayerWithControls: React.FC<VideoPlayerProps> = ({ videoId, title, o
   const [isPlaying, setIsPlaying] = useState(false);
   const [isHoveringControls, setIsHoveringControls] = useState(false);
   const [controlsVisible, setControlsVisible] = useState(true);
-  
+
   const videoContainerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLIFrameElement>(null);
   const controlsTimeoutRef = useRef<number | null>(null);
-  
+
   // Handle fullscreen changes
   const toggleFullscreen = () => {
     if (!videoContainerRef.current) return;
@@ -51,7 +51,7 @@ const VideoPlayerWithControls: React.FC<VideoPlayerProps> = ({ videoId, title, o
       if (controlsTimeoutRef.current) {
         window.clearTimeout(controlsTimeoutRef.current);
       }
-      
+
       controlsTimeoutRef.current = window.setTimeout(() => {
         setControlsVisible(false);
       }, 3000);
@@ -61,7 +61,7 @@ const VideoPlayerWithControls: React.FC<VideoPlayerProps> = ({ videoId, title, o
         window.clearTimeout(controlsTimeoutRef.current);
       }
     }
-    
+
     return () => {
       if (controlsTimeoutRef.current) {
         window.clearTimeout(controlsTimeoutRef.current);
@@ -95,11 +95,11 @@ const VideoPlayerWithControls: React.FC<VideoPlayerProps> = ({ videoId, title, o
 
   return (
     <div className="flex flex-col w-full h-full">
-      <div 
+      <div
         ref={videoContainerRef}
         className={cn(
           "relative w-full overflow-hidden transition-all duration-300",
-          isFullscreen ? "h-full bg-black" : "aspect-video rounded-xl"
+          isFullscreen ? "h-full bg-black" : "aspect-video rounded-[16px]"
         )}
         onMouseEnter={() => setIsHoveringControls(true)}
         onMouseLeave={() => setIsHoveringControls(false)}
@@ -108,7 +108,7 @@ const VideoPlayerWithControls: React.FC<VideoPlayerProps> = ({ videoId, title, o
           setTimeout(() => setIsHoveringControls(false), 3000);
         }}
       >
-        <iframe 
+        <iframe
           ref={videoRef}
           className="w-full h-full"
           src={`https://www.youtube.com/embed/${videoId}?autoplay=0&rel=0&modestbranding=1`}
@@ -119,7 +119,7 @@ const VideoPlayerWithControls: React.FC<VideoPlayerProps> = ({ videoId, title, o
         />
 
         {/* Controls overlay */}
-        <motion.div 
+        <motion.div
           className={cn(
             "absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-end",
             "pointer-events-none transition-opacity duration-300",
@@ -130,30 +130,30 @@ const VideoPlayerWithControls: React.FC<VideoPlayerProps> = ({ videoId, title, o
           transition={{ duration: 0.3 }}
         >
           <div className="p-3 flex items-center justify-between pointer-events-auto">
-            <Button 
-              variant="ghost" 
+            <Button
+              variant="ghost"
               size="sm"
-              className="text-white hover:bg-white/20 h-8 w-8 p-0" 
+              className="text-white hover:bg-white/20 h-8 w-8 p-0"
               onClick={togglePlayPause}
             >
               {isPlaying ? <Pause size={16} /> : <Play size={16} />}
             </Button>
-            
+
             <div className="flex-grow mx-2 h-1 bg-white/30 rounded-full overflow-hidden">
               <div className="bg-white h-full w-[30%]"></div>
             </div>
-            
-            <Button 
-              variant="ghost" 
+
+            <Button
+              variant="ghost"
               size="sm"
-              className="text-white hover:bg-white/20 h-8 w-8 p-0" 
+              className="text-white hover:bg-white/20 h-8 w-8 p-0"
               onClick={toggleFullscreen}
             >
               <Maximize size={16} />
             </Button>
           </div>
         </motion.div>
-        
+
         {/* Close button (only when not in fullscreen) */}
         {!isFullscreen && onClose && (
           <Button
@@ -165,11 +165,11 @@ const VideoPlayerWithControls: React.FC<VideoPlayerProps> = ({ videoId, title, o
           </Button>
         )}
       </div>
-      
+
       {/* Video title and info (only when not in fullscreen) */}
       {!isFullscreen && (
         <div className="mt-3 px-1">
-          <h3 className="font-medium text-base line-clamp-2">{title}</h3>
+          <h3 className="font-semibold text-[15px] text-[hsl(var(--foreground))] line-clamp-2">{title}</h3>
         </div>
       )}
     </div>

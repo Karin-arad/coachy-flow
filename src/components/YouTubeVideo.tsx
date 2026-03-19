@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 
 interface YouTubeVideoProps {
   videoId: string;
@@ -9,55 +10,58 @@ interface YouTubeVideoProps {
 const YouTubeVideo = ({ videoId, title }: YouTubeVideoProps) => {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
-  
+
   useEffect(() => {
-    console.log('🎬 YouTubeVideo component mounted with:', { videoId, title });
-    
     if (!videoId) {
-      console.error('❌ Missing videoId for YouTube embed');
       setHasError(true);
     }
-    
+
     // Reset states when videoId changes
     setIsLoading(true);
     setHasError(false);
-    
-    // Simulate checking if video loads
+
     const timer = setTimeout(() => {
       setIsLoading(false);
     }, 2000);
-    
+
     return () => clearTimeout(timer);
   }, [videoId, title]);
 
   const handleIframeLoad = () => {
-    console.log('✅ YouTube iframe loaded successfully for:', videoId);
     setIsLoading(false);
   };
 
   const handleIframeError = () => {
-    console.error('❌ Error loading YouTube video:', videoId);
     setHasError(true);
     setIsLoading(false);
   };
 
   if (!videoId) {
-    console.warn('⚠️ No videoId provided to YouTubeVideo component');
     return (
-      <div className="w-full max-w-[560px] aspect-video rounded-lg bg-gray-100 flex items-center justify-center text-gray-500">
+      <div className="w-full aspect-video rounded-[16px] bg-[hsl(var(--background))] flex items-center justify-center text-[hsl(var(--muted-foreground))] text-sm">
         No video available
       </div>
     );
   }
 
   return (
-    <div className="w-full max-w-[560px] aspect-video rounded-lg overflow-hidden shadow-lg relative">
+    <div className="w-full aspect-video rounded-[16px] overflow-hidden shadow-[0_4px_16px_rgba(0,0,0,0.08)] relative">
       {isLoading && (
-        <div className="absolute inset-0 bg-gray-100 flex items-center justify-center">
-          <div className="flex space-x-2">
-            <div className="w-3 h-3 bg-gray-400 rounded-full animate-bounce"></div>
-            <div className="w-3 h-3 bg-gray-400 rounded-full animate-bounce delay-100"></div>
-            <div className="w-3 h-3 bg-gray-400 rounded-full animate-bounce delay-200"></div>
+        <div className="absolute inset-0 bg-[hsl(var(--background))] flex items-center justify-center">
+          <div className="flex gap-2">
+            {[0, 1, 2].map((i) => (
+              <motion.div
+                key={i}
+                className="w-2.5 h-2.5 rounded-full bg-[hsl(var(--primary))]"
+                animate={{ scale: [0.8, 1.2, 0.8] }}
+                transition={{
+                  duration: 0.8,
+                  repeat: Infinity,
+                  delay: i * 0.15,
+                  ease: 'easeInOut',
+                }}
+              />
+            ))}
           </div>
         </div>
       )}
@@ -71,7 +75,7 @@ const YouTubeVideo = ({ videoId, title }: YouTubeVideoProps) => {
         onError={handleIframeError}
       />
       {hasError && (
-        <div className="absolute inset-0 bg-gray-100/80 flex items-center justify-center text-red-500">
+        <div className="absolute inset-0 bg-[hsl(var(--background))]/80 flex items-center justify-center text-[hsl(var(--destructive))] text-sm">
           Error loading video
         </div>
       )}

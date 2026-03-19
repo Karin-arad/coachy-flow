@@ -2,7 +2,6 @@
 import React, { useEffect } from 'react';
 import { useFlowContext } from '@/context/FlowContext';
 import AnimatedCard from './AnimatedCard';
-import { Button } from '@/components/ui/button';
 import { useWorkoutGeneration } from '@/hooks/useWorkoutGeneration';
 import { useVideoSearch } from '@/hooks/useVideoSearch';
 import LoadingState from './practice/LoadingState';
@@ -12,7 +11,7 @@ import VideoSection from './practice/VideoSection';
 
 const PracticeSummary = () => {
   const { currentScreen, emotionRatings, userConversation, timeAvailable, goToScreen } = useFlowContext();
-  
+
   const {
     isLoading,
     workoutDescription,
@@ -31,9 +30,7 @@ const PracticeSummary = () => {
   } = useVideoSearch();
 
   useEffect(() => {
-    console.log('PracticeSummary loaded, currentScreen:', currentScreen);
     if (currentScreen === 7 && !workoutDescription && !isLoading && retryCount < 3) {
-      console.log('Generating workout recommendation for screen 7');
       handleWorkoutGeneration();
     }
   }, [currentScreen, retryCount]);
@@ -59,47 +56,58 @@ const PracticeSummary = () => {
     handleVideoRetry(workoutDescription!, emotionRatings, timeAvailable, userConversation);
   };
 
-  const handlePrevious = () => {
-    goToScreen(6);
-  };
-
   if (currentScreen !== 7) {
     return null;
   }
 
   return (
-    <AnimatedCard 
-      isVisible={true} 
+    <AnimatedCard
+      isVisible={true}
       className="h-full w-full"
     >
       <div className="h-full flex flex-col justify-start items-center p-4 text-center overflow-y-auto">
-        <h2 className="text-2xl font-semibold mb-4">Your Practice Summary</h2>
-        
+        {/* Celebration header */}
+        <div className="flex flex-col items-center mb-5">
+          <span style={{ fontSize: 40 }}>🎉</span>
+          <h2 className="text-[22px] font-bold text-[hsl(var(--foreground))] mt-1">
+            Your Practice Summary
+          </h2>
+        </div>
+
         {isLoading ? (
           <LoadingState />
         ) : error && retryCount < 3 ? (
           <ErrorState error={error} onRetry={handleRetry} />
         ) : workoutDescription ? (
           <div className="space-y-4 w-full flex-1 overflow-y-auto">
-            <WorkoutDisplay workoutDescription={workoutDescription} />
-            <VideoSection 
-              videoId={videoId}
-              videoTitle={videoTitle}
-              onVideoRetry={handleVideoRetryClick}
-            />
-            
-            <div className="mt-6">
-              <Button 
-                onClick={handlePrevious}
-                variant="outline"
-                className="w-full py-3 rounded-xl"
+            {/* White card wrapping workout + video */}
+            <div className="bg-white rounded-[20px] overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.06)] p-5 space-y-4">
+              <WorkoutDisplay workoutDescription={workoutDescription} />
+              <VideoSection
+                videoId={videoId}
+                videoTitle={videoTitle}
+                onVideoRetry={handleVideoRetryClick}
+              />
+            </div>
+
+            {/* Action buttons */}
+            <div className="mt-4 space-y-3 w-full">
+              <button
+                className="w-full py-3 rounded-[14px] bg-[hsl(var(--primary))] text-white font-semibold text-[15px]"
+                onClick={() => {/* start workout */}}
               >
-                חזרה
-              </Button>
+                Start Workout
+              </button>
+              <button
+                className="w-full py-3 rounded-[14px] border border-[hsl(var(--border))] text-[hsl(var(--muted-foreground))] font-medium text-[15px]"
+                onClick={() => goToScreen(6)}
+              >
+                Find Something Else
+              </button>
             </div>
           </div>
         ) : (
-          <p className="text-gray-600 mb-8">
+          <p className="text-[hsl(var(--muted-foreground))] mb-8">
             Preparing your personalized practice...
           </p>
         )}

@@ -75,40 +75,40 @@ const CoachyFlow = () => {
   };
   
   return (
-    <div className="min-h-screen w-full flex flex-col bg-white overflow-auto">
-      <CelebrationEffects 
-        effectType={celebrationType} 
-        active={isCelebrating} 
-        duration={1500}
-      />
-      
-      <InstallButton />
-      <IOSDebugInfo />
-      
-      {showApiKeyModal && <APIKeyInput onClose={() => setShowApiKeyModal(false)} />}
-      
-      <Button 
-        variant="outline"
-        onClick={() => setShowApiKeyModal(true)}
-        className="text-xs px-3 py-1 h-8 bg-white/80 border border-gray-200 shadow-sm hover:bg-white fixed bottom-5 left-5 z-50 rtl:left-auto rtl:right-5"
-        size="sm"
-      >
-        <Settings className="h-4 w-4 mr-1" /> הגדרות
-      </Button>
-      
-      <div className="flex-1 flex flex-col items-center justify-start px-6 py-6 w-full max-w-md mx-auto">
+    <div className="app-container">
+      <div className="flow-container">
+        <CelebrationEffects
+          effectType={celebrationType}
+          active={isCelebrating}
+          duration={1500}
+        />
+
+        <InstallButton />
+        <IOSDebugInfo />
+
+        {showApiKeyModal && <APIKeyInput onClose={() => setShowApiKeyModal(false)} />}
+
+        <Button
+          variant="outline"
+          onClick={() => setShowApiKeyModal(true)}
+          className="text-xs px-3 py-1 h-8 bg-white/80 border border-gray-200 shadow-sm hover:bg-white fixed bottom-5 left-5 z-50 rtl:left-auto rtl:right-5"
+          size="sm"
+        >
+          <Settings className="h-4 w-4 mr-1" /> הגדרות
+        </Button>
+
         <div className="w-full mb-6">
           <ProgressBar currentStep={getCurrentStepForProgressBar()} totalSteps={7} />
         </div>
-        
-        <div className="w-full flex-1 flex justify-center items-start min-h-[500px]">
+
+        <div className="w-full flex-1 flex justify-center items-start">
           <motion.div
             key={currentScreen}
-            initial={{ opacity: 0, x: 20 }}
+            initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            transition={{ duration: 0.3 }}
-            className="w-full h-full"
+            exit={{ opacity: 0, x: -30 }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
+            className="w-full"
           >
             {renderCurrentScreen()}
           </motion.div>

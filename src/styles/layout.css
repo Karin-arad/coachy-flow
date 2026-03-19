@@ -1,46 +1,46 @@
+/* Mobile-first responsive layout */
+.app-container {
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: hsl(var(--background));
+  direction: rtl;
+  font-family: 'Rubik', 'Heebo', sans-serif;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
 
-@layer utilities {
-  .screen-2-container, .screen-3-container {
-    aspect-ratio: 9 / 16;
-    width: 100%;
-    max-width: 100%;
-    height: 100%;
-    overflow: hidden;
-    transform-origin: center;
-    --scale-factor: 1;
+.flow-container {
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Tablet: center content */
+@media (min-width: 431px) {
+  .flow-container {
+    max-width: 430px;
+    margin: 0 auto;
+  }
+}
+
+/* Desktop: phone-in-browser */
+@media (min-width: 769px) {
+  .app-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
-  .continue-button {
-    background: linear-gradient(90deg, #DE4A8F 0%, #F1A10C 100%);
-    color: #000000;
-    font-weight: 700;
-    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
-    transition: all 0.3s ease;
-  }
-
-  .continue-button:hover {
-    background: linear-gradient(90deg, #D43983 0%, #E09100 100%);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(222, 74, 143, 0.4);
-  }
-
-  /* Mobile responsive styles */
-  @media (max-width: 768px) {
-    .screen-2-container, .screen-3-container {
-      --scale-factor: 0.98;
-      max-height: calc(100vh - 2rem);
-      width: 100%;
-    }
-    
-    .continue-button {
-      font-size: 0.9rem;
-      padding: 0.6rem 1.2rem;
-    }
-    
-    /* Additional mobile fixes */
-    body, html, #root {
-      overflow-x: hidden;
-      width: 100%;
-    }
+  .flow-container {
+    max-width: 430px;
+    min-height: auto;
+    height: 100vh;
+    height: 100dvh;
+    border-radius: 24px;
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.08);
+    background: hsl(var(--background));
+    overflow-y: auto;
   }
 }

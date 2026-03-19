@@ -1,5 +1,5 @@
 
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowUp } from 'lucide-react';
 
@@ -11,16 +11,20 @@ interface ConversationTextareaProps {
 const ConversationTextarea = ({ value, onChange }: ConversationTextareaProps) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  // Enhanced iOS textarea focus handling
-  const handleTextareaFocus = () => {
-    if (textareaRef.current && /iPad|iPhone|iPod/.test(navigator.userAgent)) {
-      textareaRef.current.setAttribute('readonly', 'readonly');
-      textareaRef.current.setAttribute('style', 'font-size: 16px !important;');
-      setTimeout(() => {
-        textareaRef.current?.removeAttribute('readonly');
-      }, 100);
-    }
-  };
+  useEffect(() => {
+    const viewport = window.visualViewport;
+    if (!viewport) return;
+
+    const handleResize = () => {
+      const textarea = document.querySelector('textarea');
+      if (textarea && document.activeElement === textarea) {
+        textarea.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    };
+
+    viewport.addEventListener('resize', handleResize);
+    return () => viewport.removeEventListener('resize', handleResize);
+  }, []);
 
   return (
     <motion.div
@@ -35,7 +39,6 @@ const ConversationTextarea = ({ value, onChange }: ConversationTextareaProps) =>
             ref={textareaRef}
             value={value}
             onChange={(e) => onChange(e.target.value)}
-            onFocus={handleTextareaFocus}
             placeholder="למשל: כאבי גב תחתון, בעיות ברכיים, רק פלג עליון, בלי פלאנקים..."
             className="bg-transparent border-none focus:outline-none resize-none w-full min-h-[100px] text-sm"
             style={{

@@ -73,107 +73,19 @@
     @apply max-w-[430px];
     @apply min-w-[320px];
   }
+}
 
-  .coachy-rainbow-gradient {
-    background: linear-gradient(to right, hsl(var(--primary)), hsl(var(--primary-light)), hsl(var(--energy)));
-  }
-  
-  .coachy-card {
-    @apply bg-white rounded-xl shadow-sm p-4;
-    @apply border border-gray-100;
-  }
+/* Modern mobile support */
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
 
-  /* iOS-specific fixes */
-  .ios-card-fix {
-    /* Remove problematic aspect ratio constraints on iOS */
-    aspect-ratio: unset !important;
-    /* Use -webkit-fill-available for better iOS height handling */
-    height: -webkit-fill-available;
-    min-height: 0;
-    /* Improve rendering on iOS Safari */
-    -webkit-transform: translateZ(0);
-    transform: translateZ(0);
-    will-change: transform;
-  }
+input, textarea, button, select {
+  touch-action: manipulation;
+}
 
-  .ios-conversation-fix {
-    /* Ensure proper stacking context */
-    position: relative;
-    z-index: 1;
-    /* Better iOS layout handling */
-    display: flex;
-    flex-direction: column;
-    /* Prevent iOS Safari layout bugs */
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .ios-textarea-fix {
-    /* iOS-specific textarea fixes */
-    -webkit-appearance: none;
-    appearance: none;
-    /* Prevent zoom on focus */
-    font-size: 16px !important;
-    /* Better focus handling on iOS */
-    -webkit-user-select: text;
-    user-select: text;
-    /* Prevent iOS Safari from adding rounded corners */
-    border-radius: 12px !important;
-    /* Improve touch responsiveness */
-    touch-action: manipulation;
-  }
-
-  /* iOS-specific media queries */
-  @supports (-webkit-touch-callout: none) {
-    /* iOS Safari specific styles */
-    .ios-card-fix {
-      height: calc(100vh - 120px);
-      max-height: calc(100vh - 120px);
-    }
-    
-    .ios-conversation-fix {
-      /* Better spacing for iOS */
-      padding-bottom: env(safe-area-inset-bottom, 20px);
-    }
-    
-    /* Fix iOS RTL layout issues */
-    html[dir="rtl"] .ios-conversation-fix {
-      text-align: right;
-    }
-    
-    /* Improve iOS textarea rendering */
-    .ios-textarea-fix {
-      -webkit-text-size-adjust: 100%;
-      text-size-adjust: 100%;
-    }
-  }
-
-  /* iPhone specific viewport fixes */
-  @media screen and (max-device-width: 430px) and (-webkit-min-device-pixel-ratio: 2) {
-    .ios-card-fix {
-      /* iPhone-specific height constraints */
-      min-height: calc(100vh - 140px);
-      max-height: calc(100vh - 100px);
-    }
-    
-    .ios-conversation-fix {
-      /* Ensure proper content visibility on iPhone */
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
-    }
-  }
-
-  /* Additional iOS debugging */
-  @media screen and (max-width: 768px) {
-    .ios-debug {
-      position: fixed;
-      top: 0;
-      left: 0;
-      background: rgba(255, 0, 0, 0.8);
-      color: white;
-      padding: 5px;
-      font-size: 12px;
-      z-index: 9999;
-      pointer-events: none;
-    }
-  }
+/* Safe area support for notch devices */
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
 }

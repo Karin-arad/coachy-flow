@@ -3,21 +3,20 @@
   .text-gradient {
     @apply text-transparent bg-clip-text;
   }
-  
+
   .text-shadow-sm {
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
   }
-  
-  .coachy-rainbow-gradient {
-    background: linear-gradient(90deg, #FF6483, #FFD36E, #49E2AD, #5680FF);
-    background-size: 300% 100%;
+
+  .warm-gradient {
+    background: linear-gradient(to right, hsl(var(--primary)), hsl(var(--primary-light)), hsl(var(--energy)));
   }
-  
+
   .shimmer-effect {
     position: relative;
     overflow: hidden;
   }
-  
+
   .shimmer-effect::after {
     content: "";
     position: absolute;
@@ -34,128 +33,22 @@
     transform: translateX(100%);
     animation: shimmer 2s infinite;
   }
-  
+
   @keyframes shimmer {
     100% {
       transform: translateX(-100%);
     }
   }
-  
+
   .hover-scale {
     @apply transition-transform duration-200;
   }
-  
+
   .hover-scale:hover {
     @apply transform scale-105;
   }
-  
+
   .hover-scale:active {
     @apply transform scale-95;
-  }
-
-  /* Enhanced iOS-specific utilities */
-  .ios-textarea-native-fix {
-    -webkit-appearance: none;
-    appearance: none;
-    font-size: 16px !important;
-    -webkit-user-select: text;
-    user-select: text;
-    -webkit-overflow-scrolling: touch;
-    -webkit-text-size-adjust: 100%;
-    text-size-adjust: 100%;
-    outline-offset: 2px;
-  }
-
-  .ios-textarea-enhanced {
-    /* Enhanced iOS textarea handling */
-    -webkit-tap-highlight-color: transparent;
-    -webkit-touch-callout: none;
-    -webkit-user-select: text;
-    user-select: text;
-    /* Force hardware acceleration */
-    -webkit-transform: translateZ(0);
-    transform: translateZ(0);
-    will-change: transform;
-    /* Better touch responsiveness */
-    touch-action: manipulation;
-  }
-
-  .ios-button-fix {
-    /* iOS button touch improvements */
-    -webkit-tap-highlight-color: transparent;
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    user-select: none;
-    touch-action: manipulation;
-    /* Prevent iOS button styling */
-    -webkit-appearance: none;
-    appearance: none;
-  }
-
-  .ios-conversation-screen-container {
-    /* Force visible rendering on iOS */
-    -webkit-transform: translateZ(0);
-    transform: translateZ(0);
-    will-change: transform;
-    /* Ensure proper stacking */
-    position: relative;
-    z-index: 10;
-    /* iOS-specific display forcing */
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-  }
-
-  .ios-debug-info {
-    position: fixed;
-    top: 10px;
-    right: 10px;
-    background: rgba(0, 0, 0, 0.8);
-    color: white;
-    padding: 8px;
-    border-radius: 4px;
-    font-size: 11px;
-    z-index: 9999;
-    pointer-events: none;
-    font-family: monospace;
-  }
-
-  /* iOS viewport fixes */
-  @supports (-webkit-touch-callout: none) {
-    .ios-conversation-screen-container {
-      /* iOS Safari specific height handling */
-      min-height: calc(100vh - 140px);
-      max-height: calc(100vh - 100px);
-      /* Better iOS rendering */
-      -webkit-overflow-scrolling: touch;
-      overflow-y: auto;
-    }
-    
-    .ios-textarea-enhanced {
-      /* iOS Safari textarea improvements */
-      -webkit-text-size-adjust: 100%;
-      text-size-adjust: 100%;
-      border-radius: 12px !important;
-    }
-  }
-
-  /* iPhone-specific optimizations */
-  @media screen and (max-device-width: 430px) and (-webkit-min-device-pixel-ratio: 2) {
-    .ios-conversation-screen-container {
-      /* iPhone-specific height and rendering */
-      min-height: calc(100vh - 120px);
-      max-height: calc(100vh - 80px);
-      /* Force GPU acceleration */
-      -webkit-backface-visibility: hidden;
-      backface-visibility: hidden;
-      -webkit-perspective: 1000;
-      perspective: 1000;
-    }
-    
-    .ios-textarea-enhanced {
-      /* iPhone textarea optimizations */
-      min-height: 120px !important;
-      font-size: 16px !important;
-    }
   }
 }

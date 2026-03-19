@@ -1,7 +1,5 @@
-
 import React from 'react';
-import { cn } from '@/lib/utils';
-import { Sparkles } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 interface ProgressBarProps {
   currentStep: number;
@@ -10,27 +8,31 @@ interface ProgressBarProps {
 }
 
 const ProgressBar = ({ currentStep, totalSteps, className }: ProgressBarProps) => {
-  const progress = (currentStep / totalSteps) * 100;
-  
   return (
-    <div className="relative w-full">
-      <div className={cn('w-full mx-auto h-1 rounded-full my-4 overflow-hidden bg-gray-100', className)}>
-        <div 
-          className="h-full rounded-full transition-all duration-700 ease-in-out relative coachy-rainbow-gradient bg-[length:300%_100%]"
-          style={{ width: `${progress}%` }}
-        />
-      </div>
-      
-      {progress === 100 && (
-        <div className="absolute -right-1 top-0 pointer-events-none">
-          <div className="relative">
-            <Sparkles 
-              className="text-amber-500 drop-shadow-lg animate-pulse-gentle" 
-              size={16} 
-            />
-          </div>
-        </div>
-      )}
+    <div className={`flex items-center justify-center gap-2.5 py-4 ${className || ''}`}>
+      {Array.from({ length: totalSteps }, (_, i) => {
+        const step = i + 1;
+        const isCompleted = step < currentStep;
+        const isCurrent = step === currentStep;
+
+        return (
+          <motion.div
+            key={step}
+            className="rounded-full"
+            animate={{
+              width: isCurrent ? 12 : 10,
+              height: isCurrent ? 12 : 10,
+              backgroundColor: isCompleted || isCurrent
+                ? 'hsl(24, 100%, 63%)'
+                : 'hsl(30, 24%, 87%)',
+              boxShadow: isCurrent
+                ? '0 0 0 4px rgba(255, 140, 66, 0.2)'
+                : '0 0 0 0px rgba(255, 140, 66, 0)',
+            }}
+            transition={{ duration: 0.3, ease: 'easeOut' }}
+          />
+        );
+      })}
     </div>
   );
 };

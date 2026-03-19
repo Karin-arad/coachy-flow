@@ -1,25 +1,22 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { MessageCircle } from 'lucide-react';
 
 const ConversationHeader = () => {
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.2, duration: 0.5 }}
-      className="text-center"
+      className="flex justify-start"
     >
-      <h2 className="text-xl font-semibold mb-1 flex items-center justify-center gap-2">
-        <MessageCircle className="text-coachy-blue" size={20} />
-        ספר/י לי קצת על עצמך
-      </h2>
-      <p className="text-gray-600 mb-5">
-        יש לך כאבים או אזורים רגישים?
-        <br />
-        או אולי משהו שאת/ה רוצה שאדע לפני שנתחיל?
-      </p>
+      <div className="bg-white rounded-[18px] rounded-bl-[4px] p-4 shadow-[0_2px_8px_rgba(0,0,0,0.04)] max-w-[85%]">
+        <p className="text-[15px] text-[hsl(var(--foreground))] leading-relaxed">
+          ספר/י לי קצת על עצמך –
+          יש לך כאבים או אזורים רגישים?
+          או אולי משהו שאת/ה רוצה שאדע לפני שנתחיל?
+        </p>
+      </div>
     </motion.div>
   );
 };

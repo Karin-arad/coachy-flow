@@ -17,18 +17,14 @@ const ConversationScreen = () => {
     currentScreen
   } = useConversationScreen();
 
-  // Enhanced visibility check
   if (currentScreen !== 5) {
-    console.log('🍎 ConversationScreen - Not rendering, screen:', currentScreen);
     return null;
   }
 
-  console.log('🍎 ConversationScreen - RENDERING for screen 5, initialized:', isInitialized);
-
   return (
-    <div 
+    <div
       ref={screenRef}
-      className="w-full h-full ios-conversation-screen-container"
+      className="w-full h-full"
       style={{
         display: 'block',
         visibility: 'visible',
@@ -39,19 +35,19 @@ const ConversationScreen = () => {
         zIndex: 10
       }}
     >
-      <AnimatedCard 
-        isVisible={true} 
-        className="h-full flex flex-col ios-conversation-fix"
+      <AnimatedCard
+        isVisible={true}
+        className="h-full flex flex-col"
       >
         <div className="space-y-4 flex flex-col h-full text-sm">
           <ConversationHeader />
-          
-          <ConversationTextarea 
+
+          <ConversationTextarea
             value={userConversation}
             onChange={setUserConversation}
           />
-          
-          <ConversationActions 
+
+          <ConversationActions
             onContinue={handleContinue}
             onPrevious={handlePrevious}
           />

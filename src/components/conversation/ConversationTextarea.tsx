@@ -1,8 +1,7 @@
 
 import React, { useRef } from 'react';
 import { motion } from 'framer-motion';
-import { Textarea } from '@/components/ui/textarea';
-import { cn } from '@/lib/utils';
+import { ArrowUp } from 'lucide-react';
 
 interface ConversationTextareaProps {
   value: string;
@@ -14,9 +13,7 @@ const ConversationTextarea = ({ value, onChange }: ConversationTextareaProps) =>
 
   // Enhanced iOS textarea focus handling
   const handleTextareaFocus = () => {
-    console.log('📝 iOS: Textarea focused');
     if (textareaRef.current && /iPad|iPhone|iPod/.test(navigator.userAgent)) {
-      // Prevent iOS zoom on focus
       textareaRef.current.setAttribute('readonly', 'readonly');
       textareaRef.current.setAttribute('style', 'font-size: 16px !important;');
       setTimeout(() => {
@@ -32,25 +29,41 @@ const ConversationTextarea = ({ value, onChange }: ConversationTextareaProps) =>
       transition={{ delay: 0.4, duration: 0.5 }}
       className="flex-1 relative"
     >
-      <Textarea
-        ref={textareaRef}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        onFocus={handleTextareaFocus}
-        placeholder="למשל: כאבי גב תחתון, בעיות ברכיים, רק פלג עליון, בלי פלאנקים..."
-        className={cn(
-          "resize-none w-full h-full min-h-[120px] p-4 text-sm rounded-xl",
-          "border-2 border-gray-200 focus:border-coachy-blue",
-          "focus:ring-1 focus:ring-coachy-blue focus:outline-none",
-          "transition-all duration-300 bg-white/80",
-          "ios-textarea-fix ios-textarea-enhanced"
-        )}
-        style={{
-          fontSize: '16px', // Prevent iOS zoom
-          WebkitAppearance: 'none',
-          touchAction: 'manipulation'
-        }}
-      />
+      <div className="bg-white rounded-2xl p-4 shadow-[0_2px_12px_rgba(0,0,0,0.06)] border-[1.5px] border-[hsl(var(--primary-light))]">
+        <div className="flex gap-2">
+          <textarea
+            ref={textareaRef}
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            onFocus={handleTextareaFocus}
+            placeholder="למשל: כאבי גב תחתון, בעיות ברכיים, רק פלג עליון, בלי פלאנקים..."
+            className="bg-transparent border-none focus:outline-none resize-none w-full min-h-[100px] text-sm"
+            style={{
+              fontSize: '16px',
+              WebkitAppearance: 'none',
+              touchAction: 'manipulation'
+            }}
+          />
+          <button
+            onClick={() => {}}
+            className="w-9 h-9 rounded-full bg-[hsl(var(--primary))] flex items-center justify-center self-end flex-shrink-0"
+          >
+            <ArrowUp size={16} className="text-white" />
+          </button>
+        </div>
+
+        <div className="flex gap-2 mt-3">
+          {['💪 חיזוק', '🧘 מתיחות', '🔥 קרדיו'].map((tag) => (
+            <button
+              key={tag}
+              onClick={() => onChange(value ? value + ' ' + tag : tag)}
+              className="bg-[hsl(var(--background))] px-3 py-1.5 rounded-full text-xs"
+            >
+              {tag}
+            </button>
+          ))}
+        </div>
+      </div>
     </motion.div>
   );
 };

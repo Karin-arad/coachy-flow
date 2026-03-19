@@ -12,19 +12,19 @@ export interface ColoredSliderProps extends React.ComponentPropsWithoutRef<typeo
   showCelebration?: boolean;
 }
 
-// Modified color getters to use the new color scheme
+// Modified color getters to use the warm palette
 const getEmotionColor = (type?: ColoredSliderProps["emotionType"]) => {
   switch (type) {
     case "energy":
-      return "from-coachy-yellow to-coachy-pink";
+      return "from-[hsl(var(--primary))] to-[hsl(var(--energy))]";
     case "bounciness":
-      return "from-coachy-pink to-coachy-blue";
+      return "from-[hsl(var(--primary))] to-[hsl(var(--primary-light))]";
     case "alertness":
-      return "from-coachy-blue to-coachy-green";
+      return "from-[hsl(var(--primary-light))] to-[hsl(var(--primary))]";
     case "lightness":
-      return "from-coachy-green to-coachy-yellow";
+      return "from-[hsl(var(--primary-light))] to-[hsl(var(--secondary))]";
     default:
-      return "from-coachy-blue to-coachy-green";
+      return "from-[hsl(var(--primary))] to-[hsl(var(--primary-light))]";
   }
 };
 

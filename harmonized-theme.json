@@ -1,38 +1,23 @@
-
 {
-  "name": "Coachy Harmonized Theme",
-  "description": "A harmonized complementary color palette with improved contrast and accessibility",
-  "version": "1.0.0",
-  "colors": {
-    "primary": {
-      "blue": "#3A78D4",
-      "lightBlue": "#C4DCFF",
-      "turquoise": "#27A193"
-    },
-    "complementary": {
-      "pink": "#DE4A8F",
-      "yellow": "#F1A10C",
-      "red": "#E34848"
-    },
-    "neutral": {
-      "gray": "#F1F0FB",
-      "white": "#FFFFFF",
-      "text": "#000000",
-      "background": "#D6E6F5",
-      "altBackground": "#B8D4ED"
-    }
+  "name": "Coachy Warm",
+  "primary": {
+    "main": "#FF8C42",
+    "light": "#FFD6A5",
+    "hsl": "24 100% 63%"
   },
-  "fontWeight": "bold",
-  "textShadow": "1px 1px 2px rgba(255, 255, 255, 0.8)",
-  "textOutline": "none",
-  "accessibility": {
-    "contrastRatio": 7.0,
-    "saturationRange": "60-80",
-    "brightnessRange": "65-85"
+  "background": {
+    "main": "#FFF5E9",
+    "surface": "#FFFFFF",
+    "hsl": "30 100% 95%"
   },
-  "gradients": {
-    "sunrise": "linear-gradient(135deg, #DE4A8F 0%, #F1A10C 100%)",
-    "ocean": "linear-gradient(135deg, #3A78D4 0%, #27A193 100%)",
-    "spectrum": "linear-gradient(to right, #DE4A8F, #3A78D4, #27A193, #F1A10C)"
-  }
+  "text": {
+    "primary": "#2D2D2D",
+    "secondary": "#6B7280"
+  },
+  "border": "#E5DDD5",
+  "accent": {
+    "success": "#4CAF50",
+    "energy": "#FF6B6B"
+  },
+  "celebration": ["#FF8C42", "#FFD6A5", "#FF6B6B", "#FFD700"]
 }

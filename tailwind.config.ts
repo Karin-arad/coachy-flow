@@ -52,17 +52,6 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
-				coachy: {
-					pink: '#FF6483',
-					yellow: '#FFD36E',
-					green: '#49E2AD',
-					blue: '#5680FF',
-					lightBlue: '#C4DCFF',
-					gray: '#F1F0FB',
-					turquoise: '#27A193',
-					text: '#FFFFFF',
-					red: '#E34848',
-				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
 					foreground: 'hsl(var(--sidebar-foreground))',
@@ -200,9 +189,8 @@ export default {
 				'check-appear': 'check-appear 1.5s ease-in-out forwards'
 			},
 			backgroundImage: {
-				'sunrise-gradient': 'linear-gradient(135deg, #DE4A8F 0%, #F1A10C 100%)',
-				'ocean-calm': 'linear-gradient(135deg, #3A78D4 0%, #27A193 100%)',
-				'full-spectrum': 'linear-gradient(to right, #DE4A8F, #3A78D4, #27A193, #F1A10C)',
+				'warm-gradient': 'linear-gradient(135deg, hsl(var(--primary)), hsl(var(--energy)))',
+				'warm-subtle': 'linear-gradient(180deg, hsl(var(--background)), hsl(var(--primary-light)))',
 			},
 			spacing: {
 				'base': '8px',

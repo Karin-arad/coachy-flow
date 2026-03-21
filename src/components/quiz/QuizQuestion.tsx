@@ -1,22 +1,20 @@
 import { motion } from 'framer-motion';
-import { QuizQuestion as QuizQuestionType, Language } from '@/types/quiz';
+import { QuizNode, Language } from '@/types/quiz';
 
 interface QuizQuestionProps {
-  question: QuizQuestionType;
-  currentIndex: number;
-  totalQuestions: number;
+  question: QuizNode;
+  step: number;
+  totalSteps: number;
   language: Language;
   onAnswer: (value: string) => void;
-  onSkip?: () => void;
 }
 
 const QuizQuestion = ({
   question,
-  currentIndex,
-  totalQuestions,
+  step,
+  totalSteps,
   language,
   onAnswer,
-  onSkip,
 }: QuizQuestionProps) => {
   const title = language === 'he' ? question.titleHe : question.titleEn;
   const isRTL = language === 'he';
@@ -36,11 +34,11 @@ const QuizQuestion = ({
     >
       {/* Progress dots */}
       <div className="flex gap-2 mb-8">
-        {Array.from({ length: totalQuestions }).map((_, i) => (
+        {Array.from({ length: totalSteps }).map((_, i) => (
           <div
             key={i}
             className={`w-2 h-2 rounded-full transition-colors duration-300 ${
-              i <= currentIndex ? 'bg-[#FF8C42]' : 'bg-white/20'
+              i <= step ? 'bg-[#FF8C42]' : 'bg-white/20'
             }`}
           />
         ))}
@@ -78,19 +76,6 @@ const QuizQuestion = ({
           );
         })}
       </div>
-
-      {/* Skip button for optional questions */}
-      {question.optional && onSkip && (
-        <motion.button
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.6 }}
-          onClick={onSkip}
-          className="mt-8 text-sm text-white/30 hover:text-white/50 transition-colors font-hebrew"
-        >
-          {language === 'he' ? 'דלג ←' : 'Skip →'}
-        </motion.button>
-      )}
     </motion.div>
   );
 };

@@ -1,10 +1,10 @@
-import { QuizAnswer, QuizRecommendation, Language } from '@/types/quiz';
+import { QuizRecommendation, Language } from '@/types/quiz';
 
 const MAKE_WEBHOOK_URL = import.meta.env.VITE_QUIZ_WEBHOOK_URL || '';
 const MAKE_EMAIL_WEBHOOK_URL = import.meta.env.VITE_QUIZ_EMAIL_WEBHOOK_URL || '';
 
 export const getRecommendation = async (
-  answers: QuizAnswer,
+  answers: Record<string, unknown>,
   language: Language
 ): Promise<QuizRecommendation> => {
   if (!MAKE_WEBHOOK_URL) {
@@ -50,7 +50,7 @@ export const getRecommendation = async (
 
 export const submitEmailCapture = async (
   email: string,
-  answers: QuizAnswer,
+  answers: Record<string, unknown>,
   language: Language
 ): Promise<void> => {
   if (!MAKE_EMAIL_WEBHOOK_URL) return;

@@ -1,32 +1,47 @@
 import { useState, useCallback } from 'react';
 import { AnimatePresence } from 'framer-motion';
-import { QuizAnswer, QuizRecommendation, QuizState, Language } from '@/types/quiz';
-import { quizQuestions } from '@/data/quizQuestions';
+import { QuizNode, QuizAnswerStep, QuizRecommendation, QuizState, Language } from '@/types/quiz';
+import { quizTree } from '@/data/quizQuestions';
 import { getRecommendation } from '@/utils/recommendService';
 import QuizQuestion from './QuizQuestion';
 import QuizLoading from './QuizLoading';
 import QuizResultCard from './QuizResultCard';
 import QuizEmailCapture from './QuizEmailCapture';
 
+const TOTAL_STEPS = 3;
+
 const QuizFlow = () => {
   const [state, setState] = useState<QuizState>('questions');
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [answers, setAnswers] = useState<Partial<QuizAnswer>>({});
+  const [currentNode, setCurrentNode] = useState<QuizNode>(quizTree);
+  const [step, setStep] = useState(0);
+  const [answers, setAnswers] = useState<QuizAnswerStep[]>([]);
   const [recommendation, setRecommendation] = useState<QuizRecommendation | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   // Detect language from document direction; default to Hebrew
   const language: Language = document.documentElement.dir === 'ltr' ? 'en' : 'he';
 
-  const currentQuestion = quizQuestions[currentQuestionIndex];
-
   const submitQuiz = useCallback(
-    async (finalAnswers: QuizAnswer) => {
+    async (finalAnswers: QuizAnswerStep[]) => {
       setState('loading');
       setError(null);
 
+      // Convert tree answers to a flat object for the API
+      const answersPayload = {
+        emotionalState: finalAnswers[0]?.value || '',
+        desiredMode: finalAnswers[1]?.value || '',
+        energyLevel: finalAnswers[2]?.value || '',
+        helpType: '',
+        // Include full path for richer AI context
+        path: finalAnswers.map((a) => ({
+          question: a.questionId,
+          answer: a.value,
+          label: language === 'he' ? a.labelHe : a.labelEn,
+        })),
+      };
+
       try {
-        const result = await getRecommendation(finalAnswers, language);
+        const result = await getRecommendation(answersPayload, language);
         setRecommendation(result);
         setState('result');
       } catch (err) {
@@ -38,8 +53,9 @@ const QuizFlow = () => {
               : 'Something went wrong. Try again.'
         );
         setState('questions');
-        setCurrentQuestionIndex(0);
-        setAnswers({});
+        setCurrentNode(quizTree);
+        setStep(0);
+        setAnswers([]);
       }
     },
     [language]
@@ -47,32 +63,36 @@ const QuizFlow = () => {
 
   const handleAnswer = useCallback(
     async (value: string) => {
-      const updatedAnswers = { ...answers, [currentQuestion.id]: value };
+      const selectedOption = currentNode.options.find((o) => o.value === value);
+      if (!selectedOption) return;
+
+      const newAnswer: QuizAnswerStep = {
+        questionId: currentNode.id,
+        value,
+        labelHe: selectedOption.labelHe,
+        labelEn: selectedOption.labelEn,
+      };
+
+      const updatedAnswers = [...answers, newAnswer];
       setAnswers(updatedAnswers);
 
-      const nextIndex = currentQuestionIndex + 1;
-      if (nextIndex < quizQuestions.length) {
-        setCurrentQuestionIndex(nextIndex);
+      if (selectedOption.next) {
+        // Go deeper in the tree
+        setCurrentNode(selectedOption.next);
+        setStep((s) => s + 1);
       } else {
-        await submitQuiz(updatedAnswers as QuizAnswer);
+        // Leaf node — submit
+        await submitQuiz(updatedAnswers);
       }
     },
-    [answers, currentQuestion, currentQuestionIndex, submitQuiz]
+    [answers, currentNode, submitQuiz]
   );
-
-  const handleSkip = useCallback(async () => {
-    const nextIndex = currentQuestionIndex + 1;
-    if (nextIndex < quizQuestions.length) {
-      setCurrentQuestionIndex(nextIndex);
-    } else {
-      await submitQuiz(answers as QuizAnswer);
-    }
-  }, [answers, currentQuestionIndex, submitQuiz]);
 
   const handleRetry = () => {
     setState('questions');
-    setCurrentQuestionIndex(0);
-    setAnswers({});
+    setCurrentNode(quizTree);
+    setStep(0);
+    setAnswers([]);
     setRecommendation(null);
     setError(null);
   };
@@ -85,13 +105,12 @@ const QuizFlow = () => {
       <AnimatePresence mode="wait">
         {state === 'questions' && (
           <QuizQuestion
-            key={`q-${currentQuestionIndex}`}
-            question={currentQuestion}
-            currentIndex={currentQuestionIndex}
-            totalQuestions={quizQuestions.length}
+            key={currentNode.id}
+            question={currentNode}
+            step={step}
+            totalSteps={TOTAL_STEPS}
             language={language}
             onAnswer={handleAnswer}
-            onSkip={currentQuestion.optional ? handleSkip : undefined}
           />
         )}
 
@@ -103,7 +122,7 @@ const QuizFlow = () => {
             className="min-h-[100dvh] flex flex-col items-center justify-center px-6 py-8"
           >
             <QuizResultCard recommendation={recommendation} language={language} />
-            <QuizEmailCapture answers={answers as QuizAnswer} language={language} />
+            <QuizEmailCapture answers={answers} language={language} />
 
             {/* Retry link */}
             <button

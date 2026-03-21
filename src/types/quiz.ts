@@ -1,22 +1,21 @@
 export type Language = 'he' | 'en';
 
-export interface QuizAnswer {
-  emotionalState: string;
-  desiredMode: string;
-  energyLevel: string;
-  helpType: string;
-  avoiding?: string;
+export interface QuizOption {
+  value: string;
+  labelHe: string;
+  labelEn: string;
+  next?: QuizNode;
 }
 
-export interface QuizQuestion {
-  id: keyof QuizAnswer;
+export interface QuizNode {
+  id: string;
   titleHe: string;
   titleEn: string;
   options: QuizOption[];
-  optional?: boolean;
 }
 
-export interface QuizOption {
+export interface QuizAnswerStep {
+  questionId: string;
   value: string;
   labelHe: string;
   labelEn: string;

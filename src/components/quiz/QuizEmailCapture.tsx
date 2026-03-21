@@ -1,10 +1,10 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
-import { Language, QuizAnswer } from '@/types/quiz';
+import { Language, QuizAnswerStep } from '@/types/quiz';
 import { submitEmailCapture } from '@/utils/recommendService';
 
 interface QuizEmailCaptureProps {
-  answers: QuizAnswer;
+  answers: QuizAnswerStep[];
   language: Language;
 }
 

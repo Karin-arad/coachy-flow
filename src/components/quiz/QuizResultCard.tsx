@@ -7,7 +7,7 @@ interface QuizResultCardProps {
 }
 
 const QuizResultCard = ({ recommendation, language }: QuizResultCardProps) => {
-  const { primary, secondary } = recommendation;
+  const { primary, secondary, wink } = recommendation;
   const isRTL = language === 'he';
 
   const vibeLabel = language === 'he' ? 'הוויב שלך עכשיו' : 'Your vibe right now';
@@ -64,6 +64,18 @@ const QuizResultCard = ({ recommendation, language }: QuizResultCardProps) => {
             {secondary.title}
           </span>
         </motion.a>
+      )}
+
+      {/* Wink */}
+      {wink && (
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.8 }}
+          className="mt-4 text-center text-xs text-white/25 font-hebrew leading-relaxed"
+        >
+          {wink}
+        </motion.p>
       )}
     </motion.div>
   );

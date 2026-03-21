@@ -33,6 +33,7 @@ export interface RecommendationItem {
 export interface QuizRecommendation {
   primary: RecommendationItem;
   secondary?: RecommendationItem;
+  wink?: string;
 }
 
 export interface QuizErrorResponse {
@@ -40,4 +41,4 @@ export interface QuizErrorResponse {
   fallback: RecommendationItem;
 }
 
-export type QuizState = 'questions' | 'loading' | 'result';
+export type QuizState = 'questions' | 'free-text' | 'loading' | 'result';

@@ -4,40 +4,36 @@ import { QuizNode, QuizAnswerStep, QuizRecommendation, QuizState, Language } fro
 import { quizTree } from '@/data/quizQuestions';
 import { getRecommendation } from '@/utils/recommendService';
 import QuizQuestion from './QuizQuestion';
+import QuizFreeText from './QuizFreeText';
 import QuizLoading from './QuizLoading';
 import QuizResultCard from './QuizResultCard';
 import QuizEmailCapture from './QuizEmailCapture';
 
-const TOTAL_STEPS = 3;
+const TOTAL_STEPS = 4; // 3 bubbles + 1 free text
 
 const QuizFlow = () => {
   const [state, setState] = useState<QuizState>('questions');
   const [currentNode, setCurrentNode] = useState<QuizNode>(quizTree);
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<QuizAnswerStep[]>([]);
+  const [freeText, setFreeText] = useState('');
   const [recommendation, setRecommendation] = useState<QuizRecommendation | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  // Detect language from document direction; default to Hebrew
   const language: Language = document.documentElement.dir === 'ltr' ? 'en' : 'he';
 
   const submitQuiz = useCallback(
-    async (finalAnswers: QuizAnswerStep[]) => {
+    async (finalAnswers: QuizAnswerStep[], userFreeText: string) => {
       setState('loading');
       setError(null);
 
-      // Convert tree answers to a flat object for the API
       const answersPayload = {
-        emotionalState: finalAnswers[0]?.value || '',
-        desiredMode: finalAnswers[1]?.value || '',
-        energyLevel: finalAnswers[2]?.value || '',
-        helpType: '',
-        // Include full path for richer AI context
         path: finalAnswers.map((a) => ({
           question: a.questionId,
           answer: a.value,
           label: language === 'he' ? a.labelHe : a.labelEn,
         })),
+        freeText: userFreeText,
       };
 
       try {
@@ -56,13 +52,14 @@ const QuizFlow = () => {
         setCurrentNode(quizTree);
         setStep(0);
         setAnswers([]);
+        setFreeText('');
       }
     },
     [language]
   );
 
   const handleAnswer = useCallback(
-    async (value: string) => {
+    (value: string) => {
       const selectedOption = currentNode.options.find((o) => o.value === value);
       if (!selectedOption) return;
 
@@ -77,15 +74,23 @@ const QuizFlow = () => {
       setAnswers(updatedAnswers);
 
       if (selectedOption.next) {
-        // Go deeper in the tree
         setCurrentNode(selectedOption.next);
         setStep((s) => s + 1);
       } else {
-        // Leaf node — submit
-        await submitQuiz(updatedAnswers);
+        // Leaf node — go to free text
+        setState('free-text');
+        setStep(3);
       }
     },
-    [answers, currentNode, submitQuiz]
+    [answers, currentNode]
+  );
+
+  const handleFreeTextSubmit = useCallback(
+    async (text: string) => {
+      setFreeText(text);
+      await submitQuiz(answers, text);
+    },
+    [answers, submitQuiz]
   );
 
   const handleRetry = () => {
@@ -93,6 +98,7 @@ const QuizFlow = () => {
     setCurrentNode(quizTree);
     setStep(0);
     setAnswers([]);
+    setFreeText('');
     setRecommendation(null);
     setError(null);
   };
@@ -114,6 +120,14 @@ const QuizFlow = () => {
           />
         )}
 
+        {state === 'free-text' && (
+          <QuizFreeText
+            key="free-text"
+            language={language}
+            onSubmit={handleFreeTextSubmit}
+          />
+        )}
+
         {state === 'loading' && <QuizLoading key="loading" language={language} />}
 
         {state === 'result' && recommendation && (
@@ -124,7 +138,6 @@ const QuizFlow = () => {
             <QuizResultCard recommendation={recommendation} language={language} />
             <QuizEmailCapture answers={answers} language={language} />
 
-            {/* Retry link */}
             <button
               onClick={handleRetry}
               className="mt-8 text-xs text-white/20 hover:text-white/40 transition-colors font-hebrew"
@@ -135,7 +148,6 @@ const QuizFlow = () => {
         )}
       </AnimatePresence>
 
-      {/* Error toast */}
       {error && (
         <div className="fixed bottom-4 left-4 right-4 mx-auto max-w-sm rounded-xl p-3 bg-red-500/20 border border-red-500/30 text-center">
           <p className="text-sm text-red-300 font-hebrew">{error}</p>

@@ -1,0 +1,108 @@
+<h2>Result Card — איך התוצאה נראית?</h2>
+<p class="subtitle">אחרי אנימציית "חושבים עליך...", מה מופיע?</p>
+
+<div class="cards">
+  <!-- Option A -->
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="background: linear-gradient(135deg, #1a1a2e, #16213e); border-radius: 16px; padding: 28px; min-height: 340px; direction: rtl; font-family: 'Rubik', sans-serif; display: flex; flex-direction: column; justify-content: center;">
+        <!-- Emoji accent -->
+        <div style="text-align: center; font-size: 40px; margin-bottom: 16px;">⚡</div>
+        <!-- Sharp quote -->
+        <div style="text-align: center; font-size: 22px; font-weight: 600; color: #FFD6A5; line-height: 1.6; margin-bottom: 16px;">
+          לא צריך עומק עכשיו.<br/>צריך תנועה.
+        </div>
+        <!-- Short explanation -->
+        <div style="text-align: center; font-size: 14px; color: rgba(255,214,165,0.7); margin-bottom: 24px; line-height: 1.5;">
+          יש הרבה אנרגיה תקועה שמחפשת מוצא. לפני שחושבים — זזים.
+        </div>
+        <!-- CTA Button -->
+        <div style="text-align: center;">
+          <div style="display: inline-block; background: #FF8C42; color: white; border-radius: 24px; padding: 14px 32px; font-size: 16px; font-weight: 600; cursor: pointer;">
+            לאפליקציית האימון →
+          </div>
+        </div>
+        <!-- Secondary -->
+        <div style="text-align: center; margin-top: 16px;">
+          <div style="font-size: 12px; color: rgba(255,255,255,0.4);">או אולי: קוביית ההחלטות 🎲</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A — ציטוט חד + CTA</h3>
+      <p>משפט אחד ישיר, הסבר קצר, כפתור בולט. המלצה משנית כטקסט שקט. מהיר ופוגע בול.</p>
+    </div>
+  </div>
+
+  <!-- Option B -->
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="background: linear-gradient(135deg, #1a1a2e, #16213e); border-radius: 16px; padding: 28px; min-height: 340px; direction: rtl; font-family: 'Rubik', sans-serif; display: flex; flex-direction: column; justify-content: center;">
+        <!-- Card within card -->
+        <div style="background: rgba(255,140,66,0.1); border: 1px solid rgba(255,140,66,0.2); border-radius: 16px; padding: 24px; margin-bottom: 16px;">
+          <div style="font-size: 13px; color: #FF8C42; margin-bottom: 8px;">הוויב שלך עכשיו</div>
+          <div style="font-size: 20px; font-weight: 600; color: #FFD6A5; line-height: 1.5; margin-bottom: 12px;">
+            לא מחפשים הסחה.<br/>מחפשים להבין מה באמת מפריע.
+          </div>
+          <div style="font-size: 13px; color: rgba(255,214,165,0.6); line-height: 1.5;">
+            הדבר הכי טוב עכשיו הוא שיחה ישירה עם עצמך. בלי פילטרים.
+          </div>
+        </div>
+        <!-- Main CTA -->
+        <div style="background: #FF8C42; border-radius: 14px; padding: 16px; text-align: center; cursor: pointer; margin-bottom: 10px;">
+          <div style="font-size: 12px; color: rgba(255,255,255,0.7);">מומלץ</div>
+          <div style="font-size: 16px; font-weight: 600; color: white;">סוכן בירור עצמי ✨</div>
+        </div>
+        <!-- Secondary CTA -->
+        <div style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 12px; text-align: center; cursor: pointer;">
+          <div style="font-size: 12px; color: rgba(255,255,255,0.4);">אפשרות נוספת</div>
+          <div style="font-size: 14px; color: rgba(255,255,255,0.6);">קוביית ההחלטות 🎲</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B — כרטיס וויב + שתי אפשרויות</h3>
+      <p>"הוויב שלך עכשיו" כותרת, הסבר בפנים, שתי המלצות ברורות — ראשית ומשנית. יותר עשיר.</p>
+    </div>
+  </div>
+
+  <!-- Option C -->
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="background: linear-gradient(135deg, #1a1a2e, #16213e); border-radius: 16px; padding: 28px; min-height: 340px; direction: rtl; font-family: 'Rubik', sans-serif;">
+        <!-- Chat bubble from bot -->
+        <div style="display: flex; gap: 10px; align-items: flex-start; margin-bottom: 16px;">
+          <div style="width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, #FF8C42, #FFD6A5); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0;">✨</div>
+          <div style="background: rgba(255,140,66,0.15); border-radius: 16px 4px 16px 16px; padding: 16px; max-width: 85%;">
+            <div style="font-size: 16px; color: #FFD6A5; font-weight: 500; line-height: 1.6; margin-bottom: 8px;">
+              יש עומס רגשי שמנסה להתלבש כ"אני בסדר". לא צריך לפתור את זה — צריך לראות את זה.
+            </div>
+            <div style="font-size: 13px; color: rgba(255,214,165,0.6); line-height: 1.4;">
+              יש לי כלי שיעזור. שיחה קצרה וישירה עם עצמך.
+            </div>
+          </div>
+        </div>
+        <!-- CTA as chat action -->
+        <div style="padding-right: 46px;">
+          <div style="background: #FF8C42; border-radius: 12px; padding: 14px; text-align: center; cursor: pointer; margin-bottom: 8px;">
+            <div style="font-size: 15px; font-weight: 600; color: white;">פתח בירור עצמי →</div>
+          </div>
+          <div style="text-align: center; font-size: 12px; color: rgba(255,255,255,0.3);">
+            או: קוביית ההחלטות 🎲
+          </div>
+        </div>
+        <!-- Email tease -->
+        <div style="margin-top: 20px; padding-right: 46px;">
+          <div style="background: rgba(255,255,255,0.05); border-radius: 12px; padding: 12px; text-align: center;">
+            <div style="font-size: 12px; color: rgba(255,214,165,0.5);">🔮 רוצים לקבל את הוויב המלא שלכם היום?</div>
+            <div style="font-size: 11px; color: rgba(255,255,255,0.3); margin-top: 4px;">השאירו מייל ונשלח ניתוח קצר</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C — צ׳אט + הצעת מייל</h3>
+      <p>התוצאה מגיעה כהודעת צ׳אט, CTA כפעולה, והצעת המייל משולבת באותו flow. הכי שלם אבל הכי עמוס.</p>
+    </div>
+  </div>
+</div>

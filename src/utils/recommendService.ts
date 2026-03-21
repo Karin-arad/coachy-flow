@@ -39,6 +39,7 @@ export const getRecommendation = async (
     return {
       primary: data.primary,
       secondary: data.secondary || undefined,
+      wink: data.wink || undefined,
     };
   } catch (error) {
     if (error instanceof Error && error.name === 'AbortError') {

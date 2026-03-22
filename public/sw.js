@@ -1,4 +1,4 @@
-const CACHE_NAME = 'coachy-cache-v2';
+const CACHE_NAME = 'quiz-cache-v2';
 
 self.addEventListener('install', (event) => {
   self.skipWaiting();

@@ -72,7 +72,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         // Check if FlowContext exists and is accessible
         try {
           // Use a global event to communicate with FlowContext if needed
-          const event = new CustomEvent('coachy-celebration', { 
+          const event = new CustomEvent('quiz-celebration', { 
             detail: { type } 
           });
           window.dispatchEvent(event);

@@ -1,14 +1,15 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
-import { Language, QuizAnswerStep } from '@/types/quiz';
+import { Language, QuizAnswerStep, QuizRecommendation } from '@/types/quiz';
 import { submitEmailCapture } from '@/utils/recommendService';
 
 interface QuizEmailCaptureProps {
   answers: QuizAnswerStep[];
   language: Language;
+  recommendation: QuizRecommendation;
 }
 
-const QuizEmailCapture = ({ answers, language }: QuizEmailCaptureProps) => {
+const QuizEmailCapture = ({ answers, language, recommendation }: QuizEmailCaptureProps) => {
   const [email, setEmail] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const isRTL = language === 'he';
@@ -16,7 +17,7 @@ const QuizEmailCapture = ({ answers, language }: QuizEmailCaptureProps) => {
   const handleSubmit = async () => {
     if (!email.trim() || submitted) return;
     setSubmitted(true);
-    await submitEmailCapture(email.trim(), answers, language);
+    await submitEmailCapture(email.trim(), answers, language, recommendation);
   };
 
   return (

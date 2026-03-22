@@ -23,7 +23,27 @@ export const getRecommendation = async (
       throw new Error(`שגיאה בתקשורת: ${response.status}`);
     }
 
-    const data = await response.json();
+    const rawText = await response.text();
+    // Make/OpenAI may wrap JSON in code fences or return it doubled — parse carefully
+    let cleaned = rawText.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/i, '').trim();
+    // If response is doubled (two JSON objects concatenated), take only the first one
+    let data: Record<string, unknown>;
+    try {
+      data = JSON.parse(cleaned);
+    } catch {
+      // Find the end of the first complete JSON object by matching braces
+      let depth = 0;
+      let end = 0;
+      for (let i = 0; i < cleaned.length; i++) {
+        if (cleaned[i] === '{') depth++;
+        else if (cleaned[i] === '}') { depth--; if (depth === 0) { end = i + 1; break; } }
+      }
+      if (end > 0) {
+        data = JSON.parse(cleaned.substring(0, end));
+      } else {
+        throw new Error('תשובה לא תקינה מהשרת');
+      }
+    }
 
     if (data.error) {
       return {
@@ -52,7 +72,8 @@ export const getRecommendation = async (
 export const submitEmailCapture = async (
   email: string,
   answers: Record<string, unknown>,
-  language: Language
+  language: Language,
+  recommendation?: QuizRecommendation
 ): Promise<void> => {
   if (!MAKE_EMAIL_WEBHOOK_URL) return;
 
@@ -60,7 +81,7 @@ export const submitEmailCapture = async (
     await fetch(MAKE_EMAIL_WEBHOOK_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, answers, language }),
+      body: JSON.stringify({ email, answers, language, recommendation }),
       signal: AbortSignal.timeout(10000),
     });
   } catch {

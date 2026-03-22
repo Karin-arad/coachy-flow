@@ -34,6 +34,8 @@ const QuizResultCard = ({ recommendation, language }: QuizResultCardProps) => {
       {/* Primary CTA */}
       <motion.a
         href={primary.url}
+        target="_blank"
+        rel="noopener noreferrer"
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
         className="block w-full rounded-xl p-4 text-center bg-[#FF8C42] cursor-pointer mb-3 no-underline"
@@ -50,6 +52,8 @@ const QuizResultCard = ({ recommendation, language }: QuizResultCardProps) => {
       {secondary && (
         <motion.a
           href={secondary.url}
+          target="_blank"
+          rel="noopener noreferrer"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3 }}

@@ -1,7 +1,7 @@
 
 {
-  "name": "Coachy Flow",
-  "short_name": "Coachy",
+  "name": "Quiz",
+  "short_name": "Quiz",
   "description": "Your personalized workout companion",
   "start_url": "/",
   "display": "standalone",

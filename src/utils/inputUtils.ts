@@ -55,7 +55,7 @@ export const createWorkoutRequestPrompt = (
                          emotionRatings.lightness > 4 ? "moderately light" : "feeling heavy and stiff";
 
   // Construct the prompt following the new format
-  let prompt = `You are Coachy – a smart, supportive fitness assistant that recommends YouTube workouts based on the user's physical, emotional and practical needs.
+  let prompt = `You are Quiz – a smart, supportive fitness assistant that recommends YouTube workouts based on the user's physical, emotional and practical needs.
 
 User's current state:
 - Mood/Bounciness: ${bouncinessLevel}

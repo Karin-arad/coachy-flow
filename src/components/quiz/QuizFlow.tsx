@@ -136,7 +136,7 @@ const QuizFlow = () => {
             className="min-h-[100dvh] flex flex-col items-center justify-center px-6 py-8"
           >
             <QuizResultCard recommendation={recommendation} language={language} />
-            <QuizEmailCapture answers={answers} language={language} />
+            <QuizEmailCapture answers={answers} language={language} recommendation={recommendation} />
 
             <button
               onClick={handleRetry}

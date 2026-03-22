@@ -19,7 +19,7 @@ import APIKeyInput from '@/components/APIKeyInput';
 import { cn } from '@/lib/utils';
 import { preloadSounds } from '@/utils/soundEffects';
 
-const CoachyFlow = () => {
+const QuizFlow = () => {
   const { currentScreen, celebrationType, isCelebrating } = useFlowContext();
   const isMobile = useIsMobile();
   const [showApiKeyModal, setShowApiKeyModal] = useState(false);
@@ -119,7 +119,7 @@ const CoachyFlow = () => {
 const Index = () => {
   return (
     <FlowProvider>
-      <CoachyFlow />
+      <QuizFlow />
     </FlowProvider>
   );
 };

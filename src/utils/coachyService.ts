@@ -1,6 +1,6 @@
 
 /**
- * Utility service for communicating with the Coachy API
+ * Utility service for communicating with the Quiz API
  */
 
 // משתנה לבדיקה האם השרת זמין כרגע
@@ -43,13 +43,13 @@ export const isCoachyServerAvailable = async (): Promise<boolean> => {
 };
 
 /**
- * Send a question to the Coachy AI and get a response
+ * Send a question to the Quiz AI and get a response
  * 
  * @param question The user's question/message
  * @returns The AI's response message
  */
 export const askCoachyAI = async (question: string): Promise<string> => {
-  console.log('🔵 Sending question to Coachy API:', question);
+  console.log('🔵 Sending question to Quiz API:', question);
   console.log('🌐 API URL:', 'https://coachylovable.karinzahav.repl.co/ask');
   
   // בדיקת זמינות השרת לפני שליחת השאלה
@@ -84,7 +84,7 @@ export const askCoachyAI = async (question: string): Promise<string> => {
     }
     
     const data = await response.json();
-    console.log('✅ Received response data from Coachy API:', data);
+    console.log('✅ Received response data from Quiz API:', data);
     
     if (!data.answer) {
       console.error('❌ Server response missing answer field:', data);
@@ -93,7 +93,7 @@ export const askCoachyAI = async (question: string): Promise<string> => {
     
     return data.answer;
   } catch (error) {
-    console.error('❌ Error communicating with Coachy API:', error);
+    console.error('❌ Error communicating with Quiz API:', error);
     
     // בדיקה אם הבעיה היא בטיימאאוט
     if (error.name === 'AbortError' || error.name === 'TimeoutError') {

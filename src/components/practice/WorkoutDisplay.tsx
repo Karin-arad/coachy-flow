@@ -22,7 +22,7 @@ const WorkoutDisplay = ({ workoutDescription }: WorkoutDisplayProps) => {
           {tags.map((tag, i) => (
             <span
               key={i}
-              className="bg-[hsl(var(--background))] text-[hsl(var(--primary))] px-3 py-1 rounded-full text-[14px] font-medium"
+              className="chip"
             >
               {tag}
             </span>

@@ -7,6 +7,9 @@ import LoadingState from './practice/LoadingState';
 import ErrorState from './practice/ErrorState';
 import WorkoutDisplay from './practice/WorkoutDisplay';
 import VideoSection from './practice/VideoSection';
+import Creature from './Creature';
+import { useWorldBackground } from '@/hooks/useWorldBackground';
+import { worlds, worldBackground } from '@/lib/worlds';
 
 const PracticeSummary = () => {
   const { currentScreen, emotionRatings, userConversation, timeAvailable, goToScreen } = useFlowContext();
@@ -55,15 +58,24 @@ const PracticeSummary = () => {
     handleVideoRetry(workoutDescription!, emotionRatings, timeAvailable, userConversation);
   };
 
+  useWorldBackground(worldBackground('neutral'));
+
   if (currentScreen !== 7) {
     return null;
   }
 
   return (
     <div className="screen">
-      <h1 className="t-title">
-        {isLoading || !workoutDescription ? 'מרכיבים לך אימון' : 'האימון שלך מוכן'}
-      </h1>
+      <div className="flex items-end gap-3">
+        <h1 className="t-title flex-1">
+          {isLoading || !workoutDescription ? 'מרכיבים לך אימון' : 'האימון שלך מוכן'}
+        </h1>
+        {workoutDescription && !isLoading && (
+          <div className="w-[88px] h-[150px] flex-shrink-0">
+            <Creature value={10} color={worlds.bounciness.creature} scale={0.36} />
+          </div>
+        )}
+      </div>
 
       <div className="flex-1 flex flex-col min-h-0">
 

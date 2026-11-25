@@ -1,11 +1,14 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { cn } from '@/lib/utils';
-import { Slider } from '@/components/ui/slider';
-import { motion } from 'framer-motion';
 import NavigationButtons from './NavigationButtons';
+import Creature from './Creature';
+import MoodSlider from './MoodSlider';
+import { worlds, worldBackground, moodFor, WorldKey } from '@/lib/worlds';
+import { useWorldBackground } from '@/hooks/useWorldBackground';
 
 interface QuestionCardProps {
   title: string;
+  /** No longer shown: the creature replaced the emoji */
   emojiIcon?: string;
   currentValue: number;
   onChange: (value: number[]) => void;
@@ -19,15 +22,14 @@ interface QuestionCardProps {
 }
 
 const sliderLabels: Record<string, { high: string; low: string }> = {
-  bounciness: { high: 'שמחה גבוהה', low: 'שמחה נמוכה' },
-  energy: { high: 'הרבה אנרגיה', low: 'מעט אנרגיה' },
-  alertness: { high: 'ערנות גבוהה', low: 'עייפות' },
-  lightness: { high: 'קלילות', low: 'כבדות' },
+  bounciness: { high: 'בא לי לרקוד', low: 'בא לי שמיכה' },
+  energy: { high: 'מצב טיל', low: 'מצב ספה' },
+  alertness: { high: 'אחרי שלושה', low: 'לפני קפה' },
+  lightness: { high: 'בלון הליום', low: 'אחרי חמין' },
 };
 
 const QuestionCard = ({
   title,
-  emojiIcon = "✨",
   currentValue,
   onChange,
   onNext,
@@ -38,44 +40,43 @@ const QuestionCard = ({
   className,
   showPrevious = true
 }: QuestionCardProps) => {
-  const labels = emotionType ? sliderLabels[emotionType] : { high: 'גבוה', low: 'נמוך' };
+  const worldKey: WorldKey = emotionType ?? 'bounciness';
+  const world = worlds[worldKey];
+  const labels = sliderLabels[worldKey];
+
+  useWorldBackground(worldBackground(worldKey, currentValue));
+
+  // Shrink the creature on short phones so its tallest pose still fits the stage
+  const stageRef = useRef<HTMLDivElement>(null);
+  const [creatureScale, setCreatureScale] = useState(1);
+  useEffect(() => {
+    const stage = stageRef.current;
+    if (!stage) return;
+    const fit = () => setCreatureScale(Math.min(1, Math.max(0.4, stage.clientHeight / 400)));
+    fit();
+    const observer = new ResizeObserver(fit);
+    observer.observe(stage);
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <div className={cn('screen', className)}>
-      <div className="screen-hero">
-        <motion.div
-          className="hero-badge"
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.3 }}
-          aria-hidden="true"
-        >
-          {emojiIcon}
-        </motion.div>
+      <div>
         <h1 className="t-title">{title}</h1>
+        <p className="t-mood" aria-live="polite">{moodFor(worldKey, currentValue)}</p>
       </div>
 
-      <div className="surface">
-        <div className="flex items-baseline justify-center gap-1 mb-5" dir="ltr">
-          <span className="text-[44px] leading-none font-bold text-[hsl(var(--foreground))]">{currentValue}</span>
-          <span className="t-sub">/ 10</span>
-        </div>
+      <div ref={stageRef} className="flex-1 min-h-0">
+        <Creature value={currentValue} color={world.creature} scale={creatureScale} />
+      </div>
 
-        <Slider
-          dir="rtl"
-          value={[currentValue]}
-          min={1}
-          max={10}
-          step={1}
-          onValueChange={onChange}
-          emotionType={emotionType}
-          className="w-full"
-        />
-
+      <div>
+        <MoodSlider value={currentValue} onChange={onChange} color={world.creature} label={title} />
         {/* The slider runs right-to-left: its low end is on the right */}
-        <div className="flex justify-between mt-4">
-          <span className="t-label">{labels.low}</span>
-          <span className="t-label">{labels.high}</span>
+        <div className="flex justify-between mt-1 t-label">
+          <span>{labels.low}</span>
+          <span>{currentValue} מתוך 10</span>
+          <span>{labels.high}</span>
         </div>
       </div>
 

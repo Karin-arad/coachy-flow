@@ -55,11 +55,11 @@ const ConversationTextarea = ({ value, onChange }: ConversationTextareaProps) =>
         </div>
 
         <div className="flex gap-2 mt-3 flex-wrap">
-          {['💪 חיזוק', '🧘 מתיחות', '🔥 קרדיו'].map((tag) => (
+          {['חיזוק', 'מתיחות', 'קרדיו'].map((tag) => (
             <button
               key={tag}
               onClick={() => onChange(value ? value + ' ' + tag : tag)}
-              className="bg-[hsl(var(--background))] px-4 h-9 rounded-full t-label"
+              className="chip"
             >
               {tag}
             </button>

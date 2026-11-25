@@ -4,6 +4,9 @@ import { motion } from 'framer-motion';
 import { playSound } from '@/utils/soundEffects';
 import TimeOption from './TimeOption';
 import NavigationButtons from './NavigationButtons';
+import Creature from './Creature';
+import { useWorldBackground } from '@/hooks/useWorldBackground';
+import { worlds, worldBackground } from '@/lib/worlds';
 
 const TimeAvailability = () => {
   const { setTimeAvailable, timeAvailable, goToNextScreen, goToScreen, currentScreen, triggerCelebration } = useFlowContext();
@@ -22,6 +25,8 @@ const TimeAvailability = () => {
     playSound('click');
   };
 
+  useWorldBackground(worldBackground('energy'));
+
   // Don't render if we're not on screen 6
   if (currentScreen !== 6) {
     return null;
@@ -31,14 +36,20 @@ const TimeAvailability = () => {
 
   return (
     <div className="screen">
-      <motion.div
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1, duration: 0.4 }}
-      >
-        <h1 className="t-title mb-2">כמה זמן יש לך?</h1>
-        <p className="t-sub">כמה דקות מתאימות לך היום?</p>
-      </motion.div>
+      <div className="flex items-end gap-3">
+        <div className="flex-1">
+          <h1 className="t-title mb-2">כמה זמן יש לך?</h1>
+          <p className="t-sub">כמה דקות מתאימות לך היום?</p>
+        </div>
+        <div className="w-[88px] h-[104px] flex-shrink-0">
+          {/* The creature stretches with the time chosen */}
+          <Creature
+            value={{ '10': 2, '20': 5, '30': 7, '45': 8 }[timeAvailable] ?? 4}
+            color={worlds.energy.creature}
+            scale={0.36}
+          />
+        </div>
+      </div>
 
       <div className="flex flex-col gap-3 flex-1">
         {timeOptions.map((minutes, index) => (

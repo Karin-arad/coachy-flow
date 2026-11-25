@@ -1,24 +1,12 @@
-
 import React from 'react';
-import { motion } from 'framer-motion';
+import Creature from '../Creature';
+import { worlds } from '@/lib/worlds';
 
 const LoadingState = () => {
   return (
-    <div className="flex flex-col items-center justify-center space-y-4">
-      <div className="flex items-center justify-center gap-2 py-12">
-        {[0, 1, 2].map((i) => (
-          <motion.div
-            key={i}
-            className="w-3 h-3 rounded-full bg-[hsl(var(--primary))]"
-            animate={{ scale: [0.8, 1.2, 0.8] }}
-            transition={{
-              duration: 0.8,
-              repeat: Infinity,
-              delay: i * 0.15,
-              ease: 'easeInOut',
-            }}
-          />
-        ))}
+    <div className="flex flex-col items-center gap-4" role="status">
+      <div className="w-[200px] h-[200px]">
+        <Creature value={6} color={worlds.bounciness.creature} scale={0.7} bouncing />
       </div>
       <p className="t-sub">מרכיבים לך את האימון...</p>
     </div>

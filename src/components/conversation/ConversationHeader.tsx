@@ -1,18 +1,20 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import Creature from '../Creature';
+import { worlds } from '@/lib/worlds';
 
 const ConversationHeader = () => {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: -10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.1, duration: 0.4 }}
-    >
-      <h1 className="t-title mb-2">כמה מילים עליך</h1>
-      <p className="t-sub">
-        יש לך כאבים או אזורים רגישים? או משהו אחר שכדאי לי לדעת לפני שמתחילים?
-      </p>
-    </motion.div>
+    <div className="flex items-end gap-3">
+      <div className="flex-1">
+        <h1 className="t-title mb-2">כמה מילים עליך</h1>
+        <p className="t-sub">
+          יש לך כאבים או אזורים רגישים? או משהו אחר שכדאי לי לדעת לפני שמתחילים?
+        </p>
+      </div>
+      <div className="w-[88px] h-[104px] flex-shrink-0">
+        <Creature value={6} color={worlds.bounciness.creature} scale={0.36} />
+      </div>
+    </div>
   );
 };
 

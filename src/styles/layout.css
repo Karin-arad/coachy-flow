@@ -3,9 +3,18 @@
 .app-container {
   min-height: 100vh;
   min-height: 100dvh;
-  background: hsl(var(--background));
+  /* Tokens of the main flow. Scoped here so the /discover quiz keeps its own look. */
+  --ink: #17153B;
+  --foreground: 243 48% 16%;
+  --muted-foreground: 243 30% 28%;
+  --primary: 243 48% 16%;
+  --border: 243 30% 80%;
+  --ring: 243 48% 16%;
+  background: var(--world-bg, #CDF7E1);
+  transition: background 0.45s ease;
+  color: var(--ink);
   direction: rtl;
-  font-family: 'Rubik', 'Heebo', system-ui, sans-serif;
+  font-family: 'Fredoka', 'Rubik', 'Heebo', system-ui, sans-serif;
   padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
   display: flex;
   justify-content: center;
@@ -61,11 +70,26 @@
   gap: 12px;
 }
 
+.app-container * {
+  font-family: 'Fredoka', 'Rubik', 'Heebo', system-ui, sans-serif;
+}
+
 .surface {
-  background: hsl(var(--surface));
-  border-radius: 24px;
+  background: #fff;
+  border-radius: 28px;
   padding: 24px 20px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+}
+
+.chip {
+  height: 40px;
+  padding: 0 16px;
+  border-radius: 20px;
+  background: rgba(23, 21, 59, 0.08);
+  color: var(--ink);
+  font-size: 16px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
 }
 
 .hero-badge {
@@ -82,17 +106,18 @@
 }
 
 /* Type scale: four sizes, used everywhere in the flow */
-.t-title { font-size: 28px; line-height: 1.25; font-weight: 700; color: hsl(var(--foreground)); }
-.t-body  { font-size: 17px; line-height: 1.55; font-weight: 400; color: hsl(var(--foreground)); }
-.t-sub   { font-size: 16px; line-height: 1.5;  font-weight: 400; color: hsl(var(--muted-foreground)); }
-.t-label { font-size: 14px; line-height: 1.4;  font-weight: 500; color: hsl(var(--muted-foreground)); }
+.t-title { font-size: 40px; line-height: 1.05; font-weight: 600; color: var(--ink); margin: 0; text-wrap: balance; }
+.t-mood  { font-size: 24px; line-height: 1.3;  font-weight: 500; color: var(--ink); margin: 6px 0 0; min-height: 31px; }
+.t-body  { font-size: 18px; line-height: 1.5;  font-weight: 400; color: var(--ink); }
+.t-sub   { font-size: 18px; line-height: 1.45; font-weight: 400; color: var(--ink); }
+.t-label { font-size: 16px; line-height: 1.4;  font-weight: 500; color: var(--ink); }
 
 /* Buttons: one primary, one secondary, same height */
 .btn-primary,
 .btn-secondary {
-  height: 56px;
-  border-radius: 16px;
-  font-size: 17px;
+  height: 60px;
+  border-radius: 30px;
+  font-size: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -103,21 +128,19 @@
 }
 .btn-primary {
   flex: 2;
-  background: hsl(var(--primary));
+  background: var(--ink);
   color: #fff;
   font-weight: 600;
-  box-shadow: 0 4px 12px rgba(255, 140, 66, 0.3);
 }
 .btn-secondary {
   flex: 1;
-  background: hsl(var(--surface));
-  color: hsl(var(--muted-foreground));
+  background: rgba(255, 255, 255, 0.7);
+  color: var(--ink);
   font-weight: 500;
-  border: 1.5px solid hsl(var(--border));
 }
 .btn-primary:active,
 .btn-secondary:active { transform: scale(0.97); }
-.btn-primary:disabled { opacity: 0.45; box-shadow: none; }
+.btn-primary:disabled { opacity: 0.4; }
 
 .icon-button {
   width: 44px;
@@ -126,25 +149,43 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: hsl(var(--muted-foreground));
+  color: var(--ink);
 }
-.icon-button:active { background: hsl(var(--primary-light) / 0.4); }
+.icon-button:active { background: rgba(23, 21, 59, 0.1); }
+
+/* The creature: springy pose changes, and an idle bounce while loading */
+.creature-body {
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@keyframes creature-bounce {
+  0%, 100% { transform: translateY(0) scaleY(1); }
+  50% { transform: translateY(-18px) scaleY(1.06); }
+}
+.creature-bounce { animation: creature-bounce 0.9s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .creature-body { transition: none; }
+  .creature-bounce { animation: none; }
+  .app-container { transition: none; }
+}
 
 /* Short phones: tighten the hero so nothing scrolls */
 @media (max-height: 640px) {
   .screen { gap: 16px; }
   .hero-badge { width: 80px; height: 80px; font-size: 40px; }
-  .t-title { font-size: 24px; }
+  .t-title { font-size: 32px; }
+  .t-mood { font-size: 20px; }
 }
 
 /* Desktop: show the app as a phone-sized column */
 @media (min-width: 769px) {
-  .app-container { align-items: center; }
+  .app-container { align-items: center; background: #17153B; }
   .flow-container {
     min-height: 0;
     height: min(860px, calc(100dvh - 32px));
     border-radius: 28px;
-    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.12);
     overflow-y: auto;
+    background: var(--world-bg, #CDF7E1);
+    transition: background 0.45s ease;
   }
 }

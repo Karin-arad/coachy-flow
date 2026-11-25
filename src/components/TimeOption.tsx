@@ -15,20 +15,20 @@ const TimeOption = ({ minutes, isSelected, onSelect }: TimeOptionProps) => {
       onClick={onSelect}
       aria-pressed={isSelected}
       className={cn(
-        'w-full h-full bg-white rounded-3xl px-6 flex items-center justify-between transition-all active:scale-[0.98]',
+        'w-full h-full rounded-[28px] px-6 flex items-center justify-between transition-all active:scale-[0.98]',
         isSelected
-          ? 'border-2 border-[hsl(var(--primary))] shadow-[0_2px_12px_rgba(255,140,66,0.2)]'
-          : 'border-[1.5px] border-[hsl(var(--border))]'
+          ? 'bg-[#17153B] text-white'
+          : 'bg-white text-[#17153B]'
       )}
     >
       <span className="flex items-baseline gap-2">
-        <span className="text-[40px] leading-none font-bold text-[hsl(var(--foreground))]">{minutes}</span>
-        <span className="t-sub">דקות</span>
+        <span className="text-[40px] leading-none font-semibold">{minutes}</span>
+        <span className="text-[18px] font-medium">דקות</span>
       </span>
       <span
         className={cn(
           'w-7 h-7 rounded-full flex items-center justify-center',
-          isSelected ? 'bg-[hsl(var(--primary))] text-white' : 'border-[1.5px] border-[hsl(var(--border))]'
+          isSelected ? 'bg-white text-[#17153B]' : 'border-2 border-[rgba(23,21,59,0.25)]'
         )}
         aria-hidden="true"
       >

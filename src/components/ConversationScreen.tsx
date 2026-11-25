@@ -4,6 +4,8 @@ import ConversationHeader from './conversation/ConversationHeader';
 import ConversationTextarea from './conversation/ConversationTextarea';
 import ConversationActions from './conversation/ConversationActions';
 import { useConversationScreen } from '@/hooks/useConversationScreen';
+import { useWorldBackground } from '@/hooks/useWorldBackground';
+import { worldBackground } from '@/lib/worlds';
 
 const ConversationScreen = () => {
   const {
@@ -15,6 +17,8 @@ const ConversationScreen = () => {
     handlePrevious,
     currentScreen
   } = useConversationScreen();
+
+  useWorldBackground(worldBackground('neutral'));
 
   if (currentScreen !== 5) {
     return null;

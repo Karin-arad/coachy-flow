@@ -20,7 +20,7 @@ const LoadingState = () => {
           />
         ))}
       </div>
-      <p className="text-[hsl(var(--muted-foreground))]">מרכיבים לך את האימון...</p>
+      <p className="t-sub">מרכיבים לך את האימון...</p>
     </div>
   );
 };

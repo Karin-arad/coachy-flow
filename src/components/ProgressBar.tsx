@@ -9,7 +9,7 @@ interface ProgressBarProps {
 
 const ProgressBar = ({ currentStep, totalSteps, className }: ProgressBarProps) => {
   return (
-    <div className={`flex items-center justify-center gap-2.5 py-4 ${className || ''}`}>
+    <div className={`flex items-center justify-center gap-2.5 ${className || ''}`}>
       {Array.from({ length: totalSteps }, (_, i) => {
         const step = i + 1;
         const isCompleted = step < currentStep;

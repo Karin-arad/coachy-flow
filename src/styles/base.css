@@ -39,17 +39,10 @@
   * {
     @apply border-border;
     font-family: 'Rubik', 'Heebo', system-ui, sans-serif;
-    @apply font-normal;
-    @apply text-sm;
   }
 
   input, textarea, .input-field, .user-text, .user-input, [contenteditable='true'] {
-    color: #555555;
-    font-weight: 500 !important;
-    text-shadow: none;
-    letter-spacing: 0.02em;
-    -webkit-text-stroke: 0.2px !important;
-    text-stroke: 0.2px !important;
+    color: hsl(var(--foreground));
   }
 
   html {
@@ -58,7 +51,8 @@
 
   body {
     @apply bg-background text-foreground;
-    background-color: #FFFFFF;
+    font-size: 16px;
+    line-height: 1.5;
   }
 
   h1, h2, h3 {

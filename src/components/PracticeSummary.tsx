@@ -1,7 +1,6 @@
 
 import React, { useEffect } from 'react';
 import { useFlowContext } from '@/context/FlowContext';
-import AnimatedCard from './AnimatedCard';
 import { useWorkoutGeneration } from '@/hooks/useWorkoutGeneration';
 import { useVideoSearch } from '@/hooks/useVideoSearch';
 import LoadingState from './practice/LoadingState';
@@ -61,27 +60,20 @@ const PracticeSummary = () => {
   }
 
   return (
-    <AnimatedCard
-      isVisible={true}
-      className="h-full w-full"
-    >
-      <div className="h-full flex flex-col justify-start items-center p-4 text-center overflow-y-auto">
-        {/* Celebration header */}
-        <div className="flex flex-col items-center mb-5">
-          <span style={{ fontSize: 40 }}>🎉</span>
-          <h2 className="text-[22px] font-bold text-[hsl(var(--foreground))] mt-1">
-            האימון שלך מוכן
-          </h2>
-        </div>
+    <div className="screen">
+      <h1 className="t-title">
+        {isLoading || !workoutDescription ? 'מרכיבים לך אימון' : 'האימון שלך מוכן'}
+      </h1>
+
+      <div className="flex-1 flex flex-col min-h-0">
 
         {isLoading ? (
-          <LoadingState />
+          <div className="flex-1 flex items-center justify-center"><LoadingState /></div>
         ) : error && retryCount < 3 ? (
           <ErrorState error={error} onRetry={handleRetry} />
         ) : workoutDescription ? (
-          <div className="space-y-4 w-full flex-1 overflow-y-auto">
-            {/* White card wrapping workout + video */}
-            <div className="bg-white rounded-[20px] overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.06)] p-5 space-y-4">
+          <div className="flex-1 flex flex-col gap-6 w-full">
+            <div className="surface space-y-5">
               <WorkoutDisplay workoutDescription={workoutDescription} />
               <VideoSection
                 videoId={videoId}
@@ -91,20 +83,21 @@ const PracticeSummary = () => {
             </div>
 
             {/* Action buttons */}
-            <div className="mt-4 space-y-3 w-full">
+            <div className="flex-1" />
+            <div className="flex flex-col gap-3 w-full">
               {/* Opens the matched video on YouTube. A link, not window.open, so iOS doesn't block it. */}
               {videoId && (
                 <a
                   href={`https://www.youtube.com/watch?v=${videoId}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="block w-full py-3 rounded-[14px] bg-[hsl(var(--primary))] text-white font-semibold text-[15px] text-center"
+                  className="btn-primary !flex-none"
                 >
                   התחלת אימון
                 </a>
               )}
               <button
-                className="w-full py-3 rounded-[14px] border border-[hsl(var(--border))] text-[hsl(var(--muted-foreground))] font-medium text-[15px]"
+                className="btn-secondary !flex-none"
                 onClick={() => goToScreen(6)}
               >
                 משהו אחר
@@ -112,12 +105,12 @@ const PracticeSummary = () => {
             </div>
           </div>
         ) : (
-          <p className="text-[hsl(var(--muted-foreground))] mb-8">
+          <p className="t-sub">
             מכינים לך אימון מותאם...
           </p>
         )}
       </div>
-    </AnimatedCard>
+    </div>
   );
 };
 

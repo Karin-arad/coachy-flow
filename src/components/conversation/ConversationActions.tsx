@@ -1,7 +1,5 @@
-
 import React from 'react';
-import { motion } from 'framer-motion';
-import { Button } from '@/components/ui/button';
+import NavigationButtons from '../NavigationButtons';
 
 interface ConversationActionsProps {
   onContinue: () => void;
@@ -10,48 +8,23 @@ interface ConversationActionsProps {
 
 const ConversationActions = ({ onContinue, onPrevious }: ConversationActionsProps) => {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.6, duration: 0.5 }}
-      className="mt-auto pt-6 space-y-3"
-    >
-      <Button
+    <div className="flex flex-col gap-3">
+      <button
+        type="button"
         onClick={onContinue}
-        variant="energetic"
-        className="w-full py-6 rounded-xl relative overflow-hidden group"
-        style={{
-          touchAction: 'manipulation',
-          WebkitTouchCallout: 'none',
-          WebkitUserSelect: 'none'
-        }}
+        className="t-label underline underline-offset-4 self-center h-11 px-4"
       >
-        <span className="relative z-10">יאללה, נמשיך</span>
-        <span className="absolute inset-0 bg-white/20 transform scale-x-0 group-hover:scale-x-100 group-active:scale-x-100 transition-transform origin-right duration-300"></span>
-      </Button>
+        אפשר לדלג, תפתיעו אותי
+      </button>
 
-      <Button
-        onClick={onPrevious}
-        variant="outline"
-        className="w-full py-3 rounded-xl"
-        style={{
-          touchAction: 'manipulation',
-          WebkitTouchCallout: 'none',
-          WebkitUserSelect: 'none'
-        }}
-      >
-        חזרה
-      </Button>
-
-      <div className="text-center mt-4">
-        <button
-          onClick={onContinue}
-          className="text-sm text-[hsl(var(--muted-foreground))] underline underline-offset-2"
-        >
-          אפשר לדלג, תפתיעו אותי ✨
-        </button>
-      </div>
-    </motion.div>
+      <NavigationButtons
+        onNext={onContinue}
+        onPrevious={onPrevious}
+        nextLabel="יאללה, נמשיך"
+        previousLabel="חזרה"
+        showChevron={false}
+      />
+    </div>
   );
 };
 

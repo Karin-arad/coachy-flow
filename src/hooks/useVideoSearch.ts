@@ -26,10 +26,6 @@ export const useVideoSearch = () => {
         setVideoId(foundVideo.id.videoId);
         setVideoTitle(foundVideo.snippet.title);
         console.log('✅ Found and validated YouTube video:', foundVideo.snippet.title, foundVideo.id.videoId);
-        toast({
-          title: "נמצא סרטון",
-          description: "מצאנו סרטון שמתאים לאימון שלך.",
-        });
       } else {
         console.log('⚠️ No videos found through search, using smart fallback');
         await useSmartFallback(emotionRatings, timeAvailable);
@@ -51,10 +47,6 @@ export const useVideoSearch = () => {
         setVideoId(fallbackVideo.videoId);
         setVideoTitle(fallbackVideo.title);
         console.log('✅ Using validated fallback video:', fallbackVideo.title, fallbackVideo.videoId);
-        toast({
-          title: "נבחר סרטון חלופי",
-          description: "בחרנו אימון מהמאגר שלנו שמתאים להעדפות שלך.",
-        });
       } else {
         console.error('❌ Even fallback video failed validation');
         setVideoId(null);

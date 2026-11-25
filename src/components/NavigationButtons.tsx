@@ -1,49 +1,40 @@
-
 import React from 'react';
-import { motion } from 'framer-motion';
 import { ChevronRight, ChevronLeft } from 'lucide-react';
 
 interface NavigationButtonsProps {
   onNext: () => void;
-  onPrevious: () => void;
-  isLastStep: boolean;
-  isPreviousDisabled: boolean;
-  isLastSlider?: boolean;
+  onPrevious?: () => void;
+  /** Hide the back button (first screen) */
+  hidePrevious?: boolean;
+  nextLabel?: string;
+  previousLabel?: string;
+  nextDisabled?: boolean;
+  /** Show the forward chevron next to the label */
+  showChevron?: boolean;
 }
 
+/** The one navigation row used by every screen: back (secondary) + forward (primary). */
 const NavigationButtons = ({
   onNext,
   onPrevious,
-  isLastStep,
-  isPreviousDisabled,
-  isLastSlider
+  hidePrevious = false,
+  nextLabel = 'הבא',
+  previousLabel = 'הקודם',
+  nextDisabled = false,
+  showChevron = true,
 }: NavigationButtonsProps) => {
   return (
-    <div className="flex gap-3 mt-2">
-      <motion.button
-        whileTap={{ scale: 0.97 }}
-        onClick={onPrevious}
-        disabled={isPreviousDisabled}
-        className="flex-1 py-3.5 rounded-[14px] border-[1.5px] border-[hsl(var(--border))] bg-white text-[hsl(var(--muted-foreground))] font-medium text-[15px] flex items-center justify-center gap-1 disabled:opacity-40 disabled:cursor-not-allowed"
-      >
-        <ChevronRight size={16} />
-        <span>הקודם</span>
-      </motion.button>
-
-      <motion.button
-        whileTap={{ scale: 0.97 }}
-        onClick={onNext}
-        className="flex-[2] py-3.5 rounded-[14px] bg-[hsl(var(--primary))] text-white font-semibold text-base shadow-[0_4px_12px_rgba(255,140,66,0.3)] flex items-center justify-center gap-1"
-      >
-        {isLastStep ? (
-          <span>יאללה, נמשיך</span>
-        ) : (
-          <>
-            <span>הבא</span>
-            <ChevronLeft size={16} />
-          </>
-        )}
-      </motion.button>
+    <div className="screen-actions">
+      {!hidePrevious && (
+        <button type="button" onClick={onPrevious} className="btn-secondary">
+          <ChevronRight size={18} />
+          <span>{previousLabel}</span>
+        </button>
+      )}
+      <button type="button" onClick={onNext} disabled={nextDisabled} className="btn-primary">
+        <span>{nextLabel}</span>
+        {showChevron && <ChevronLeft size={18} />}
+      </button>
     </div>
   );
 };

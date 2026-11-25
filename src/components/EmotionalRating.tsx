@@ -103,9 +103,9 @@ const EmotionalRating = () => {
         <NavigationButtons
           onNext={isLastSlider ? goToNextScreen : goToNextSlider}
           onPrevious={goToPreviousSlider}
-          isLastStep={isLastSlider}
-          isPreviousDisabled={currentSlider === 0}
-          isLastSlider={isLastSlider}
+          hidePrevious={currentSlider === 0}
+          nextLabel={isLastSlider ? 'יאללה, נמשיך' : 'הבא'}
+          showChevron={!isLastSlider}
         />
         
         <StepIndicator

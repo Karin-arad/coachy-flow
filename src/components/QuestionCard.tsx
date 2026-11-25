@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { Slider } from '@/components/ui/slider';
@@ -20,10 +19,10 @@ interface QuestionCardProps {
 }
 
 const sliderLabels: Record<string, { high: string; low: string }> = {
-  bounciness: { high: '🌟 שמחה גבוהה', low: '😔 שמחה נמוכה' },
-  energy: { high: '⚡ הרבה אנרגיה', low: '🔋 מעט אנרגיה' },
-  alertness: { high: '👁️ ערנות גבוהה', low: '😴 עייפות' },
-  lightness: { high: '🍃 קלילות', low: '🪨 כבדות' },
+  bounciness: { high: 'שמחה גבוהה', low: 'שמחה נמוכה' },
+  energy: { high: 'הרבה אנרגיה', low: 'מעט אנרגיה' },
+  alertness: { high: 'ערנות גבוהה', low: 'עייפות' },
+  lightness: { high: 'קלילות', low: 'כבדות' },
 };
 
 const QuestionCard = ({
@@ -39,59 +38,54 @@ const QuestionCard = ({
   className,
   showPrevious = true
 }: QuestionCardProps) => {
-  const labels = emotionType ? sliderLabels[emotionType] : { high: '😊 גבוה', low: '😔 נמוך' };
+  const labels = emotionType ? sliderLabels[emotionType] : { high: 'גבוה', low: 'נמוך' };
 
   return (
-    <div className={cn('bg-white rounded-[20px] p-6 shadow-[0_4px_20px_rgba(0,0,0,0.06)] flex flex-col', className)}>
-      <div className="flex flex-col items-center gap-4">
+    <div className={cn('screen', className)}>
+      <div className="screen-hero">
         <motion.div
-          className="text-[56px] text-center"
+          className="hero-badge"
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.3 }}
+          aria-hidden="true"
         >
           {emojiIcon}
         </motion.div>
+        <h1 className="t-title">{title}</h1>
+      </div>
 
-        <motion.h3
-          className="text-2xl font-bold text-[hsl(var(--foreground))] text-center mb-4"
-          initial={{ y: -10, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.1, duration: 0.3 }}
-        >
-          {title}
-        </motion.h3>
-
-        <div className="w-full px-2 relative mb-2">
-          <Slider
-            dir="rtl"
-            value={[currentValue]}
-            min={1}
-            max={10}
-            step={1}
-            onValueChange={onChange}
-            emotionType={emotionType}
-            className="w-full"
-          />
-          <div className="flex justify-between mt-3 px-1">
-            {/* The slider runs right-to-left: its low end is on the right */}
-            <span className="text-xs text-[hsl(var(--muted-foreground))]">{labels.low}</span>
-            <span className="text-xs text-[hsl(var(--muted-foreground))]">{labels.high}</span>
-          </div>
+      <div className="surface">
+        <div className="flex items-baseline justify-center gap-1 mb-5" dir="ltr">
+          <span className="text-[44px] leading-none font-bold text-[hsl(var(--foreground))]">{currentValue}</span>
+          <span className="t-sub">/ 10</span>
         </div>
 
-        <div className="text-center text-lg font-semibold text-[hsl(var(--primary))]">
-          {currentValue} / 10
+        <Slider
+          dir="rtl"
+          value={[currentValue]}
+          min={1}
+          max={10}
+          step={1}
+          onValueChange={onChange}
+          emotionType={emotionType}
+          className="w-full"
+        />
+
+        {/* The slider runs right-to-left: its low end is on the right */}
+        <div className="flex justify-between mt-4">
+          <span className="t-label">{labels.low}</span>
+          <span className="t-label">{labels.high}</span>
         </div>
       </div>
 
       {onNext && (
         <NavigationButtons
           onNext={onNext}
-          onPrevious={onPrevious || (() => {})}
-          isLastStep={currentStep === totalSteps}
-          isPreviousDisabled={!showPrevious}
-          isLastSlider={currentStep === totalSteps}
+          onPrevious={onPrevious}
+          hidePrevious={!showPrevious}
+          nextLabel={currentStep === totalSteps ? 'יאללה, נמשיך' : 'הבא'}
+          showChevron={currentStep !== totalSteps}
         />
       )}
     </div>

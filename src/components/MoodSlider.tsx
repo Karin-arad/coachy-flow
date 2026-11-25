@@ -21,12 +21,12 @@ const MoodSlider = ({ value, onChange, color, label }: MoodSliderProps) => (
     onValueCommit={() => playSound('ding')}
     className="relative flex w-full touch-none select-none items-center h-11"
   >
-    <SliderPrimitive.Track className="relative h-[18px] w-full grow overflow-hidden rounded-full bg-[rgba(23,21,59,0.16)]">
+    <SliderPrimitive.Track className="relative h-[18px] w-full grow overflow-hidden rounded-full slider-track">
       <SliderPrimitive.Range className="absolute h-full" style={{ background: color }} />
     </SliderPrimitive.Track>
     <SliderPrimitive.Thumb
       aria-label={label}
-      className="block h-11 w-11 rounded-full bg-[#17153B] border-[5px] border-white shadow-[0_4px_0_rgba(23,21,59,0.18)] focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-offset-4 focus-visible:outline-[#17153B]"
+      className="slider-thumb block h-11 w-11 rounded-full border-[5px] border-white shadow-[0_4px_0_rgba(23,21,59,0.18)] focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-offset-4"
     />
   </SliderPrimitive.Root>
 );

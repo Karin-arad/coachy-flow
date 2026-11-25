@@ -1,5 +1,6 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
+import Face from './creatures/Face';
 
 interface CreatureProps {
   /** 1 (flat on the floor) to 10 (tall, smiling, jumping) */
@@ -11,8 +12,6 @@ interface CreatureProps {
   bouncing?: boolean;
   className?: string;
 }
-
-const INK = '#17153B';
 
 /**
  * The app's character. Its pose is the answer: height, eyes and smile
@@ -30,9 +29,6 @@ const Creature = ({ value, color, scale = 1, bouncing = false, className }: Crea
       : v <= 7
         ? '50% 50% 40% 40% / 58% 58% 42% 42%'
         : '48% 52% 44% 46% / 42% 42% 58% 58%';
-  const eyeHeight = (v <= 2 ? 5 : 6 + v * 2) * scale;
-  const smileHeight = (v <= 3 ? 2 : 2 + v * 1.6) * scale;
-  const stroke = Math.max(3, 5 * scale);
 
   return (
     <div
@@ -61,25 +57,7 @@ const Creature = ({ value, color, scale = 1, bouncing = false, className }: Crea
           borderRadius: radius,
         }}
       >
-        <div className="flex" style={{ gap: 34 * scale, marginTop: Math.round(height * 0.3) }}>
-          {[0, 1].map((i) => (
-            <span
-              key={i}
-              className="block transition-all duration-300"
-              style={{ width: 18 * scale, height: eyeHeight, borderRadius: 9 * scale, background: INK }}
-            />
-          ))}
-        </div>
-        <span
-          className="block transition-all duration-300"
-          style={{
-            width: 34 * scale,
-            height: smileHeight,
-            marginTop: 8 * scale,
-            borderBottom: `${stroke}px solid ${INK}`,
-            borderRadius: '0 0 50% 50%',
-          }}
-        />
+        <Face value={v} scale={scale} top={Math.round(height * 0.3)} />
       </div>
     </div>
   );

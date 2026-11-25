@@ -2,8 +2,11 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 import NavigationButtons from './NavigationButtons';
 import Creature from './Creature';
+import BouncingBall from './creatures/BouncingBall';
+import LitCreature from './creatures/LitCreature';
+import WeightCreature from './creatures/WeightCreature';
 import MoodSlider from './MoodSlider';
-import { worlds, worldBackground, moodFor, WorldKey } from '@/lib/worlds';
+import { worlds, worldBackground, moodFor, isDarkWorld, WorldKey } from '@/lib/worlds';
 import { useWorldBackground } from '@/hooks/useWorldBackground';
 import { useFitScale } from '@/hooks/useFitScale';
 
@@ -45,7 +48,14 @@ const QuestionCard = ({
   const world = worlds[worldKey];
   const labels = sliderLabels[worldKey];
 
-  useWorldBackground(worldBackground(worldKey, currentValue));
+  useWorldBackground(worldBackground(worldKey, currentValue), isDarkWorld(worldKey, currentValue));
+
+  // Each question moves in its own way
+  const Hero =
+    worldKey === 'energy' ? BouncingBall
+    : worldKey === 'alertness' ? LitCreature
+    : worldKey === 'lightness' ? WeightCreature
+    : Creature;
 
   // Shrink the creature on short phones so its tallest pose still fits the stage
   const { ref: stageRef, scale: creatureScale } = useFitScale();
@@ -58,7 +68,7 @@ const QuestionCard = ({
       </div>
 
       <div ref={stageRef} className="flex-1 min-h-0">
-        <Creature value={currentValue} color={world.creature} scale={creatureScale} />
+        <Hero value={currentValue} color={world.creature} scale={creatureScale} />
       </div>
 
       <div>

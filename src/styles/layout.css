@@ -5,6 +5,7 @@
   min-height: 100dvh;
   /* Tokens of the main flow. Scoped here so the /discover quiz keeps its own look. */
   --ink: #17153B;
+  --on-ink: #fff;
   --foreground: 243 48% 16%;
   --muted-foreground: 243 30% 28%;
   --primary: 243 48% 16%;
@@ -158,13 +159,13 @@ details.disclosure[open] .disclosure-chevron { transform: rotate(180deg); }
 .btn-primary {
   flex: 2;
   background: var(--ink);
-  color: #fff;
+  color: var(--on-ink);
   font-weight: 600;
 }
 .btn-secondary {
   flex: 1;
   background: rgba(255, 255, 255, 0.7);
-  color: var(--ink);
+  color: #17153B;
   font-weight: 500;
 }
 .btn-primary:active,
@@ -182,6 +183,51 @@ details.disclosure[open] .disclosure-chevron { transform: rotate(180deg); }
 }
 .icon-button:active { background: rgba(23, 21, 59, 0.1); }
 
+/* Dark screens (low alertness): text and controls turn light */
+[data-tone='dark'] .app-container {
+  --ink: #FFF3C4;
+  --on-ink: #17153B;
+}
+[data-tone='dark'] .btn-secondary { background: rgba(255, 255, 255, 0.88); }
+.t-title, .t-mood, .t-label { transition: color 0.45s ease; }
+
+.slider-track { background: color-mix(in srgb, var(--ink) 18%, transparent); }
+.slider-thumb { background: var(--ink); outline-color: var(--ink); }
+
+/* Energy: one bounce. Height and speed are set per value. */
+@keyframes ball-bounce {
+  0%, 100% { transform: translateY(0) scale(1.1, 0.9); animation-timing-function: cubic-bezier(0.2, 0.7, 0.4, 1); }
+  12% { transform: translateY(0) scale(0.97, 1.03); }
+  50% { transform: translateY(var(--bounce-height, -60px)) scale(1, 1); animation-timing-function: cubic-bezier(0.6, 0, 0.8, 0.3); }
+}
+.ball-bounce { animation: ball-bounce 1s infinite; transform-origin: 50% 100%; }
+@keyframes ball-shadow {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(0.55); opacity: 0.5; }
+}
+.ball-shadow { animation: ball-shadow 1s infinite ease-in-out; }
+
+/* Alertness: stars at night */
+@keyframes star-twinkle {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+.star-twinkle { animation: star-twinkle 2.4s ease-in-out infinite; }
+
+/* Lightness: the iron ball lands, the feather drifts */
+@keyframes iron-land {
+  0% { transform: translateY(-70px); animation-timing-function: cubic-bezier(0.6, 0, 1, 0.6); }
+  55% { transform: translateY(0) scale(1.08, 0.9); }
+  75% { transform: translateY(-6px) scale(1, 1); }
+  100% { transform: translateY(0) scale(1, 1); }
+}
+.iron-land { animation: iron-land 0.5s both; transform-origin: 50% 100%; }
+@keyframes feather-float {
+  0%, 100% { transform: translate(-10px, 0) rotate(-4deg); }
+  50% { transform: translate(10px, -16px) rotate(5deg); }
+}
+.feather-float { animation: feather-float 3.6s ease-in-out infinite; }
+
 /* The creature: springy pose changes, and an idle bounce while loading */
 .creature-body {
   transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -193,7 +239,7 @@ details.disclosure[open] .disclosure-chevron { transform: rotate(180deg); }
 .creature-bounce { animation: creature-bounce 0.9s ease-in-out infinite; }
 @media (prefers-reduced-motion: reduce) {
   .creature-body { transition: none; }
-  .creature-bounce { animation: none; }
+  .creature-bounce, .ball-bounce, .ball-shadow, .star-twinkle, .iron-land, .feather-float { animation: none; }
   .app-container { transition: none; }
 }
 

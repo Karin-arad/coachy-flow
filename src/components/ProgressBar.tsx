@@ -19,8 +19,8 @@ const ProgressBar = ({ currentStep, totalSteps, className }: ProgressBarProps) =
       {Array.from({ length: totalSteps }, (_, i) => (
         <span
           key={i}
-          className="flex-1 h-1.5 rounded-full transition-colors duration-300"
-          style={{ background: i < currentStep ? '#17153B' : 'rgba(23, 21, 59, 0.16)' }}
+          className="flex-1 h-1.5 rounded-full transition-all duration-300"
+          style={{ background: 'var(--ink)', opacity: i < currentStep ? 1 : 0.18 }}
         />
       ))}
     </div>

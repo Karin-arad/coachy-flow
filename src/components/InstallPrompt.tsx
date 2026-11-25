@@ -77,7 +77,7 @@ const InstallPrompt = () => {
       <div className="flex items-center gap-3">
         <img src="/icons/icon-192.png" alt="" width={56} height={56} className="rounded-[14px] flex-shrink-0" />
         <div>
-          <p className="t-label !text-[18px] !font-semibold">לשמור את קואצ'י במסך הבית?</p>
+          <p className="t-label !text-[18px] !font-semibold">לשמור את Coachy במסך הבית?</p>
           <p className="t-label !font-normal">ככה האימון הבא במרחק נגיעה</p>
         </div>
       </div>

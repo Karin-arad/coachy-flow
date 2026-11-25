@@ -43,7 +43,7 @@ const OpeningScreen = ({ onDone }: OpeningScreenProps) => {
         transition={{ delay: 0.5, duration: 0.5, ease: 'easeOut' }}
       >
         {/* the creature introduces itself: Coachy is its name */}
-        <span className="t-mood block !mt-0 mb-2">היי, אני קואצ'י</span>
+        <span className="t-mood block !mt-0 mb-2">היי, אני Coachy</span>
         <span className="t-title block whitespace-nowrap" style={{ fontSize: 'min(40px, 9.4vw)' }}>לחפש ביוטיוב? נאאא</span>
         <span className="t-sub block mt-3" style={{ textWrap: 'balance' }}>4 שאלות קצרות ונמצא לך אימון שמתאים בול</span>
       </motion.span>

@@ -12,6 +12,7 @@ import ProgressBar from '@/components/ProgressBar';
 import CelebrationEffects from '@/components/CelebrationEffects';
 import InstallButton from '@/components/InstallButton';
 import OpeningScreen from '@/components/OpeningScreen';
+import InstallPrompt from '@/components/InstallPrompt';
 import { motion } from 'framer-motion';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
@@ -107,6 +108,9 @@ const QuizFlow = () => {
         >
           {renderCurrentScreen()}
         </motion.main>
+
+        {/* Offered once, on the first question of the first visit */}
+        {currentScreen === 1 && <InstallPrompt />}
       </div>
     </div>
   );

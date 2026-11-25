@@ -228,6 +228,32 @@ details.disclosure[open] .disclosure-chevron { transform: rotate(180deg); }
 }
 .feather-float { animation: feather-float 3.6s ease-in-out infinite; }
 
+/* First-visit offer to save the app to the home screen */
+.install-sheet {
+  position: fixed;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 430px;
+  z-index: 60;
+  background: #fff;
+  color: #17153B;
+  --ink: #17153B;
+  --on-ink: #fff;
+  border-radius: 28px 28px 0 0;
+  padding: 20px 20px calc(20px + env(safe-area-inset-bottom));
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-shadow: 0 -8px 40px rgba(23, 21, 59, 0.18);
+  animation: install-sheet-in 0.35s cubic-bezier(0.2, 0.9, 0.3, 1) both;
+}
+@keyframes install-sheet-in {
+  from { transform: translate(-50%, 100%); }
+  to { transform: translate(-50%, 0); }
+}
+
 /* Opening: overhead press. The rig (arms + barbell) grows from the shoulders. */
 @keyframes lift-rig {
   0%, 12%, 100% { height: var(--rig-low); }
@@ -251,7 +277,7 @@ details.disclosure[open] .disclosure-chevron { transform: rotate(180deg); }
 .creature-bounce { animation: creature-bounce 0.9s ease-in-out infinite; }
 @media (prefers-reduced-motion: reduce) {
   .creature-body { transition: none; }
-  .creature-bounce, .lift-rig, .lift-body, .ball-bounce, .ball-shadow, .star-twinkle, .iron-land, .feather-float { animation: none; }
+  .creature-bounce, .install-sheet, .lift-rig, .lift-body, .ball-bounce, .ball-shadow, .star-twinkle, .iron-land, .feather-float { animation: none; }
   .app-container { transition: none; }
 }
 

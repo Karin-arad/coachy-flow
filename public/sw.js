@@ -1,4 +1,4 @@
-const CACHE_NAME = 'quiz-cache-v2';
+const CACHE_NAME = 'coachy-cache-v3';
 
 self.addEventListener('install', (event) => {
   self.skipWaiting();
@@ -6,7 +6,8 @@ self.addEventListener('install', (event) => {
     caches.open(CACHE_NAME).then((cache) => {
       return cache.addAll([
         '/manifest.json',
-        '/lovable-uploads/9e41fe91-9357-4b0e-9232-1db2e8d5dd7c.png'
+        '/icons/icon-192.png',
+        '/icons/icon-512.png'
       ]);
     })
   );

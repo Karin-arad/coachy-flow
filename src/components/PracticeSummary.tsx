@@ -92,12 +92,17 @@ const PracticeSummary = () => {
 
             {/* Action buttons */}
             <div className="mt-4 space-y-3 w-full">
-              <button
-                className="w-full py-3 rounded-[14px] bg-[hsl(var(--primary))] text-white font-semibold text-[15px]"
-                onClick={() => {/* start workout */}}
-              >
-                התחלת אימון
-              </button>
+              {/* Opens the matched video on YouTube. A link, not window.open, so iOS doesn't block it. */}
+              {videoId && (
+                <a
+                  href={`https://www.youtube.com/watch?v=${videoId}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block w-full py-3 rounded-[14px] bg-[hsl(var(--primary))] text-white font-semibold text-[15px] text-center"
+                >
+                  התחלת אימון
+                </a>
+              )}
               <button
                 className="w-full py-3 rounded-[14px] border border-[hsl(var(--border))] text-[hsl(var(--muted-foreground))] font-medium text-[15px]"
                 onClick={() => goToScreen(6)}

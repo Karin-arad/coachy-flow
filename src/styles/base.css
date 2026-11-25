@@ -5,7 +5,7 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap');
 
 @layer base {
   :root {
@@ -39,18 +39,11 @@
 @layer base {
   * {
     @apply border-border;
-    font-family: Inter, system-ui, sans-serif;
-    @apply font-normal;
-    @apply text-sm;
+    font-family: 'Rubik', 'Heebo', system-ui, sans-serif;
   }
 
   input, textarea, .input-field, .user-text, .user-input, [contenteditable='true'] {
-    color: #555555;
-    font-weight: 500 !important;
-    text-shadow: none;
-    letter-spacing: 0.02em;
-    -webkit-text-stroke: 0.2px !important;
-    text-stroke: 0.2px !important;
+    color: hsl(var(--foreground));
   }
 
   html {
@@ -59,7 +52,8 @@
 
   body {
     @apply bg-background text-foreground;
-    background-color: #FFFFFF;
+    font-size: 16px;
+    line-height: 1.5;
   }
 
   h1, h2, h3 {

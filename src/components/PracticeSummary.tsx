@@ -1,13 +1,15 @@
-
 import React, { useEffect } from 'react';
+import { ChevronDown } from 'lucide-react';
 import { useFlowContext } from '@/context/FlowContext';
-import AnimatedCard from './AnimatedCard';
 import { useWorkoutGeneration } from '@/hooks/useWorkoutGeneration';
 import { useVideoSearch } from '@/hooks/useVideoSearch';
 import LoadingState from './practice/LoadingState';
 import ErrorState from './practice/ErrorState';
 import WorkoutDisplay from './practice/WorkoutDisplay';
 import VideoSection from './practice/VideoSection';
+import Creature from './Creature';
+import { useWorldBackground } from '@/hooks/useWorldBackground';
+import { worlds, worldBackground, moodFor } from '@/lib/worlds';
 
 const PracticeSummary = () => {
   const { currentScreen, emotionRatings, userConversation, timeAvailable, goToScreen } = useFlowContext();
@@ -56,63 +58,91 @@ const PracticeSummary = () => {
     handleVideoRetry(workoutDescription!, emotionRatings, timeAvailable, userConversation);
   };
 
+  useWorldBackground(worldBackground('neutral'));
+
   if (currentScreen !== 7) {
     return null;
   }
 
+  const ready = Boolean(workoutDescription) && !isLoading;
+
+  // What the match was based on, in the person's own answers
+  const recap = [
+    moodFor('bounciness', emotionRatings.bounciness),
+    moodFor('energy', emotionRatings.energy),
+    moodFor('alertness', emotionRatings.alertness),
+    moodFor('lightness', emotionRatings.lightness),
+    timeAvailable ? `${timeAvailable} דקות` : '',
+  ].filter(Boolean);
+
   return (
-    <AnimatedCard
-      isVisible={true}
-      className="h-full w-full"
-    >
-      <div className="h-full flex flex-col justify-start items-center p-4 text-center overflow-y-auto">
-        {/* Celebration header */}
-        <div className="flex flex-col items-center mb-5">
-          <span style={{ fontSize: 40 }}>🎉</span>
-          <h2 className="text-[22px] font-bold text-[hsl(var(--foreground))] mt-1">
-            Your Practice Summary
-          </h2>
-        </div>
-
-        {isLoading ? (
-          <LoadingState />
-        ) : error && retryCount < 3 ? (
-          <ErrorState error={error} onRetry={handleRetry} />
-        ) : workoutDescription ? (
-          <div className="space-y-4 w-full flex-1 overflow-y-auto">
-            {/* White card wrapping workout + video */}
-            <div className="bg-white rounded-[20px] overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.06)] p-5 space-y-4">
-              <WorkoutDisplay workoutDescription={workoutDescription} />
-              <VideoSection
-                videoId={videoId}
-                videoTitle={videoTitle}
-                onVideoRetry={handleVideoRetryClick}
-              />
-            </div>
-
-            {/* Action buttons */}
-            <div className="mt-4 space-y-3 w-full">
-              <button
-                className="w-full py-3 rounded-[14px] bg-[hsl(var(--primary))] text-white font-semibold text-[15px]"
-                onClick={() => {/* start workout */}}
-              >
-                Start Workout
-              </button>
-              <button
-                className="w-full py-3 rounded-[14px] border border-[hsl(var(--border))] text-[hsl(var(--muted-foreground))] font-medium text-[15px]"
-                onClick={() => goToScreen(6)}
-              >
-                Find Something Else
-              </button>
-            </div>
+    <div className="screen">
+      <div className="flex items-end gap-3">
+        <h1 className="t-title flex-1">{ready ? 'האימון שלך מוכן' : 'מרכיבים לך אימון'}</h1>
+        {ready && (
+          <div className="w-[88px] h-[150px] flex-shrink-0">
+            <Creature value={10} color={worlds.bounciness.creature} scale={0.36} />
           </div>
-        ) : (
-          <p className="text-[hsl(var(--muted-foreground))] mb-8">
-            Preparing your personalized practice...
-          </p>
         )}
       </div>
-    </AnimatedCard>
+
+      {isLoading ? (
+        <div className="flex-1 flex items-center justify-center"><LoadingState /></div>
+      ) : error && retryCount < 3 ? (
+        <ErrorState error={error} onRetry={handleRetry} />
+      ) : workoutDescription ? (
+        <>
+          <div>
+            <p className="t-label mb-2">לפי מה שסיפרת</p>
+            <ul className="flex flex-wrap gap-2">
+              {recap.map((item, i) => (
+                <li key={i} className="chip">{item}</li>
+              ))}
+            </ul>
+          </div>
+
+          <VideoSection
+            videoId={videoId}
+            videoTitle={videoTitle}
+            onVideoRetry={handleVideoRetryClick}
+          />
+
+          <details className="disclosure surface !py-2">
+            <summary>
+              <span>פירוט האימון</span>
+              <ChevronDown size={20} className="disclosure-chevron transition-transform" aria-hidden="true" />
+            </summary>
+            <div className="pt-2 pb-3">
+              <WorkoutDisplay workoutDescription={workoutDescription} />
+            </div>
+          </details>
+
+          <div className="flex-1" />
+
+          <div className="flex flex-col gap-3 w-full">
+            {/* Opens the matched video on YouTube. A link, not window.open, so iOS doesn't block it. */}
+            {videoId && (
+              <a
+                href={`https://www.youtube.com/watch?v=${videoId}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-primary !flex-none"
+              >
+                התחלת אימון
+              </a>
+            )}
+            <button
+              className="btn-secondary !flex-none"
+              onClick={() => goToScreen(6)}
+            >
+              משהו אחר
+            </button>
+          </div>
+        </>
+      ) : (
+        <p className="t-sub">מכינים לך אימון מותאם...</p>
+      )}
+    </div>
   );
 };
 

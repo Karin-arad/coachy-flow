@@ -1,6 +1,5 @@
 
 import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
-import { toast } from '@/hooks/use-toast';
 
 interface NavigationContextType {
   currentScreen: number;
@@ -55,11 +54,6 @@ export const NavigationProvider: React.FC<{children: React.ReactNode}> = ({ chil
     navigationTimeoutRef.current = setTimeout(() => {
       setCurrentScreen(nextScreen);
     }, 50);
-
-    toast({
-      title: 'מעבר לשלב הבא',
-      description: `עברנו לשלב ${nextScreen}`,
-    });
   };
 
   const goToScreen = (screen: number) => {

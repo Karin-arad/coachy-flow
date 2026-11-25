@@ -13,7 +13,6 @@ import CelebrationEffects from '@/components/CelebrationEffects';
 import InstallButton from '@/components/InstallButton';
 import { motion } from 'framer-motion';
 import { Settings } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { useIsMobile } from '@/hooks/use-mobile';
 import APIKeyInput from '@/components/APIKeyInput';
 import { cn } from '@/lib/utils';
@@ -82,35 +81,30 @@ const QuizFlow = () => {
           duration={1500}
         />
 
-        <InstallButton />
-
         {showApiKeyModal && <APIKeyInput onClose={() => setShowApiKeyModal(false)} />}
 
-        <Button
-          variant="outline"
-          onClick={() => setShowApiKeyModal(true)}
-          className="text-xs px-3 py-1 h-8 bg-white/80 border border-gray-200 shadow-sm hover:bg-white fixed bottom-5 left-5 z-50 rtl:left-auto rtl:right-5"
-          size="sm"
-        >
-          <Settings className="h-4 w-4 mr-1" /> הגדרות
-        </Button>
-
-        <div className="w-full mb-6">
-          <ProgressBar currentStep={getCurrentStepForProgressBar()} totalSteps={7} />
-        </div>
-
-        <div className="w-full flex-1 flex justify-center items-start">
-          <motion.div
-            key={currentScreen}
-            initial={{ opacity: 0, x: 30 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -30 }}
-            transition={{ duration: 0.3, ease: "easeOut" }}
-            className="w-full"
+        <header className="flow-header">
+          <button
+            type="button"
+            className="icon-button"
+            aria-label="הגדרות"
+            onClick={() => setShowApiKeyModal(true)}
           >
-            {renderCurrentScreen()}
-          </motion.div>
-        </div>
+            <Settings size={20} />
+          </button>
+          <ProgressBar currentStep={getCurrentStepForProgressBar()} totalSteps={7} />
+          <InstallButton />
+        </header>
+
+        <motion.main
+          key={currentScreen}
+          initial={{ opacity: 0, x: 30 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.3, ease: "easeOut" }}
+          className="flow-main"
+        >
+          {renderCurrentScreen()}
+        </motion.main>
       </div>
     </div>
   );

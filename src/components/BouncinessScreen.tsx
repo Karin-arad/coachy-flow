@@ -26,7 +26,7 @@ const BouncinessScreen = () => {
 
   return (
     <QuestionCard
-      title="איך את/ה מרגיש/ה עכשיו?"
+      title="איך ההרגשה עכשיו?"
       emojiIcon="🌟"
       currentValue={emotionRatings.bounciness}
       onChange={handleValueChange}

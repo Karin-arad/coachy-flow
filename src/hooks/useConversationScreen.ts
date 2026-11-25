@@ -33,7 +33,6 @@ export const useConversationScreen = () => {
           console.log('✅ iOS: ConversationScreen element confirmed immediately');
           
           // Force visible styles
-          element.style.display = 'block';
           element.style.visibility = 'visible';
           element.style.opacity = '1';
           element.style.transform = 'translateZ(0)';
@@ -64,7 +63,7 @@ export const useConversationScreen = () => {
         const handleViewportChange = () => {
           console.log('📱 iOS viewport change detected');
           if (screenRef.current) {
-            screenRef.current.style.height = `${window.innerHeight}px`;
+            // height is handled by the flex layout (100dvh)
           }
         };
         

@@ -1,12 +1,18 @@
-
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { Slider } from '@/components/ui/slider';
-import { motion } from 'framer-motion';
 import NavigationButtons from './NavigationButtons';
+import Creature from './Creature';
+import BouncingBall from './creatures/BouncingBall';
+import LitCreature from './creatures/LitCreature';
+import WeightCreature from './creatures/WeightCreature';
+import MoodSlider from './MoodSlider';
+import { worlds, worldBackground, moodFor, isDarkWorld, WorldKey } from '@/lib/worlds';
+import { useWorldBackground } from '@/hooks/useWorldBackground';
+import { useFitScale } from '@/hooks/useFitScale';
 
 interface QuestionCardProps {
   title: string;
+  /** No longer shown: the creature replaced the emoji */
   emojiIcon?: string;
   currentValue: number;
   onChange: (value: number[]) => void;
@@ -20,15 +26,14 @@ interface QuestionCardProps {
 }
 
 const sliderLabels: Record<string, { high: string; low: string }> = {
-  bounciness: { high: '🌟 שמחה גבוהה', low: '😔 שמחה נמוכה' },
-  energy: { high: '⚡ הרבה אנרגיה', low: '🔋 מעט אנרגיה' },
-  alertness: { high: '👁️ עירני מאוד', low: '😴 עייף/ה' },
-  lightness: { high: '🍃 קל/ה', low: '🪨 כבד/ה' },
+  bounciness: { high: 'בא לי לרקוד', low: 'בא לי שמיכה' },
+  energy: { high: 'מצב טיל', low: 'מצב ספה' },
+  alertness: { high: 'אחרי שלושה', low: 'לפני קפה' },
+  lightness: { high: 'בלון הליום', low: 'אחרי חמין' },
 };
 
 const QuestionCard = ({
   title,
-  emojiIcon = "✨",
   currentValue,
   onChange,
   onNext,
@@ -39,58 +44,50 @@ const QuestionCard = ({
   className,
   showPrevious = true
 }: QuestionCardProps) => {
-  const labels = emotionType ? sliderLabels[emotionType] : { high: '😊 גבוה', low: '😔 נמוך' };
+  const worldKey: WorldKey = emotionType ?? 'bounciness';
+  const world = worlds[worldKey];
+  const labels = sliderLabels[worldKey];
+
+  useWorldBackground(worldBackground(worldKey, currentValue), isDarkWorld(worldKey, currentValue));
+
+  // Each question moves in its own way
+  const Hero =
+    worldKey === 'energy' ? BouncingBall
+    : worldKey === 'alertness' ? LitCreature
+    : worldKey === 'lightness' ? WeightCreature
+    : Creature;
+
+  // Shrink the creature on short phones so its tallest pose still fits the stage
+  const { ref: stageRef, scale: creatureScale } = useFitScale();
 
   return (
-    <div className={cn('bg-white rounded-[20px] p-6 shadow-[0_4px_20px_rgba(0,0,0,0.06)] flex flex-col', className)}>
-      <div className="flex flex-col items-center gap-4">
-        <motion.div
-          className="text-[56px] text-center"
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.3 }}
-        >
-          {emojiIcon}
-        </motion.div>
+    <div className={cn('screen', className)}>
+      <div>
+        <h1 className="t-title">{title}</h1>
+        <p className="t-mood" aria-live="polite">{moodFor(worldKey, currentValue)}</p>
+      </div>
 
-        <motion.h3
-          className="text-2xl font-bold text-[hsl(var(--foreground))] text-center mb-4"
-          initial={{ y: -10, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.1, duration: 0.3 }}
-        >
-          {title}
-        </motion.h3>
+      <div ref={stageRef} className="flex-1 min-h-0">
+        <Hero value={currentValue} color={world.creature} scale={creatureScale} />
+      </div>
 
-        <div className="w-full px-2 relative mb-2">
-          <Slider
-            dir="rtl"
-            value={[currentValue]}
-            min={1}
-            max={10}
-            step={1}
-            onValueChange={onChange}
-            emotionType={emotionType}
-            className="w-full"
-          />
-          <div className="flex justify-between mt-3 px-1">
-            <span className="text-xs text-[hsl(var(--muted-foreground))]">{labels.high}</span>
-            <span className="text-xs text-[hsl(var(--muted-foreground))]">{labels.low}</span>
-          </div>
-        </div>
-
-        <div className="text-center text-lg font-semibold text-[hsl(var(--primary))]">
-          {currentValue} / 10
+      <div>
+        <MoodSlider value={currentValue} onChange={onChange} color={world.creature} label={title} />
+        {/* The slider runs right-to-left: its low end is on the right */}
+        <div className="flex justify-between mt-1 t-label">
+          <span>{labels.low}</span>
+          <span>{currentValue} מתוך 10</span>
+          <span>{labels.high}</span>
         </div>
       </div>
 
       {onNext && (
         <NavigationButtons
           onNext={onNext}
-          onPrevious={onPrevious || (() => {})}
-          isLastStep={currentStep === totalSteps}
-          isPreviousDisabled={!showPrevious}
-          isLastSlider={currentStep === totalSteps}
+          onPrevious={onPrevious}
+          hidePrevious={!showPrevious}
+          nextLabel={currentStep === totalSteps ? 'יאללה, נמשיך' : 'הבא'}
+          showChevron={currentStep !== totalSteps}
         />
       )}
     </div>

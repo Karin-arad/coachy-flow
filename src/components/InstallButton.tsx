@@ -1,6 +1,5 @@
 
 import React, { useEffect, useState } from 'react';
-import { Button } from '@/components/ui/button';
 import { Download } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 
@@ -46,15 +45,14 @@ const InstallButton = () => {
   if (!deferredPrompt) return null;
 
   return (
-    <Button
+    <button
+      type="button"
       onClick={handleInstallClick}
-      variant="calm"
-      size="sm"
-      className="fixed top-5 left-5 z-50 gap-2 rtl:left-auto rtl:right-5"
+      className="icon-button"
+      aria-label="התקנת האפליקציה"
     >
-      <Download className="h-4 w-4" />
-      <span>התקן את האפליקציה</span>
-    </Button>
+      <Download size={20} />
+    </button>
   );
 };
 

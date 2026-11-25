@@ -89,16 +89,16 @@ export const useWorkoutGeneration = () => {
         setWorkoutDescription(fallbackRecommendation);
         setError(null);
         toast({
-          title: "Using offline recommendation",
-          description: "We've created a practice based on your preferences without AI assistance.",
+          title: "המלצה ללא חיבור",
+          description: "הרכבנו אימון לפי ההעדפות שלך, בלי עזרת הבינה המלאכותית.",
         });
         return fallbackRecommendation;
       } else {
-        setError('Could not generate a workout recommendation. We\'ll try again automatically.');
+        setError('לא הצלחנו להרכיב אימון. מנסים שוב אוטומטית.');
         toast({
           variant: "destructive",
-          title: "Connection issue",
-          description: "Retrying workout generation...",
+          title: "בעיית חיבור",
+          description: "מנסים שוב להרכיב אימון...",
         });
         throw error;
       }

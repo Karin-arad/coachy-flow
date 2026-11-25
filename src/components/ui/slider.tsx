@@ -29,7 +29,7 @@ const getEmotionColor = (type?: ColoredSliderProps["emotionType"]) => {
 };
 
 const getTrackColor = (type?: ColoredSliderProps["emotionType"]) => {
-  return "bg-gray-100";
+  return "bg-[hsl(var(--muted))]";
 };
 
 const Slider = React.forwardRef<
@@ -97,7 +97,7 @@ const Slider = React.forwardRef<
       dir="rtl" // Ensure RTL layout for the slider
       ref={ref}
       className={cn(
-        "relative flex w-full touch-none select-none items-center",
+        "relative flex w-full touch-none select-none items-center h-8",
         className
       )}
       onPointerDown={() => setIsDragging(true)}
@@ -106,7 +106,7 @@ const Slider = React.forwardRef<
       {...props}
     >
       <SliderPrimitive.Track className={cn(
-        "relative h-2 w-full grow overflow-hidden rounded-full",
+        "relative h-3 w-full grow overflow-hidden rounded-full",
         getTrackColor(emotionType)
       )}>
         <SliderPrimitive.Range className={cn(
@@ -116,7 +116,7 @@ const Slider = React.forwardRef<
         )} />
       </SliderPrimitive.Track>
       <SliderPrimitive.Thumb className={cn(
-        "block h-6 w-6 rounded-full border-2 border-white bg-gradient-to-r shadow-md transition-all duration-200",
+        "block h-8 w-8 rounded-full border-[3px] border-white bg-gradient-to-r shadow-md transition-transform duration-200",
         "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
         "disabled:pointer-events-none disabled:opacity-50",
         isDragging ? "scale-110" : "hover:scale-110",

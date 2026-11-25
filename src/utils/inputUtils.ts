@@ -65,7 +65,7 @@ User's current state:
   
   // Add time available if provided
   if (timeAvailable) {
-    prompt += `\n- Available time: ${timeAvailable}`;
+    prompt += `\n- Available time: ${timeAvailable} minutes`;
   }
   
   // Add workout preferences if provided

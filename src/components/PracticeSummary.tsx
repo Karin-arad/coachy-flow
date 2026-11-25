@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { useFlowContext } from '@/context/FlowContext';
 import { useWorkoutGeneration } from '@/hooks/useWorkoutGeneration';
@@ -58,6 +58,8 @@ const PracticeSummary = () => {
     handleVideoRetry(workoutDescription!, emotionRatings, timeAvailable, userConversation);
   };
 
+  const [playing, setPlaying] = useState(false);
+
   useWorldBackground(worldBackground('neutral'));
 
   if (currentScreen !== 7) {
@@ -105,6 +107,7 @@ const PracticeSummary = () => {
             videoId={videoId}
             videoTitle={videoTitle}
             onVideoRetry={handleVideoRetryClick}
+            playing={playing}
           />
 
           <details className="disclosure surface !py-2">
@@ -120,16 +123,18 @@ const PracticeSummary = () => {
           <div className="flex-1" />
 
           <div className="flex flex-col gap-3 w-full">
-            {/* Opens the matched video on YouTube. A link, not window.open, so iOS doesn't block it. */}
-            {videoId && (
-              <a
-                href={`https://www.youtube.com/watch?v=${videoId}`}
-                target="_blank"
-                rel="noopener noreferrer"
+            {/* Plays the matched video here. The YouTube link sits under the player. */}
+            {videoId && !playing && (
+              <button
+                type="button"
                 className="btn-primary !flex-none"
+                onClick={() => {
+                  setPlaying(true);
+                  document.getElementById('workout-video')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }}
               >
                 התחלת אימון
-              </a>
+              </button>
             )}
             <button
               className="btn-secondary !flex-none"

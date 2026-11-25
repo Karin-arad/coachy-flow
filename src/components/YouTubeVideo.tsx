@@ -5,9 +5,11 @@ import { motion } from 'framer-motion';
 interface YouTubeVideoProps {
   videoId: string;
   title: string;
+  /** Start playing right away (set after the person taps "start") */
+  autoplay?: boolean;
 }
 
-const YouTubeVideo = ({ videoId, title }: YouTubeVideoProps) => {
+const YouTubeVideo = ({ videoId, title, autoplay = false }: YouTubeVideoProps) => {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
 
@@ -67,7 +69,7 @@ const YouTubeVideo = ({ videoId, title }: YouTubeVideoProps) => {
       )}
       <iframe
         className="w-full h-full"
-        src={`https://www.youtube.com/embed/${videoId}`}
+        src={`https://www.youtube.com/embed/${videoId}?playsinline=1${autoplay ? '&autoplay=1' : ''}`}
         title={title || 'נגן יוטיוב'}
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         allowFullScreen

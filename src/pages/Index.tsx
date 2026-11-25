@@ -12,16 +12,13 @@ import ProgressBar from '@/components/ProgressBar';
 import CelebrationEffects from '@/components/CelebrationEffects';
 import InstallButton from '@/components/InstallButton';
 import { motion } from 'framer-motion';
-import { Settings } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
-import APIKeyInput from '@/components/APIKeyInput';
 import { cn } from '@/lib/utils';
 import { preloadSounds } from '@/utils/soundEffects';
 
 const QuizFlow = () => {
   const { currentScreen, celebrationType, isCelebrating } = useFlowContext();
   const isMobile = useIsMobile();
-  const [showApiKeyModal, setShowApiKeyModal] = useState(false);
   
   useEffect(() => {
     preloadSounds();
@@ -81,17 +78,8 @@ const QuizFlow = () => {
           duration={1500}
         />
 
-        {showApiKeyModal && <APIKeyInput onClose={() => setShowApiKeyModal(false)} />}
-
         <header className="flow-header">
-          <button
-            type="button"
-            className="icon-button"
-            aria-label="הגדרות"
-            onClick={() => setShowApiKeyModal(true)}
-          >
-            <Settings size={20} />
-          </button>
+          <span aria-hidden="true" />
           <ProgressBar currentStep={getCurrentStepForProgressBar()} totalSteps={7} />
           <InstallButton />
         </header>

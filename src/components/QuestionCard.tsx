@@ -1,10 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React from 'react';
 import { cn } from '@/lib/utils';
 import NavigationButtons from './NavigationButtons';
 import Creature from './Creature';
 import MoodSlider from './MoodSlider';
 import { worlds, worldBackground, moodFor, WorldKey } from '@/lib/worlds';
 import { useWorldBackground } from '@/hooks/useWorldBackground';
+import { useFitScale } from '@/hooks/useFitScale';
 
 interface QuestionCardProps {
   title: string;
@@ -47,17 +48,7 @@ const QuestionCard = ({
   useWorldBackground(worldBackground(worldKey, currentValue));
 
   // Shrink the creature on short phones so its tallest pose still fits the stage
-  const stageRef = useRef<HTMLDivElement>(null);
-  const [creatureScale, setCreatureScale] = useState(1);
-  useEffect(() => {
-    const stage = stageRef.current;
-    if (!stage) return;
-    const fit = () => setCreatureScale(Math.min(1, Math.max(0.4, stage.clientHeight / 400)));
-    fit();
-    const observer = new ResizeObserver(fit);
-    observer.observe(stage);
-    return () => observer.disconnect();
-  }, []);
+  const { ref: stageRef, scale: creatureScale } = useFitScale();
 
   return (
     <div className={cn('screen', className)}>

@@ -39,6 +39,7 @@ const extractKeywords = (text: string): string[] => {
   if (lowerText.includes('פלג עליון') || lowerText.includes('upper body')) keywords.push('upper body');
   if (lowerText.includes('רגליים') || lowerText.includes('legs')) keywords.push('legs workout');
   if (lowerText.includes('ללא ציוד') || lowerText.includes('no equipment')) keywords.push('no equipment');
+  if (lowerText.includes('קפיצות') || lowerText.includes('no jumping') || lowerText.includes('low impact')) keywords.push('low impact');
   
   return keywords;
 };
@@ -67,7 +68,7 @@ export const createSearchQueries = (
   const lowerConversation = userConversation.toLowerCase();
   
   if (lowerWorkout.includes('yoga') || lowerConversation.includes('יוגה')) workoutTypes.push('yoga');
-  if (lowerWorkout.includes('stretch') || lowerConversation.includes('מתיחה')) workoutTypes.push('stretching');
+  if (lowerWorkout.includes('stretch') || lowerConversation.includes('מתיח') || lowerConversation.includes('stretch')) workoutTypes.push('stretching');
   if (lowerWorkout.includes('cardio') || lowerWorkout.includes('hiit') || lowerConversation.includes('קרדיו')) workoutTypes.push('cardio HIIT');
   if (lowerWorkout.includes('strength') || lowerConversation.includes('כוח')) workoutTypes.push('strength training');
   if (lowerWorkout.includes('pilates') || lowerConversation.includes('פילאטיס')) workoutTypes.push('pilates');

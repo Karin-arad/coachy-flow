@@ -45,7 +45,7 @@ const YouTubeVideo = ({ videoId, title }: YouTubeVideoProps) => {
   }
 
   return (
-    <div className="w-full aspect-video rounded-[16px] overflow-hidden shadow-[0_4px_16px_rgba(0,0,0,0.08)] relative">
+    <div className="w-full aspect-video rounded-[18px] overflow-hidden relative">
       {isLoading && (
         <div className="absolute inset-0 bg-[hsl(var(--background))] flex items-center justify-center">
           <div className="flex gap-2">

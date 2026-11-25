@@ -1,5 +1,5 @@
-
 import React, { useEffect } from 'react';
+import { ChevronDown } from 'lucide-react';
 import { useFlowContext } from '@/context/FlowContext';
 import { useWorkoutGeneration } from '@/hooks/useWorkoutGeneration';
 import { useVideoSearch } from '@/hooks/useVideoSearch';
@@ -9,7 +9,7 @@ import WorkoutDisplay from './practice/WorkoutDisplay';
 import VideoSection from './practice/VideoSection';
 import Creature from './Creature';
 import { useWorldBackground } from '@/hooks/useWorldBackground';
-import { worlds, worldBackground } from '@/lib/worlds';
+import { worlds, worldBackground, moodFor } from '@/lib/worlds';
 
 const PracticeSummary = () => {
   const { currentScreen, emotionRatings, userConversation, timeAvailable, goToScreen } = useFlowContext();
@@ -64,64 +64,84 @@ const PracticeSummary = () => {
     return null;
   }
 
+  const ready = Boolean(workoutDescription) && !isLoading;
+
+  // What the match was based on, in the person's own answers
+  const recap = [
+    moodFor('bounciness', emotionRatings.bounciness),
+    moodFor('energy', emotionRatings.energy),
+    moodFor('alertness', emotionRatings.alertness),
+    moodFor('lightness', emotionRatings.lightness),
+    timeAvailable ? `${timeAvailable} דקות` : '',
+  ].filter(Boolean);
+
   return (
     <div className="screen">
       <div className="flex items-end gap-3">
-        <h1 className="t-title flex-1">
-          {isLoading || !workoutDescription ? 'מרכיבים לך אימון' : 'האימון שלך מוכן'}
-        </h1>
-        {workoutDescription && !isLoading && (
+        <h1 className="t-title flex-1">{ready ? 'האימון שלך מוכן' : 'מרכיבים לך אימון'}</h1>
+        {ready && (
           <div className="w-[88px] h-[150px] flex-shrink-0">
             <Creature value={10} color={worlds.bounciness.creature} scale={0.36} />
           </div>
         )}
       </div>
 
-      <div className="flex-1 flex flex-col min-h-0">
-
-        {isLoading ? (
-          <div className="flex-1 flex items-center justify-center"><LoadingState /></div>
-        ) : error && retryCount < 3 ? (
-          <ErrorState error={error} onRetry={handleRetry} />
-        ) : workoutDescription ? (
-          <div className="flex-1 flex flex-col gap-6 w-full">
-            <div className="surface space-y-5">
-              <WorkoutDisplay workoutDescription={workoutDescription} />
-              <VideoSection
-                videoId={videoId}
-                videoTitle={videoTitle}
-                onVideoRetry={handleVideoRetryClick}
-              />
-            </div>
-
-            {/* Action buttons */}
-            <div className="flex-1" />
-            <div className="flex flex-col gap-3 w-full">
-              {/* Opens the matched video on YouTube. A link, not window.open, so iOS doesn't block it. */}
-              {videoId && (
-                <a
-                  href={`https://www.youtube.com/watch?v=${videoId}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn-primary !flex-none"
-                >
-                  התחלת אימון
-                </a>
-              )}
-              <button
-                className="btn-secondary !flex-none"
-                onClick={() => goToScreen(6)}
-              >
-                משהו אחר
-              </button>
-            </div>
+      {isLoading ? (
+        <div className="flex-1 flex items-center justify-center"><LoadingState /></div>
+      ) : error && retryCount < 3 ? (
+        <ErrorState error={error} onRetry={handleRetry} />
+      ) : workoutDescription ? (
+        <>
+          <div>
+            <p className="t-label mb-2">לפי מה שסיפרת</p>
+            <ul className="flex flex-wrap gap-2">
+              {recap.map((item, i) => (
+                <li key={i} className="chip">{item}</li>
+              ))}
+            </ul>
           </div>
-        ) : (
-          <p className="t-sub">
-            מכינים לך אימון מותאם...
-          </p>
-        )}
-      </div>
+
+          <VideoSection
+            videoId={videoId}
+            videoTitle={videoTitle}
+            onVideoRetry={handleVideoRetryClick}
+          />
+
+          <details className="disclosure surface !py-2">
+            <summary>
+              <span>פירוט האימון</span>
+              <ChevronDown size={20} className="disclosure-chevron transition-transform" aria-hidden="true" />
+            </summary>
+            <div className="pt-2 pb-3">
+              <WorkoutDisplay workoutDescription={workoutDescription} />
+            </div>
+          </details>
+
+          <div className="flex-1" />
+
+          <div className="flex flex-col gap-3 w-full">
+            {/* Opens the matched video on YouTube. A link, not window.open, so iOS doesn't block it. */}
+            {videoId && (
+              <a
+                href={`https://www.youtube.com/watch?v=${videoId}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-primary !flex-none"
+              >
+                התחלת אימון
+              </a>
+            )}
+            <button
+              className="btn-secondary !flex-none"
+              onClick={() => goToScreen(6)}
+            >
+              משהו אחר
+            </button>
+          </div>
+        </>
+      ) : (
+        <p className="t-sub">מכינים לך אימון מותאם...</p>
+      )}
     </div>
   );
 };

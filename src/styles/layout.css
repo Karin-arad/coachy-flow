@@ -91,6 +91,35 @@
   display: inline-flex;
   align-items: center;
 }
+.chip-toggle {
+  height: 44px;
+  padding: 0 18px;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.75);
+  font-size: 18px;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.chip-toggle.chip-on {
+  background: var(--ink);
+  color: #fff;
+}
+.chip-toggle:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 2px;
+}
+
+details.disclosure > summary {
+  list-style: none;
+  cursor: pointer;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 18px;
+  font-weight: 500;
+}
+details.disclosure > summary::-webkit-details-marker { display: none; }
+details.disclosure[open] .disclosure-chevron { transform: rotate(180deg); }
 
 .hero-badge {
   width: 128px;

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { RefreshCw } from 'lucide-react';
 import YouTubeVideo from '@/components/YouTubeVideo';
@@ -12,26 +11,19 @@ interface VideoSectionProps {
 const VideoSection = ({ videoId, videoTitle, onVideoRetry }: VideoSectionProps) => {
   if (videoId) {
     return (
-      <div className="w-full">
-        <h3 className="t-label mb-3 text-right">
-          הסרטון שלך
-        </h3>
+      <div className="surface !p-3 w-full">
         <YouTubeVideo videoId={videoId} title={videoTitle} />
+        {videoTitle && (
+          <p dir="auto" className="t-label px-2 pt-3 pb-1 text-start">{videoTitle}</p>
+        )}
       </div>
     );
   }
 
   return (
-    <div className="w-full space-y-3">
-      <div className="bg-[hsl(var(--background))] border border-[hsl(var(--border))] rounded-[16px] p-4">
-        <p className="t-sub">
-          לא מצאנו סרטון כרגע, אבל תוכנית האימון מוכנה.
-        </p>
-      </div>
-      <button
-        onClick={onVideoRetry}
-        className="btn-secondary !flex-none w-full"
-      >
+    <div className="surface w-full flex flex-col gap-4">
+      <p className="t-body">לא מצאנו סרטון כרגע, אבל תוכנית האימון מוכנה.</p>
+      <button onClick={onVideoRetry} className="btn-secondary !flex-none w-full !bg-[rgba(23,21,59,0.08)]">
         <RefreshCw className="h-4 w-4" />
         חיפוש סרטון נוסף
       </button>

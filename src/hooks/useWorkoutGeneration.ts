@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { EmotionRatings } from '@/types/video';
 import { createWorkoutRequestPrompt } from '@/utils/inputUtils';
 import { askCoachyAI } from '@/utils/coachyService';
-import { toast } from '@/hooks/use-toast';
 
 export const useWorkoutGeneration = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -81,27 +80,13 @@ export const useWorkoutGeneration = () => {
       return response;
       
     } catch (error) {
+      // The text service is unreachable: use the built-in description, quietly.
+      // The person still gets a matched video; how the text was produced is not their concern.
       console.error('❌ Error generating workout recommendation:', error);
-      setRetryCount(prev => prev + 1);
-      
-      if (retryCount >= 2) {
-        const fallbackRecommendation = generateFallbackRecommendation(emotionRatings, userConversation, timeAvailable);
-        setWorkoutDescription(fallbackRecommendation);
-        setError(null);
-        toast({
-          title: "המלצה ללא חיבור",
-          description: "הרכבנו אימון לפי ההעדפות שלך, בלי עזרת הבינה המלאכותית.",
-        });
-        return fallbackRecommendation;
-      } else {
-        setError('לא הצלחנו להרכיב אימון. מנסים שוב אוטומטית.');
-        toast({
-          variant: "destructive",
-          title: "בעיית חיבור",
-          description: "מנסים שוב להרכיב אימון...",
-        });
-        throw error;
-      }
+      const fallbackRecommendation = generateFallbackRecommendation(emotionRatings, userConversation, timeAvailable);
+      setWorkoutDescription(fallbackRecommendation);
+      setError(null);
+      return fallbackRecommendation;
     } finally {
       setIsLoading(false);
     }

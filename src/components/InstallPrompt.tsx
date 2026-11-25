@@ -21,6 +21,17 @@ const alreadySeen = () => {
   }
 };
 
+const markSeen = () => {
+  try {
+    localStorage.setItem(SEEN_KEY, '1');
+  } catch {
+    // ignore
+  }
+};
+
+/** Browsers inside other apps (Instagram, Facebook, WhatsApp...) cannot add to the home screen. */
+const isInAppBrowser = () => /Instagram|FBAN|FBAV|FB_IAB|Line\/|TikTok|Snapchat|WhatsApp|LinkedInApp/i.test(navigator.userAgent);
+
 /**
  * Offered once, on the first visit, and never inside the installed app.
  * Android/Chrome can install from the button. iOS has no install API,
@@ -33,10 +44,13 @@ const InstallPrompt = () => {
   const ios = isIOS();
 
   useEffect(() => {
-    if (isStandalone() || alreadySeen()) return;
+    if (isStandalone() || alreadySeen() || isInAppBrowser()) return;
 
+    // Remembered from the moment it is shown, not only when a button is pressed:
+    // on iOS people leave through the share menu without closing the sheet.
     if (ios) {
       setVisible(true);
+      markSeen();
       return;
     }
 
@@ -44,17 +58,14 @@ const InstallPrompt = () => {
       e.preventDefault();
       setDeferredPrompt(e);
       setVisible(true);
+      markSeen();
     };
     window.addEventListener('beforeinstallprompt', onBeforeInstall);
     return () => window.removeEventListener('beforeinstallprompt', onBeforeInstall);
   }, [ios]);
 
   const close = () => {
-    try {
-      localStorage.setItem(SEEN_KEY, '1');
-    } catch {
-      // ignore
-    }
+    markSeen();
     setVisible(false);
   };
 

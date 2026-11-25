@@ -5,7 +5,6 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap');
 
 @layer base {
   :root {
@@ -39,7 +38,7 @@
 @layer base {
   * {
     @apply border-border;
-    font-family: Inter, system-ui, sans-serif;
+    font-family: 'Rubik', 'Heebo', system-ui, sans-serif;
     @apply font-normal;
     @apply text-sm;
   }

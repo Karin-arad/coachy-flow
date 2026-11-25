@@ -39,7 +39,7 @@ const YouTubeVideo = ({ videoId, title }: YouTubeVideoProps) => {
   if (!videoId) {
     return (
       <div className="w-full aspect-video rounded-[16px] bg-[hsl(var(--background))] flex items-center justify-center text-[hsl(var(--muted-foreground))] text-sm">
-        No video available
+        אין סרטון זמין
       </div>
     );
   }
@@ -68,7 +68,7 @@ const YouTubeVideo = ({ videoId, title }: YouTubeVideoProps) => {
       <iframe
         className="w-full h-full"
         src={`https://www.youtube.com/embed/${videoId}`}
-        title={title || 'YouTube video player'}
+        title={title || 'נגן יוטיוב'}
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         allowFullScreen
         onLoad={handleIframeLoad}
@@ -76,7 +76,7 @@ const YouTubeVideo = ({ videoId, title }: YouTubeVideoProps) => {
       />
       {hasError && (
         <div className="absolute inset-0 bg-[hsl(var(--background))]/80 flex items-center justify-center text-[hsl(var(--destructive))] text-sm">
-          Error loading video
+          שגיאה בטעינת הסרטון
         </div>
       )}
     </div>

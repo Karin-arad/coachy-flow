@@ -22,8 +22,8 @@ interface QuestionCardProps {
 const sliderLabels: Record<string, { high: string; low: string }> = {
   bounciness: { high: '🌟 שמחה גבוהה', low: '😔 שמחה נמוכה' },
   energy: { high: '⚡ הרבה אנרגיה', low: '🔋 מעט אנרגיה' },
-  alertness: { high: '👁️ עירני מאוד', low: '😴 עייף/ה' },
-  lightness: { high: '🍃 קל/ה', low: '🪨 כבד/ה' },
+  alertness: { high: '👁️ ערנות גבוהה', low: '😴 עייפות' },
+  lightness: { high: '🍃 קלילות', low: '🪨 כבדות' },
 };
 
 const QuestionCard = ({
@@ -74,8 +74,9 @@ const QuestionCard = ({
             className="w-full"
           />
           <div className="flex justify-between mt-3 px-1">
-            <span className="text-xs text-[hsl(var(--muted-foreground))]">{labels.high}</span>
+            {/* The slider runs right-to-left: its low end is on the right */}
             <span className="text-xs text-[hsl(var(--muted-foreground))]">{labels.low}</span>
+            <span className="text-xs text-[hsl(var(--muted-foreground))]">{labels.high}</span>
           </div>
         </div>
 

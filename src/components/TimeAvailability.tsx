@@ -45,7 +45,7 @@ const TimeAvailability = () => {
         >
           <div className="text-[48px] leading-none mb-3">⏰</div>
           <h2 className="text-2xl font-bold text-[hsl(var(--foreground))]">כמה זמן יש לך?</h2>
-          <p className="text-[15px] text-[hsl(var(--muted-foreground))] mt-1">בחר את משך האימון המתאים לך</p>
+          <p className="text-[15px] text-[hsl(var(--muted-foreground))] mt-1">כמה דקות מתאימות לך היום?</p>
         </motion.div>
 
         <div className="grid grid-cols-2 gap-3 flex-1">

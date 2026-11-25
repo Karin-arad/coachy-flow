@@ -48,7 +48,7 @@ const ConversationActions = ({ onContinue, onPrevious }: ConversationActionsProp
           onClick={onContinue}
           className="text-sm text-[hsl(var(--muted-foreground))] underline underline-offset-2"
         >
-          דלגי, תפתיעו אותי ✨
+          אפשר לדלג, תפתיעו אותי ✨
         </button>
       </div>
     </motion.div>

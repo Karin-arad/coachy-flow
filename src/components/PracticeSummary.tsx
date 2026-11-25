@@ -70,7 +70,7 @@ const PracticeSummary = () => {
         <div className="flex flex-col items-center mb-5">
           <span style={{ fontSize: 40 }}>🎉</span>
           <h2 className="text-[22px] font-bold text-[hsl(var(--foreground))] mt-1">
-            Your Practice Summary
+            האימון שלך מוכן
           </h2>
         </div>
 
@@ -96,19 +96,19 @@ const PracticeSummary = () => {
                 className="w-full py-3 rounded-[14px] bg-[hsl(var(--primary))] text-white font-semibold text-[15px]"
                 onClick={() => {/* start workout */}}
               >
-                Start Workout
+                התחלת אימון
               </button>
               <button
                 className="w-full py-3 rounded-[14px] border border-[hsl(var(--border))] text-[hsl(var(--muted-foreground))] font-medium text-[15px]"
                 onClick={() => goToScreen(6)}
               >
-                Find Something Else
+                משהו אחר
               </button>
             </div>
           </div>
         ) : (
           <p className="text-[hsl(var(--muted-foreground))] mb-8">
-            Preparing your personalized practice...
+            מכינים לך אימון מותאם...
           </p>
         )}
       </div>

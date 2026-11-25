@@ -19,7 +19,7 @@ const ErrorState = ({ error, onRetry }: ErrorStateProps) => {
         className="flex items-center gap-2 bg-[hsl(var(--primary))] text-white px-4 py-2 rounded-[14px] text-sm font-medium"
       >
         <RefreshCw className="h-4 w-4" />
-        Try Again
+        ניסיון נוסף
       </button>
     </div>
   );

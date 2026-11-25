@@ -67,7 +67,7 @@ export default {
 				'rubik': ['Rubik', 'sans-serif'],
 				'heebo': ['Heebo', 'sans-serif'],
 				'hebrew': ['Rubik', 'Heebo', 'sans-serif'],
-				'sans': ['Inter', 'system-ui', 'sans-serif'],
+				'sans': ['Rubik', 'Heebo', 'system-ui', 'sans-serif'],
 			},
 			borderRadius: {
 				lg: 'var(--radius)',

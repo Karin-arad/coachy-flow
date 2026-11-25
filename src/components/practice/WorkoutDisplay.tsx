@@ -16,7 +16,7 @@ const WorkoutDisplay = ({ workoutDescription }: WorkoutDisplayProps) => {
   const cleanTitle = title.replace(/#\w+/g, '').trim();
 
   return (
-    <div className="bg-white rounded-[20px] p-5 shadow-[0_4px_20px_rgba(0,0,0,0.06)] w-full text-left">
+    <div dir="auto" className="bg-white rounded-[20px] p-5 shadow-[0_4px_20px_rgba(0,0,0,0.06)] w-full text-start">
       {tags.length > 0 && (
         <div className="flex gap-2 flex-wrap mb-3">
           {tags.map((tag, i) => (

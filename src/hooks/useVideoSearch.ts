@@ -27,8 +27,8 @@ export const useVideoSearch = () => {
         setVideoTitle(foundVideo.snippet.title);
         console.log('✅ Found and validated YouTube video:', foundVideo.snippet.title, foundVideo.id.videoId);
         toast({
-          title: "Video found!",
-          description: "Found a perfect workout video for your practice.",
+          title: "נמצא סרטון",
+          description: "מצאנו סרטון שמתאים לאימון שלך.",
         });
       } else {
         console.log('⚠️ No videos found through search, using smart fallback');
@@ -52,8 +52,8 @@ export const useVideoSearch = () => {
         setVideoTitle(fallbackVideo.title);
         console.log('✅ Using validated fallback video:', fallbackVideo.title, fallbackVideo.videoId);
         toast({
-          title: "Backup video selected",
-          description: "We've selected a curated workout that matches your preferences.",
+          title: "נבחר סרטון חלופי",
+          description: "בחרנו אימון מהמאגר שלנו שמתאים להעדפות שלך.",
         });
       } else {
         console.error('❌ Even fallback video failed validation');
@@ -61,8 +61,8 @@ export const useVideoSearch = () => {
         setVideoTitle('');
         toast({
           variant: "destructive",
-          title: "Video unavailable",
-          description: "Unable to load a workout video right now. Please try again later.",
+          title: "הסרטון לא זמין",
+          description: "לא הצלחנו לטעון סרטון כרגע. אפשר לנסות שוב מאוחר יותר.",
         });
       }
     } catch (error) {

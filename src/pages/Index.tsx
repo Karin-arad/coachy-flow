@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { FlowProvider, useFlowContext } from '@/context/FlowContext';
 import BouncinessScreen from '@/components/BouncinessScreen';
 import EnergyScreen from '@/components/EnergyScreen';
@@ -11,6 +11,7 @@ import PracticeSummary from '@/components/PracticeSummary';
 import ProgressBar from '@/components/ProgressBar';
 import CelebrationEffects from '@/components/CelebrationEffects';
 import InstallButton from '@/components/InstallButton';
+import OpeningScreen from '@/components/OpeningScreen';
 import { motion } from 'framer-motion';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
@@ -19,6 +20,9 @@ import { preloadSounds } from '@/utils/soundEffects';
 const QuizFlow = () => {
   const { currentScreen, celebrationType, isCelebrating } = useFlowContext();
   const isMobile = useIsMobile();
+  // The opening plays on every visit, then hands over to the first question
+  const [opening, setOpening] = useState(true);
+  const endOpening = useCallback(() => setOpening(false), []);
   
   useEffect(() => {
     preloadSounds();
@@ -69,6 +73,16 @@ const QuizFlow = () => {
     }
   };
   
+  if (opening) {
+    return (
+      <div className="app-container">
+        <div className="flow-container">
+          <OpeningScreen onDone={endOpening} />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="app-container">
       <div className="flow-container">

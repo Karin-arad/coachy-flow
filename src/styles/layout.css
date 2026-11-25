@@ -228,6 +228,18 @@ details.disclosure[open] .disclosure-chevron { transform: rotate(180deg); }
 }
 .feather-float { animation: feather-float 3.6s ease-in-out infinite; }
 
+/* Opening: overhead press. The rig (arms + barbell) grows from the shoulders. */
+@keyframes lift-rig {
+  0%, 12%, 100% { height: var(--rig-low); }
+  45%, 62% { height: var(--rig-high); }
+}
+.lift-rig { height: var(--rig-high); animation: lift-rig 1.6s cubic-bezier(0.45, 0, 0.3, 1) infinite; }
+@keyframes lift-body {
+  0%, 12%, 100% { transform: scaleY(0.9); }
+  45%, 62% { transform: scaleY(1.04); }
+}
+.lift-body { transform-origin: 50% 100%; animation: lift-body 1.6s cubic-bezier(0.45, 0, 0.3, 1) infinite; }
+
 /* The creature: springy pose changes, and an idle bounce while loading */
 .creature-body {
   transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -239,7 +251,7 @@ details.disclosure[open] .disclosure-chevron { transform: rotate(180deg); }
 .creature-bounce { animation: creature-bounce 0.9s ease-in-out infinite; }
 @media (prefers-reduced-motion: reduce) {
   .creature-body { transition: none; }
-  .creature-bounce, .ball-bounce, .ball-shadow, .star-twinkle, .iron-land, .feather-float { animation: none; }
+  .creature-bounce, .lift-rig, .lift-body, .ball-bounce, .ball-shadow, .star-twinkle, .iron-land, .feather-float { animation: none; }
   .app-container { transition: none; }
 }
 

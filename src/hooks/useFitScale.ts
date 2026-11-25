@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from 'react';
  * `fullHeight` is the stage height at which the creature is drawn at scale 1.
  */
 export const useFitScale = (fullHeight = 400, min = 0.3) => {
-  const ref = useRef<HTMLDivElement>(null);
+  const ref = useRef<HTMLElement & HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
 
   useEffect(() => {

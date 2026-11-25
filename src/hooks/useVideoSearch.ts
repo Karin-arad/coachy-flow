@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { EmotionRatings } from '@/types/video';
 import { createSearchQueries, searchWithMultipleQueries, getFallbackVideo, validateVideo } from '@/utils/videoService';
+import { parseMinutes } from '@/utils/videoSearch';
 import { toast } from '@/hooks/use-toast';
 
 export const useVideoSearch = () => {
@@ -20,7 +21,7 @@ export const useVideoSearch = () => {
       setVideoSearchAttempts(prev => prev + 1);
       
       const searchQueries = createSearchQueries(workoutText, emotionRatings, timeAvailable, userConversation);
-      const foundVideo = await searchWithMultipleQueries(searchQueries);
+      const foundVideo = await searchWithMultipleQueries(searchQueries, parseMinutes(timeAvailable));
       
       if (foundVideo) {
         setVideoId(foundVideo.id.videoId);

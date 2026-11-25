@@ -3,53 +3,89 @@ import { FallbackVideo, VideoData, EmotionRatings } from '../types/video';
 import { FALLBACK_VIDEOS } from '../data/fallbackVideos';
 import { mapTimeToDuration } from './videoSearch';
 import { validateVideo } from './videoValidation';
-import { fetchYouTubeData } from './openaiService';
+import { fetchYouTubeData, fetchVideoDurations, YouTubeDurationFilter } from './openaiService';
 
-// Store last selected videos to avoid repetition
-let lastSelectedVideos: string[] = [];
+// Recently suggested videos, kept across visits so people get variety
+const RECENT_KEY = 'coachy_recent_videos';
+const RECENT_LIMIT = 15;
 
-export const searchWithMultipleQueries = async (queries: string[]): Promise<VideoData | null> => {
-  const maxVideosToFetch = 10; // Fetch more videos to have variety
-  
+const loadRecent = (): string[] => {
+  try {
+    const stored = JSON.parse(localStorage.getItem(RECENT_KEY) || '[]');
+    return Array.isArray(stored) ? stored.filter((id) => typeof id === 'string') : [];
+  } catch {
+    return [];
+  }
+};
+
+let lastSelectedVideos: string[] = loadRecent();
+
+const rememberVideo = (videoId: string) => {
+  lastSelectedVideos = [...lastSelectedVideos.filter((id) => id !== videoId), videoId].slice(-RECENT_LIMIT);
+  try {
+    localStorage.setItem(RECENT_KEY, JSON.stringify(lastSelectedVideos));
+  } catch {
+    // storage can be unavailable (private mode); variety then lasts for this visit only
+  }
+};
+
+const pickRandom = <T,>(items: T[]): T => items[Math.floor(Math.random() * items.length)];
+
+/** A video fits when it is at most 20% shorter or 15% longer than the time asked for. */
+export const fitsDuration = (videoMinutes: number, targetMinutes: number): boolean =>
+  videoMinutes >= targetMinutes * 0.8 && videoMinutes <= targetMinutes * 1.15;
+
+/** YouTube's own length buckets: medium is 4-20 minutes, long is over 20. */
+const durationFilterFor = (targetMinutes?: number | null): YouTubeDurationFilter => {
+  if (!targetMinutes) return 'any';
+  if (targetMinutes <= 15) return 'medium';
+  if (targetMinutes >= 25) return 'long';
+  return 'any'; // around 20 minutes sits on the boundary between the two buckets
+};
+
+export const searchWithMultipleQueries = async (
+  queries: string[],
+  targetMinutes?: number | null
+): Promise<VideoData | null> => {
+  const filter = durationFilterFor(targetMinutes);
+
   for (const query of queries) {
     try {
       console.log('🔍 Trying search query:', query);
-      const videoData = await fetchYouTubeData(query);
-      
-      if (videoData?.items && videoData.items.length > 0) {
-        // Filter out recently selected videos and find a new one
-        const availableVideos = videoData.items.filter((video: VideoData) => 
-          !lastSelectedVideos.includes(video.id.videoId)
-        );
-        
-        // If all videos were recently used, use all available videos
-        const videosToCheck = availableVideos.length > 0 ? availableVideos : videoData.items;
-        
-        // Try different videos, not just the first one
-        const randomIndex = Math.floor(Math.random() * Math.min(videosToCheck.length, 3));
-        const video = videosToCheck[randomIndex];
-        
-        const isValid = await validateVideo(video.id.videoId);
-        
-        if (isValid) {
-          // Update last selected videos list
-          lastSelectedVideos.push(video.id.videoId);
-          if (lastSelectedVideos.length > 5) {
-            lastSelectedVideos = lastSelectedVideos.slice(-5); // Keep only last 5
-          }
-          
-          console.log('✅ Found valid video:', video.snippet.title, video.id.videoId);
-          console.log('📝 Updated last selected videos:', lastSelectedVideos);
-          return video;
+      const videoData = await fetchYouTubeData(query, filter);
+      const items: VideoData[] = videoData?.items || [];
+      if (items.length === 0) continue;
+
+      let candidates = items;
+
+      if (targetMinutes) {
+        // Check the real length of every result; titles often promise a different one
+        try {
+          const durations = await fetchVideoDurations(items.map((video) => video.id.videoId));
+          candidates = items.filter((video) => fitsDuration(durations[video.id.videoId] ?? 0, targetMinutes));
+          console.log(`⏱️ ${candidates.length} of ${items.length} results fit ${targetMinutes} minutes`);
+          if (candidates.length === 0) continue; // try the next query
+        } catch (error) {
+          console.warn('⚠️ Could not check video lengths, using search results as they are', error);
         }
+      }
+
+      // Prefer videos this person has not been shown recently, then pick at random among them
+      const fresh = candidates.filter((video) => !lastSelectedVideos.includes(video.id.videoId));
+      const video = pickRandom(fresh.length > 0 ? fresh : candidates);
+
+      if (await validateVideo(video.id.videoId)) {
+        rememberVideo(video.id.videoId);
+        console.log('✅ Found valid video:', video.snippet.title, video.id.videoId);
+        return video;
       }
     } catch (error) {
       console.warn('⚠️ Search query failed:', query, error);
       continue;
     }
   }
-  
-  console.warn('⚠️ All search queries failed');
+
+  console.warn('⚠️ No search result matched');
   return null;
 };
 
@@ -89,12 +125,15 @@ export const getFallbackVideo = (
   
   let selectedVideo: FallbackVideo | null = null;
   
-  // Try to find video matching preferred durations in order
+  // The length asked for comes first: in this energy level, then in any level,
+  // and only then the next closest length
   for (const duration of preferredDurations) {
-    const matchingVideos = availableVideos.filter(video => video.duration === duration);
-    if (matchingVideos.length > 0) {
-      const randomIndex = Math.floor(Math.random() * matchingVideos.length);
-      selectedVideo = matchingVideos[randomIndex];
+    const inCategory = FALLBACK_VIDEOS.filter(video => video.category === category && video.duration === duration);
+    const anyCategory = FALLBACK_VIDEOS.filter(video => video.duration === duration);
+    const pool = inCategory.length > 0 ? inCategory : anyCategory;
+    if (pool.length > 0) {
+      const fresh = pool.filter(video => !lastSelectedVideos.includes(video.videoId));
+      selectedVideo = pickRandom(fresh.length > 0 ? fresh : pool);
       console.log(`✅ Found video with duration ${duration}:`, selectedVideo.title);
       break;
     }
@@ -114,14 +153,9 @@ export const getFallbackVideo = (
     console.log('🆘 Ultimate fallback, selected random video:', selectedVideo.title);
   }
   
-  // Update last selected videos list
-  lastSelectedVideos.push(selectedVideo.videoId);
-  if (lastSelectedVideos.length > 5) {
-    lastSelectedVideos = lastSelectedVideos.slice(-5);
-  }
-  
+  rememberVideo(selectedVideo.videoId);
+
   console.log('🎯 Selected fallback video:', selectedVideo.title, 'category:', category, 'duration:', selectedVideo.duration);
-  console.log('📝 Updated last selected videos:', lastSelectedVideos);
   
   return selectedVideo;
 };

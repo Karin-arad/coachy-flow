@@ -1,29 +1,28 @@
 
 import { EmotionRatings } from '../types/video';
 
-// Map time strings to duration categories for better matching
+/** The number of minutes the person chose, e.g. "45" -> 45. */
+export const parseMinutes = (timeAvailable: string): number | null => {
+  const match = timeAvailable.match(/\d+/);
+  return match ? parseInt(match[0], 10) : null;
+};
+
+const CURATED_DURATIONS = [5, 10, 15, 20, 30, 45, 60];
+
+/**
+ * Durations of the curated list, closest to the requested time first.
+ * (This used to test with includes(), so "45" matched "5" and got 5-minute videos.)
+ */
 const mapTimeToDuration = (timeAvailable: string): string[] => {
-  const lowerTime = timeAvailable.toLowerCase();
-  
-  // Return array of durations in order of preference
-  if (lowerTime.includes('5') || lowerTime.includes('חמש')) {
-    return ['5-minute', '10-minute', '15-minute'];
-  } else if (lowerTime.includes('10') || lowerTime.includes('עשר')) {
-    return ['10-minute', '5-minute', '15-minute'];
-  } else if (lowerTime.includes('15') || lowerTime.includes('חמש עשרה')) {
-    return ['15-minute', '10-minute', '20-minute'];
-  } else if (lowerTime.includes('20') || lowerTime.includes('עשרים')) {
-    return ['20-minute', '15-minute', '30-minute'];
-  } else if (lowerTime.includes('30') || lowerTime.includes('שלושים')) {
-    return ['30-minute', '20-minute', '45-minute'];
-  } else if (lowerTime.includes('45') || lowerTime.includes('ארבעים וחמש')) {
-    return ['45-minute', '30-minute', '60-minute'];
-  } else if (lowerTime.includes('60') || lowerTime.includes('שישים') || lowerTime.includes('שעה')) {
-    return ['60-minute', '45-minute', '30-minute'];
+  const minutes = parseMinutes(timeAvailable);
+  if (minutes === null) {
+    return ['15-minute', '10-minute', '20-minute', '30-minute'];
   }
-  
-  // Default fallback for unrecognized time formats
-  return ['15-minute', '10-minute', '20-minute', '30-minute'];
+  return [...CURATED_DURATIONS]
+    // equally close: prefer the shorter one, so nobody gets more than they asked for
+    .sort((a, b) => Math.abs(a - minutes) - Math.abs(b - minutes) || a - b)
+    .slice(0, 3)
+    .map((d) => `${d}-minute`);
 };
 
 const extractKeywords = (text: string): string[] => {
@@ -94,31 +93,34 @@ export const createSearchQueries = (
   
   // Add randomization to query order and content
   const randomSeed = Math.floor(Math.random() * 3);
-  const timeVariations = [timeAvailable, timeAvailable.replace('דקות', 'minute'), timeAvailable.replace('דקה', 'min')];
+  // Say the length in words YouTube titles use: "45 minute", not a bare "45"
+  const minutes = parseMinutes(timeAvailable);
+  const timeAvailableText = minutes !== null ? `${minutes} minute` : timeAvailable;
+  const timeVariations = minutes !== null ? [`${minutes} minute`, `${minutes} min`] : [timeAvailable];
   
   // Most specific search (includes workout type, energy, and time)
   if (workoutTypes.length > 0) {
     queries.push(`${workoutTypes[0]} ${energyKeywords} ${timeVariations[randomSeed % timeVariations.length]} workout`);
     if (workoutTypes.length > 1) {
-      queries.push(`${workoutTypes[1]} ${intensityLevel} ${timeAvailable} exercise`);
+      queries.push(`${workoutTypes[1]} ${intensityLevel} ${timeAvailableText} exercise`);
     }
   }
   
   // Energy-based searches with variations
-  queries.push(`${energyKeywords} ${timeAvailable} fitness workout exercise`);
-  queries.push(`${intensityLevel} ${timeAvailable} home workout routine`);
+  queries.push(`${energyKeywords} ${timeAvailableText} fitness workout exercise`);
+  queries.push(`${intensityLevel} ${timeAvailableText} home workout routine`);
   
   // Add user-specific terms if available
   if (userConversation.trim()) {
     const conversationKeywords = extractKeywords(userConversation);
     if (conversationKeywords.length > 0) {
-      queries.push(`${conversationKeywords.join(' ')} ${energyKeywords} ${timeAvailable} workout`);
+      queries.push(`${conversationKeywords.join(' ')} ${energyKeywords} ${timeAvailableText} workout`);
     }
   }
   
   // General search with rotation
   const generalTerms = ['fitness', 'exercise', 'workout', 'training'];
-  queries.push(`${generalTerms[randomSeed % generalTerms.length]} ${timeAvailable} ${intensityLevel}`);
+  queries.push(`${generalTerms[randomSeed % generalTerms.length]} ${timeAvailableText} ${intensityLevel}`);
   
   console.log('🔍 Generated search queries:', queries);
   return queries;
